@@ -265,9 +265,7 @@ int main(argc,argv)
     {
         do_help();
         return 0;
-    }
-    else
-    {
+    } else {
         for (i=1;i<argc;i++)
         {
             if ((*argv[i])=='-')
@@ -292,9 +290,7 @@ int main(argc,argv)
                         i++;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 if (zipfilenamearg == 0)
                 {
                     zipfilenamearg = i ;
@@ -314,9 +310,7 @@ int main(argc,argv)
     if (zipfilenamearg==0)
     {
         zipok=0;
-    }
-    else
-    {
+    } else {
         int i,len;
         int dot_found=0;
 
@@ -509,9 +503,7 @@ int main(argc,argv)
         errclose = zipClose(zf,NULL);
         if (errclose != ZIP_OK)
             printf("error in closing %s\n",filename_try);
-    }
-    else
-    {
+    } else {
        do_help();
     }
 

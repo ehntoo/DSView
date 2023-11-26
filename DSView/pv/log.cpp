@@ -87,8 +87,7 @@ void dsv_clear_log_file()
         if (ret != 0){
             dsv_err("Clear log file error!");
         }
-    }
-    else{
+    } else {
         QDir dir;
         QString filePath = get_dsv_log_path();
         if (dir.exists(filePath))

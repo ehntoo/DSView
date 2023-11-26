@@ -534,14 +534,11 @@ SRD_PRIV int py_strseq_to_char(PyObject *py_strseq, char ***out_strv)
 			Py_DECREF(py_bytes);
 			if (!str)
 				goto err;
-		}
-		else if (PyLong_Check(py_item))
-		{
+		} else if (PyLong_Check(py_item)) {
 			lv = PyLong_AsLong(py_item);
 			sprintf(dec_buf, "%d", lv);
 			str = g_strdup(dec_buf);
-		}
-		else{
+		} else {
 			Py_DECREF(py_item);
 			goto err;
 		}

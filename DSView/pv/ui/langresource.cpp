@@ -235,8 +235,7 @@ const char* LangResource::get_lang_text(int page_id, const char *str_id, const c
         if (it != _current_page->_res_history.end()){
             return (*it).second.c_str();
         }
-    }
-    else{
+    } else {
         auto it = _current_page->_res.find(key);
         if (it != _current_page->_res.end()){
             if (_current_page->_is_dynamic){

@@ -110,8 +110,8 @@ QString Ruler::format_freq(double period, unsigned precision)
         char buffer[20] = {0};
         char format[10] = {0};
         QString units = FreqPrefixes[prefix] + "Hz";
-        sprintf(format, "%%.%df", (int)precision);       
-        sprintf(buffer, format, 1 / (period * multiplier));
+        snprintf(format, sizeof(format), "%%.%df", (int)precision);       
+        snprintf(buffer, sizeof(buffer), format, 1 / (period * multiplier));
         strcat(buffer, units.toUtf8().data());
         return QString(buffer);
     }
@@ -136,8 +136,8 @@ QString Ruler::format_time(double t, int prefix,
     QString units = SIPrefixes[prefix] + "s";
     double v = (t * multiplier) / 1000000.0;
     buffer[0] = v >= 0 ? '+' : '-';
-    sprintf(format, "%%.%df", (int)precision);   
-    sprintf(buffer + 1, format, v);
+    snprintf(format, sizeof(format), "%%.%df", (int)precision);   
+    snprintf(buffer + 1, sizeof(buffer)-1, format, v);
     strcat(buffer + 1, units.toUtf8().data());
     return QString(buffer);
 }
@@ -298,8 +298,7 @@ void Ruler::mouseReleaseEvent(QMouseEvent *event)
                 if (!_cursor_sel_visible) {
                     _cursor_sel_x = event->pos().x();
                     _cursor_sel_visible = true;                                    
-                } 
-                else {
+                } else {
                     int overCursor;
                     int msx = _cursor_sel_x;
                     if (msx < 0)
@@ -317,8 +316,7 @@ void Ruler::mouseReleaseEvent(QMouseEvent *event)
                         _view.add_cursor(CursorColor[cursor_list.size() % 8], index);
                         _view.show_cursors(true);
                         updatedCursor = true;
-                    }
-                    else if (overCursor > 0) {
+                    } else if (overCursor > 0) {
                         auto i = cursor_list.begin();
 
                         while (--overCursor != 0){
@@ -331,8 +329,7 @@ void Ruler::mouseReleaseEvent(QMouseEvent *event)
                     }
                     _cursor_sel_visible = false;
                 }
-            } 
-            else {
+            } else {
                 int overCursor;
                 overCursor = in_cursor_sel_rect(event->pos());
                 if (overCursor > 0) {
@@ -477,9 +474,7 @@ void Ruler::draw_logic_tick_mark(QPainter &p)
                 format_time(t, prefix));
             p.drawLine(QPoint(x, major_tick_y1),
                 QPoint(x, tick_y2));
-        }
-        else
-        {
+        } else {
             // Draw a minor tick
             if (minor_tick_period / scale > 2 * typical_width)
                 p.drawText(x, 2 * ValueMargin, 0, text_height,
@@ -597,9 +592,7 @@ void Ruler::draw_osc_tick_mark(QPainter &p)
                 AlignCenter | AlignTop | TextDontClip,
                 format_time(t, prefix));
             p.drawLine(QPoint(x, major_tick_y1), QPoint(x, tick_y2));
-        }
-        else
-        {
+        } else {
             // Draw a minor tick
             if (minor_tick_period / scale > 2 * typical_width)
                 p.drawText(x, 2 * ValueMargin, 0, text_height,
@@ -672,7 +665,7 @@ void Ruler::draw_cursor_sel(QPainter &p)
     const int y = height();
     const QRectF selRect = get_cursor_sel_rect(0);
     const QPointF del_points[] = {
-        QPointF(_cursor_sel_x + CursorSelWidth / 2, (selRect.top() + CursorSelWidth / 2)),
+        QPointF(_cursor_sel_x + CursorSelWidth / 2.0, (selRect.top() + CursorSelWidth / 2.0)),
         QPointF((selRect.left() + selRect.right()) / 2, selRect.top()),
         selRect.topLeft(),
         selRect.bottomLeft(),

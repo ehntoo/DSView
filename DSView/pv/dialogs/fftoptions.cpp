@@ -80,8 +80,7 @@ FftOptions::FftOptions(QWidget *parent, SigSession *session) :
     
     if (_session->get_device()->get_config_uint64(SR_CONF_MAX_DSO_SAMPLELIMITS, _sample_limit)) {
         _sample_limit = _sample_limit * 0.5;
-    }
-    else {
+    } else {
         dsv_err("ERROR: config_get SR_CONF_MAX_DSO_SAMPLELIMITS failed.");
     }
 

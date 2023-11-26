@@ -54,8 +54,8 @@ public:
     void check_setting();
 
 private:
-    void paintEvent(QPaintEvent *e);
-    void changeEvent(QEvent *event);
+    void paintEvent(QPaintEvent *e) override;
+    void changeEvent(QEvent *event) override;
     void retranslateUi();
     void reStyle();
     bool check_trig_channel();

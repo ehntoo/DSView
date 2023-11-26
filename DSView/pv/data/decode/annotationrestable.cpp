@@ -54,7 +54,7 @@ const char g_bin_cvt_table[] = "000000010010001101000101011001111000100110101011
 			++num;
 		}		
 
-	    if (strncmp(tmp, "000", 3) == 0)
+		if (strncmp(tmp, "000", 3) == 0)
 			*wr = '0';
 		else if (strncmp(tmp, "001", 3) == 0)
 			*wr = '1';
@@ -162,14 +162,11 @@ const char* AnnotationResTable::format_to_string(const char *hex_str, int fmt)
 
  		 if (c >= '0' && c <= '9'){
 			 dex = (int)(c - '0');	 
-		 }
-		 else if (c >= 'A' && c <= 'F'){
+		 } else if (c >= 'A' && c <= 'F'){
 			 dex = (int)(c - 'A') + 10;
-		 }
-		 else if (c >= 'a' && c <= 'f'){
+		 } else if (c >= 'a' && c <= 'f'){
 			 dex = (int)(c - 'a') + 10;
-		 }
-		 else{ 
+		 } else {
 			 dsv_err("is not a hex string");
 			 assert(false);
 		 }
@@ -201,7 +198,7 @@ const char* AnnotationResTable::format_to_string(const char *hex_str, int fmt)
 	 if (fmt == DecoderDataFormat::dec && len * 4 <= 64){
          long long lv = bin2long_string(buf, len * 4);
 		 g_number_tmp_64[0] = 0;
-    	 sprintf(g_number_tmp_64, "%lld", lv);
+    	 snprintf(g_number_tmp_64, sizeof(g_number_tmp_64), "%lld", lv);
          return g_number_tmp_64;
 	 }
 	 
@@ -211,7 +208,7 @@ const char* AnnotationResTable::format_to_string(const char *hex_str, int fmt)
              int lv = (int)bin2long_string(buf, len * 4);
 			 //can display chars
 			 if (lv >= 33 && lv <= 126){
-				 sprintf(g_number_tmp_64, "%c", (char)lv);
+				 snprintf(g_number_tmp_64, sizeof(g_number_tmp_64), "%c", (char)lv);
 				 return g_number_tmp_64;
 			 }
          }

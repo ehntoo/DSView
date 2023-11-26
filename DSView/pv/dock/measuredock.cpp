@@ -568,8 +568,7 @@ void MeasureDock::set_sel_cursor()
 
     if (inf->start_bt == _sel_btn){
         inf->cursor1 = sel_cursor_bt->text().toInt();
-    }
-    else if (inf->end_bt == _sel_btn){
+    } else if (inf->end_bt == _sel_btn){
         inf->cursor2 = sel_cursor_bt->text().toInt();
     }
 
@@ -609,8 +608,7 @@ void MeasureDock::update_dist()
             if (delta < 0)
                 delta_text.replace('+', '-');
             inf.r_label->setText(delta_text);
-        }
-        else {
+        } else {
             inf.r_label->setText(" ");
         }
     }

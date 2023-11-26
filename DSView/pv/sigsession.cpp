@@ -478,8 +478,7 @@ namespace pv
                 auto sig = (view::DsoSignal*)s;
                 sig->set_zero_ratio(sig->get_zero_ratio());
                 sig->set_stop_scale(1);
-            }            
-            else if (s->signal_type() == SR_CHANNEL_ANALOG){  
+            } else if (s->signal_type() == SR_CHANNEL_ANALOG){  
                 auto sig = (view::AnalogSignal*)s;
                 sig->set_zero_ratio(sig->get_zero_ratio());
             }
@@ -551,8 +550,7 @@ namespace pv
 
             if (_device_agent.is_hardware()){
                 _is_stream_mode = _device_agent.is_stream_mode();
-            }
-            else if (_device_agent.is_demo() || _device_agent.is_file()){
+            } else if (_device_agent.is_demo() || _device_agent.is_file()){
                 _is_stream_mode = true;
             }
 
@@ -632,29 +630,22 @@ namespace pv
                     dsoSig->set_mValid(false);
                 }
             }   
-        }
-        else
-        {    
+        } else {    
             if (is_single_mode())
             {
                 if (_is_stream_mode)
                     bAddDecoder = true;
-            }
-            else if (is_repeat_mode())
-            { 
+            } else if (is_repeat_mode()) { 
                 if (_is_stream_mode)
                 {
                     if (_capture_times == 1)
                         bAddDecoder = true;
                     else
                         bSwapBuffer = true;
-                }
-                else{
+                } else {
                     bSwapBuffer = true;
                 }             
-            }
-            else if (is_loop_mode())
-            {
+            } else if (is_loop_mode()) {
                  
             }
         }
@@ -763,9 +754,7 @@ namespace pv
             }
 
             return true;
-        }
-        else
-        {
+        } else {
             dsv_info("Data is uploading from device data buffer, waiting for stop.");
         }
         return false;
@@ -836,9 +825,7 @@ namespace pv
             _data_updated = false;
             _noData_cnt = 0;
             data_auto_unlock();
-        }
-        else
-        {
+        } else {
             if (++_noData_cnt >= (WaitShowTime / FeedInterval))
                 nodata_timeout();
         }
@@ -852,9 +839,9 @@ namespace pv
         }
 
         std::vector<view::Signal *> sigs;
-        unsigned int logic_probe_count = 0;
-        unsigned int dso_probe_count = 0;
-        unsigned int analog_probe_count = 0;
+        // unsigned int logic_probe_count = 0;
+        // unsigned int dso_probe_count = 0;
+        // unsigned int analog_probe_count = 0;
 
         _capture_data->clear();
         _view_data->clear();
@@ -871,17 +858,17 @@ namespace pv
                 switch (probe->type)
                 {
                 case SR_CHANNEL_LOGIC:
-                    if (probe->enabled)
-                        logic_probe_count++;
+                    // if (probe->enabled)
+                    //     logic_probe_count++;
                     break;
 
                 case SR_CHANNEL_DSO:
-                    dso_probe_count++;
+                    // dso_probe_count++;
                     break;
 
                 case SR_CHANNEL_ANALOG:
-                    if (probe->enabled)
-                        analog_probe_count++;
+                    // if (probe->enabled)
+                    //     analog_probe_count++;
                     break;
                 }
             }
@@ -938,9 +925,9 @@ namespace pv
 
         std::vector<view::Signal *> sigs;
         view::Signal *signal = NULL;
-        int logic_chan_num = 0;
-        int dso_chan_num = 0;
-        int all_chann_num = 0;
+        // int logic_chan_num = 0;
+        // int dso_chan_num = 0;
+        // int all_chann_num = 0;
         int start_view_dex = -1;
 
         set_cur_snap_samplerate(_device_agent.get_sample_rate());
@@ -952,14 +939,14 @@ namespace pv
             sr_channel *probe = (sr_channel *)l->data;
   
             signal = NULL;
-            all_chann_num++;
+            // all_chann_num++;
  
             switch (probe->type)
             {
             case SR_CHANNEL_LOGIC:
                 if (probe->enabled)
                 {    
-                    logic_chan_num++;
+                    // logic_chan_num++;
 
                     auto i = _signals.begin();
 
@@ -989,7 +976,7 @@ namespace pv
             case SR_CHANNEL_ANALOG:
                 if (probe->enabled)
                 { 
-                    dso_chan_num++;
+                    // dso_chan_num++;
 
                     auto i = _signals.begin();
                     while (i != _signals.end())
@@ -1125,9 +1112,7 @@ namespace pv
                     _callback->receive_trigger(_capture_data->_trig_pos);
                 }                
             }
-        }
-        else
-        {
+        } else {
             int probe_count = 0;
             int probe_en_count = 0;
 
@@ -1177,9 +1162,7 @@ namespace pv
             // frame_began is DecoderStack, but in future we need to signal
             // this after both analog and logic sweeps have begun.
             _callback->frame_began();
-        }
-        else
-        {
+        } else {
             // Append to the existing data snapshot
             _capture_data->get_logic()->append_payload(o);
         }
@@ -1239,9 +1222,7 @@ namespace pv
                     _device_agent.get_channels(),
                     _is_instant,
                     _device_agent.is_file());
-        }
-        else
-        {
+        } else {
             // Append to the existing data snapshot
             _capture_data->get_dso()->append_payload(o);
         }
@@ -1314,9 +1295,7 @@ namespace pv
 
             // first payload
             _capture_data->get_analog()->first_payload(o, _device_agent.get_sample_limit(), _device_agent.get_channels());
-        }
-        else
-        {
+        } else {
             // Append to the existing data snapshot
             _capture_data->get_analog()->append_payload(o);
         }
@@ -1404,16 +1383,13 @@ namespace pv
             {
                 _error = Pkt_data_err;
                 _callback->session_error();
-            }
-            else
-            {
+            } else {
                 int mode = _device_agent.get_work_mode();
 
                 // Post a message to start all decode tasks.
                 if (mode == LOGIC){
                     _callback->trigger_message(DSV_MSG_REV_END_PACKET);
-                }
-                else{
+                } else {
                     if (mode == DSO && _is_instant){             
                         sr_status status;
 
@@ -1549,9 +1525,7 @@ namespace pv
             if (silent)
             {
                 ret = true;
-            }
-            else if (trace->create_popup(true))
-            {
+            } else if (trace->create_popup(true)) {
                 ret = true;
             }
 
@@ -1569,9 +1543,7 @@ namespace pv
                 data_updated();
                 
                 out_trace = trace;
-            }
-            else
-            {
+            } else {
                 delete trace;
             }
 
@@ -1618,9 +1590,7 @@ namespace pv
         {
             // destroy it in thread
             trace->_delete_flag = true;
-        }
-        else
-        {
+        } else {
             delete trace;
             signals_changed();
         }
@@ -2033,9 +2003,7 @@ namespace pv
             if (is_repeat_mode() && _is_working && event == DS_EV_COLLECT_TASK_END)
             {
                 _callback->trigger_message(DSV_MSG_TRIG_NEXT_COLLECT);
-            }
-            else
-            {
+            } else {
                 _is_working = false;
                 _is_instant = false;
                 _callback->trigger_message(DSV_MSG_END_COLLECT_WORK);
@@ -2143,20 +2111,16 @@ namespace pv
 
                         if (intvl >= 100){
                             _repeat_wait_prog_step = 5;
-                        }
-                        else if (_repeat_intvl >= 1){
+                        } else if (_repeat_intvl >= 1){
                             intvl = _repeat_intvl * 1000 / 10;
                             _repeat_wait_prog_step = 10;
-                        }
-                        else{
+                        } else {
                             intvl = _repeat_intvl * 1000 / 5;
                             _repeat_wait_prog_step = 20;
                         }
 
                         _repeat_wait_prog_timer.Start(intvl);
-                    }
-                    else
-                    {
+                    } else {
                         _repeat_hold_prg = 0;
                         exec_capture();
                     }
@@ -2181,14 +2145,11 @@ namespace pv
                         if (!_is_stream_mode){
                             bAddDecoder = true;
                             bSwapBuffer = true;
-                        }
-                        else if (_capture_times > 1){
+                        } else if (_capture_times > 1){
                             bAddDecoder = true;
                             bSwapBuffer = true;
                         }
-                    }
-                    else if (is_loop_mode())
-                    {
+                    } else if (is_loop_mode()) {
                         bAddDecoder = true;
                     }
 
@@ -2277,8 +2238,7 @@ namespace pv
             if (mode == LOGIC){
                 if (_device_agent.is_hardware()){
                     _is_stream_mode = _device_agent.is_stream_mode();
-                }
-                else if (_device_agent.is_demo()){
+                } else if (_device_agent.is_demo()){
                     _is_stream_mode = true;
                 }
             }
@@ -2421,8 +2381,7 @@ namespace pv
         if (traceType == SR_CHANNEL_LOGIC || traceType == SR_CHANNEL_ANALOG)
         { 
             _device_agent.set_channel_name(trace->get_index(), name.toUtf8());
-        }
-        else if (traceType == SR_CHANNEL_DECODER && _decoder_pannel != NULL){
+        } else if (traceType == SR_CHANNEL_DECODER && _decoder_pannel != NULL){
             _decoder_pannel->update_deocder_item_name(trace, name.toUtf8().data());
         }
     }

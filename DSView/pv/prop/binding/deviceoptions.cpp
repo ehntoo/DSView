@@ -22,7 +22,7 @@
 
 #include "deviceoptions.h"
 
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <QObject>
 #include <stdint.h>
 #include "../bool.h"
@@ -160,7 +160,7 @@ void DeviceOptions::bind_bool(const QString &name, const QString label, int key)
 	QString text = LangResource::Instance()->get_lang_text(STR_PAGE_DSL, label.toLocal8Bit().data(), label.toLocal8Bit().data());
 	_properties.push_back(
         new Bool(name, text, bind(config_getter, key),
-			bind(config_setter, key, _1)));
+			bind(config_setter, key, boost::placeholders::_1)));
 }
 
 void DeviceOptions::bind_enum(const QString &name, const QString label, int key,
@@ -183,7 +183,7 @@ void DeviceOptions::bind_enum(const QString &name, const QString label, int key,
 	_properties.push_back(
         new Enum(name, label, values,
 			bind(config_getter, key),
-			bind(config_setter, key, _1)));
+			bind(config_setter, key, boost::placeholders::_1)));
 }
 
 void DeviceOptions::bind_int(const QString &name, const QString label, int key, QString suffix,
@@ -192,7 +192,7 @@ void DeviceOptions::bind_int(const QString &name, const QString label, int key, 
 	_properties.push_back(
         new Int(name, label, suffix, range,
 			bind(config_getter, key),
-			bind(config_setter, key, _1)));
+			bind(config_setter, key, boost::placeholders::_1)));
 }
 
 void DeviceOptions::bind_double(const QString &name, const QString label, int key, QString suffix,
@@ -202,7 +202,7 @@ void DeviceOptions::bind_double(const QString &name, const QString label, int ke
     _properties.push_back(
         new Double(name, label, decimals, suffix, range, step,
             bind(config_getter, key),
-            bind(config_setter, key, _1)));
+            bind(config_setter, key, boost::placeholders::_1)));
 }
 
 QString DeviceOptions::print_gvariant(GVariant *const gvar)
@@ -211,9 +211,7 @@ QString DeviceOptions::print_gvariant(GVariant *const gvar)
 
 	if (g_variant_is_of_type(gvar, G_VARIANT_TYPE("s"))){
         s = QString::fromUtf8(g_variant_get_string(gvar, NULL));
-	}
-	else
-	{
+	} else {
 		gchar *const text = g_variant_print(gvar, FALSE);
         s = QString::fromUtf8(text);
 		g_free(text);
@@ -245,11 +243,10 @@ void DeviceOptions::bind_samplerate(const QString &name, const QString label,
 				make_pair((double)elements[0], (double)elements[1]),
 						(double)elements[2],
 				bind(samplerate_double_getter),
-				bind(samplerate_double_setter, _1)));
+				bind(samplerate_double_setter, boost::placeholders::_1)));
 
 		g_variant_unref(gvar_list_samplerates);
-	}
-	else if ((gvar_list_samplerates = g_variant_lookup_value(gvar_list,
+	} else if ((gvar_list_samplerates = g_variant_lookup_value(gvar_list,
 			"samplerates", G_VARIANT_TYPE("at"))))
 	{
         bind_enum(name, label, SR_CONF_SAMPLERATE,
@@ -334,7 +331,7 @@ void DeviceOptions::bind_bandwidths(const QString &name, const QString label, in
 	_properties.push_back(
         new Enum(name, label, values,
 			bind(config_getter, key),
-			bind(config_setter, key, _1)));
+			bind(config_setter, key, boost::placeholders::_1)));
 }
 
 void DeviceOptions::bind_list(const QString &name, const QString label, int key, GVariant *const gvar_list)
@@ -358,7 +355,7 @@ void DeviceOptions::bind_list(const QString &name, const QString label, int key,
 	_properties.push_back(
         new Enum(name, label, values,
 			bind(config_getter, key),
-			bind(config_setter, key, _1)));
+			bind(config_setter, key, boost::placeholders::_1)));
 }
 
 } // binding

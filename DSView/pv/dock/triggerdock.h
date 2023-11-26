@@ -60,7 +60,7 @@ public:
     TriggerDock(QWidget *parent, SigSession *session);
     ~TriggerDock();
 
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) override;
 
     void update_view();
 
@@ -72,7 +72,7 @@ public:
     void try_commit_trigger();
 
 private:
-    void changeEvent(QEvent *event);
+    void changeEvent(QEvent *event) override;
     void retranslateUi();
     void reStyle();
 

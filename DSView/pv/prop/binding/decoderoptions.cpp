@@ -22,7 +22,7 @@
 #include <libsigrokdecode.h>
 
 #include "decoderoptions.h"
-#include <boost/bind.hpp> 
+#include <boost/bind/bind.hpp> 
 #include <boost/none_t.hpp>
 
 #include "../../data/decoderstack.h"
@@ -71,8 +71,7 @@ DecoderOptions::DecoderOptions(pv::data::DecoderStack* decoder_stack, data::deco
 
 		if (lang_str != NULL && bLang){
             desc_str = lang_str;
-        }
-        else{
+        } else {
             desc_str = opt->desc;
         }
 
@@ -81,7 +80,7 @@ DecoderOptions::DecoderOptions(pv::data::DecoderStack* decoder_stack, data::deco
 		const Property::Getter getter = bind(
 			&DecoderOptions::getter, this, opt->id);
 		const Property::Setter setter = bind(
-			&DecoderOptions::setter, this, opt->id, _1);
+			&DecoderOptions::setter, this, opt->id, boost::placeholders::_1);
 
 		Property *prop = NULL;
 

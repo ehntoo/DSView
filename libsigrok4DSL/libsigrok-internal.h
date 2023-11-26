@@ -21,6 +21,7 @@
 #define LIBSIGROK_SIGROK_INTERNAL_H
 
 //#include <stdarg.h>
+#include <stdbool.h>
 #include <glib.h>
 #include <ds_types.h>
 #include "config.h" /* Needed for HAVE_LIBUSB_1_0 and others. */
@@ -128,7 +129,7 @@ struct sr_dev_driver {
 	int (*dev_close) (struct sr_dev_inst *sdi);
 	int (*dev_destroy) (struct sr_dev_inst *sdi);
     int (*dev_status_get) (const struct sr_dev_inst *sdi,
-                           struct sr_status *status, gboolean prg);
+                           struct sr_status *status, bool prg);
     int (*dev_acquisition_start) (struct sr_dev_inst *sdi,
 			void *cb_data);
     int (*dev_acquisition_stop) (const struct sr_dev_inst *sdi,
@@ -182,7 +183,7 @@ struct sr_dev_inst {
 
 struct sr_session 
 { 
-    gboolean running;
+    bool running;
 
 	unsigned int num_sources;
 
@@ -202,7 +203,7 @@ struct sr_session
 	 * within the session thread itself.
 	 */
     GMutex stop_mutex;
-	gboolean abort_session;
+	bool abort_session;
 };
 
 struct sr_usb_dev_inst {
@@ -251,17 +252,17 @@ struct ds_trigger {
 
 /*--- device.c --------------------------------------------------------------*/
 
-SR_PRIV struct sr_channel *sr_channel_new(uint16_t index, int type, gboolean enabled, const char *name);
+SR_PRIV struct sr_channel *sr_channel_new(uint16_t index, int type, bool enabled, const char *name);
 
 SR_PRIV void sr_dev_probes_free(struct sr_dev_inst *sdi);
 
-SR_PRIV int sr_enable_device_channel(struct sr_dev_inst *sdi, const struct sr_channel *probe, gboolean enable);
+SR_PRIV int sr_enable_device_channel(struct sr_dev_inst *sdi, const struct sr_channel *probe, bool enable);
 
 SR_PRIV int sr_dev_probe_name_set(const struct sr_dev_inst *sdi,
 		int probenum, const char *name);
 
 SR_PRIV int sr_dev_probe_enable(const struct sr_dev_inst *sdi, int probenum,
-		gboolean state);
+		bool state);
 		
 SR_PRIV int sr_dev_trigger_set(const struct sr_dev_inst *sdi, uint16_t probenum,
 		const char *trigger);
@@ -326,12 +327,12 @@ SR_PRIV uint64_t sr_trigger_get_value1(uint16_t stage);
 SR_PRIV uint64_t sr_trigger_get_edge0(uint16_t stage);
 SR_PRIV uint64_t sr_trigger_get_edge1(uint16_t stage);
 
-SR_PRIV uint16_t ds_trigger_get_mask0(uint16_t stage, uint16_t msc, uint16_t lsc, gboolean qutr_mode, gboolean half_mode);
-SR_PRIV uint16_t ds_trigger_get_value0(uint16_t stage, uint16_t msc, uint16_t lsc, gboolean qutr_mode, gboolean half_mode);
-SR_PRIV uint16_t ds_trigger_get_edge0(uint16_t stage, uint16_t msc, uint16_t lsc, gboolean qutr_mode, gboolean half_mode);
-SR_PRIV uint16_t ds_trigger_get_mask1(uint16_t stage, uint16_t msc, uint16_t lsc, gboolean qutr_mode, gboolean half_mode);
-SR_PRIV uint16_t ds_trigger_get_value1(uint16_t stage, uint16_t msc, uint16_t lsc, gboolean qutr_mode, gboolean half_mode);
-SR_PRIV uint16_t ds_trigger_get_edge1(uint16_t stage, uint16_t msc, uint16_t lsc, gboolean qutr_mode, gboolean half_mode);
+SR_PRIV uint16_t ds_trigger_get_mask0(uint16_t stage, uint16_t msc, uint16_t lsc, bool qutr_mode, bool half_mode);
+SR_PRIV uint16_t ds_trigger_get_value0(uint16_t stage, uint16_t msc, uint16_t lsc, bool qutr_mode, bool half_mode);
+SR_PRIV uint16_t ds_trigger_get_edge0(uint16_t stage, uint16_t msc, uint16_t lsc, bool qutr_mode, bool half_mode);
+SR_PRIV uint16_t ds_trigger_get_mask1(uint16_t stage, uint16_t msc, uint16_t lsc, bool qutr_mode, bool half_mode);
+SR_PRIV uint16_t ds_trigger_get_value1(uint16_t stage, uint16_t msc, uint16_t lsc, bool qutr_mode, bool half_mode);
+SR_PRIV uint16_t ds_trigger_get_edge1(uint16_t stage, uint16_t msc, uint16_t lsc, bool qutr_mode, bool half_mode);
 
 SR_PRIV int ds_trigger_init(void);
 SR_PRIV int ds_trigger_destroy(void);
@@ -344,7 +345,7 @@ enum {
 	SERIAL_NONBLOCK = 4,
 };
 
-typedef gboolean (*packet_valid_t)(const uint8_t *buf);
+typedef bool (*packet_valid_t)(const uint8_t *buf);
 
 SR_PRIV int serial_open(struct sr_serial_dev_inst *serial, int flags);
 SR_PRIV int serial_close(struct sr_serial_dev_inst *serial);
@@ -440,7 +441,7 @@ SR_PRIV int sr_config_list(const struct sr_dev_driver *driver,
                           const struct sr_channel_group *cg,
                           int key, GVariant **data);
 SR_PRIV const struct sr_config_info *sr_config_info_get(int key);
-SR_PRIV int sr_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, gboolean prg);
+SR_PRIV int sr_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, bool prg);
 SR_PRIV struct sr_config *sr_config_new(int key, GVariant *data);
 SR_PRIV void sr_config_free(struct sr_config *src);
 SR_PRIV int ds_scan_all_device_list(libusb_context *usb_ctx, struct libusb_device **list_buf, int size, int *count);

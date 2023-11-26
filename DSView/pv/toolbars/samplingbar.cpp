@@ -159,13 +159,9 @@ namespace pv
                 if (_device_agent->is_demo())
                 {
                     _device_type.setText(L_S(STR_PAGE_TOOLBAR, S_ID(IDS_TOOLBAR_DEVICE_TYPE_DEMO), "Demo"));
-                }
-                else if (_device_agent->is_file())
-                {
+                } else if (_device_agent->is_file()) {
                     _device_type.setText(L_S(STR_PAGE_TOOLBAR, S_ID(IDS_TOOLBAR_DEVICE_TYPE_FILE), "File"));
-                }
-                else
-                {
+                } else {
                     int usb_speed = LIBUSB_SPEED_HIGH;
                     _device_agent->get_config_int32(SR_CONF_USB_SPEED, usb_speed);
 
@@ -197,9 +193,7 @@ namespace pv
                     _instant_button.setText(is_working ? str_one_stop : str_instant);
 
                 _run_stop_button.setText(str_start);
-            }
-            else
-            {
+            } else {
                 _run_stop_button.setText(is_working ? str_stop: str_start);
 
                 if (bDev && mode == DSO)
@@ -303,9 +297,7 @@ namespace pv
                         update_sample_rate_selector_value();
                         _sample_count.setDisabled(true);
                         _sample_rate.setDisabled(true);
-                    }
-                    else
-                    {
+                    } else {
                         _sample_count.setDisabled(false);
                         if (mode != DSO)
                             _sample_rate.setDisabled(false);
@@ -516,9 +508,7 @@ namespace pv
                 else
                     sw_depth = LogicMaxSWDepth32 / ch_num;
 #endif
-            }
-            else
-            {
+            } else {
                 sw_depth = AnalogMaxSWDepth;
             }
 
@@ -527,9 +517,7 @@ namespace pv
                 _device_agent->get_config_bool(SR_CONF_RLE_SUPPORT, rle_support);
                 if (rle_support)
                     rle_depth = min(hw_depth * SR_KB(1), sw_depth);
-            }
-            else if (mode == DSO)
-            {
+            } else if (mode == DSO) {
                 _device_agent->get_config_uint64(SR_CONF_MAX_TIMEBASE, max_timebase);
                 _device_agent->get_config_uint64(SR_CONF_MIN_TIMEBASE, min_timebase);
             }
@@ -602,13 +590,9 @@ namespace pv
             if (pre_duration > _sample_count.itemData(0).value<double>())
             {
                 _sample_count.setCurrentIndex(0);
-            }
-            else if (pre_duration < _sample_count.itemData(_sample_count.count() - 1).value<double>())
-            {
+            } else if (pre_duration < _sample_count.itemData(_sample_count.count() - 1).value<double>()) {
                 _sample_count.setCurrentIndex(_sample_count.count() - 1);
-            }
-            else
-            {
+            } else {
                 for (int i = 0; i < _sample_count.count(); i++)
                 {
                     double sel_val = _sample_count.itemData(i).value<double>();
@@ -640,21 +624,15 @@ namespace pv
                 if (_device_agent->get_config_uint64(SR_CONF_TIMEBASE, v))
                 {
                     duration = (double)v; 
-                }
-                else
-                {
+                } else {
                     dsv_err("ERROR: config_get SR_CONF_TIMEBASE failed.");
                     return;
                 }
-            }
-            else
-            { 
+            } else { 
                 if (_device_agent->get_config_uint64(SR_CONF_LIMIT_SAMPLES, v))
                 {
                     duration = (double)v; 
-                }
-                else
-                {
+                } else {
                     dsv_err("ERROR: config_get SR_CONF_TIMEBASE failed.");
                     return;
                 }
@@ -704,14 +682,10 @@ namespace pv
             if (0 == dir)
             {
                 hori_res = commit_hori_res();
-            }
-            else if ((dir > 0) && (_sample_count.currentIndex() > 0))
-            {
+            } else if ((dir > 0) && (_sample_count.currentIndex() > 0)) {
                 _sample_count.setCurrentIndex(_sample_count.currentIndex() - 1);
                 hori_res = commit_hori_res();
-            }
-            else if ((dir < 0) && (_sample_count.currentIndex() < _sample_count.count() - 1))
-            {
+            } else if ((dir < 0) && (_sample_count.currentIndex() < _sample_count.count() - 1)) {
                 _sample_count.setCurrentIndex(_sample_count.currentIndex() + 1);
                 hori_res = commit_hori_res();
             }
@@ -760,9 +734,7 @@ namespace pv
             {
                 update_sample_rate_selector_value();
                 update_sample_count_selector_value();
-            }
-            else
-            {
+            } else {
                 const double sample_duration = _sample_count.itemData(
                                                                 _sample_count.currentIndex())
                                                    .value<double>();
@@ -843,9 +815,7 @@ namespace pv
                     if (bRet)
                     {
                         zero_adj();
-                    }
-                    else
-                    {
+                    } else {
                         _device_agent->set_config_bool(SR_CONF_ZERO, false);
                         update_view_status();
                     }
@@ -910,9 +880,7 @@ namespace pv
                     if (MsgBox::Confirm(strMsg))
                     {
                         zero_adj();
-                    }
-                    else
-                    {
+                    } else {
                         _device_agent->set_config_bool(SR_CONF_ZERO, false);
                         update_view_status();
                     }
@@ -960,8 +928,7 @@ namespace pv
 
             if (_session->set_device(devHandle)){
                 _last_device_index = _device_selector.currentIndex();   
-            }
-            else{
+            } else {
                 update_device_list(); // Reload the list.
             }
         }
@@ -982,9 +949,7 @@ namespace pv
                     _sample_rate.setDisabled(true);
                 else
                     _sample_rate.setDisabled(!enable);
-            }
-            else
-            {
+            } else {
                 _sample_count.setDisabled(true);
                 _sample_rate.setDisabled(true);
             }
@@ -1001,9 +966,7 @@ namespace pv
             {
                 if (_device_agent->is_file()){
                     _mode_action->setVisible(false);
-                }
-                else
-                {
+                } else {
                     update_mode_icon();
                     _mode_action->setVisible(true);
                     _action_repeat->setVisible(true);    
@@ -1018,15 +981,11 @@ namespace pv
                 }
                 _run_stop_action->setVisible(true);
                 _instant_action->setVisible(true);      
-            }
-            else if (mode == ANALOG)
-            {
+            } else if (mode == ANALOG) {
                 _mode_action->setVisible(false);
                 _run_stop_action->setVisible(true);
                 _instant_action->setVisible(false);
-            }
-            else if (mode == DSO)
-            {
+            } else if (mode == DSO) {
                 _mode_action->setVisible(false);
                 _run_stop_action->setVisible(true);
                 _instant_action->setVisible(true);
@@ -1050,15 +1009,12 @@ namespace pv
                     _device_agent->set_config_string(SR_CONF_PATTERN_MODE, "protocol");
                     _session->broadcast_msg(DSV_MSG_DEMO_OPERATION_MODE_CHNAGED);
                 }
-            }
-            else if (act == _action_repeat)
-            { 
+            } else if (act == _action_repeat) { 
                 if (_device_agent->is_stream_mode() || _device_agent->is_demo())
                 {
                     _session->set_repeat_intvl(0.1);
                     _session->set_collect_mode(COLLECT_REPEAT);
-                }
-                else{
+                } else {
                     pv::dialogs::Interval interval_dlg(this);
 
                     interval_dlg.set_interval(_session->get_repeat_intvl());
@@ -1076,9 +1032,7 @@ namespace pv
                     _device_agent->set_config_string(SR_CONF_PATTERN_MODE, "random");
                     _session->broadcast_msg(DSV_MSG_DEMO_OPERATION_MODE_CHNAGED);
                 }          
-            }
-            else if (act == _action_loop)
-            {  
+            } else if (act == _action_loop) {  
                 _session->set_collect_mode(COLLECT_LOOP);
 
                 if (_device_agent->is_demo()){
@@ -1158,8 +1112,7 @@ namespace pv
             if (_session->get_device()->is_file()){
                 _sample_rate.setEnabled(false);
                 _sample_count.setEnabled(false);                
-            }
-            else if (mode == DSO){               
+            } else if (mode == DSO){               
                 _sample_rate.setEnabled(false);
                 _sample_count.setEnabled(bEnable);
 
@@ -1167,8 +1120,7 @@ namespace pv
                 {
                     _sample_count.setEnabled(true);
                 }
-            }
-            else{
+            } else {
                 _sample_rate.setEnabled(bEnable);
                 _sample_count.setEnabled(bEnable);
 

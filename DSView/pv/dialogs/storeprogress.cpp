@@ -171,21 +171,18 @@ void StoreProgress::accept()
             _store_session.session()->set_saving(true);
             QTimer::singleShot(100, this, SLOT(timeout()));
             setTitle(L_S(STR_PAGE_DLG, S_ID(IDS_DLG_EXPORTING), "Exporting..."));    
-        }
-        else{
+        } else {
             save_done();
             close(); 
             show_error();
         }
-    }
-    else{
+    } else {
          if (_store_session.save_start()){
             _isBusy = true;
             _store_session.session()->set_saving(true);
             QTimer::singleShot(100, this, SLOT(timeout()));
             setTitle(L_S(STR_PAGE_DLG, S_ID(IDS_DLG_SAVING), "Saving..."));
-        }
-        else{
+        } else {
             save_done();
             close(); 
             show_error();

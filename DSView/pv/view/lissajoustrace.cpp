@@ -132,8 +132,7 @@ void LissajousTrace::paint_mid(QPainter &p, int left, int right, QColor fore, QC
             p.setPen(view::View::Red);
             p.drawText(_border.marginsRemoved(QMargins(10, 30, 10, 30)),
                        L_S(STR_PAGE_DLG, S_ID(IDS_DLG_DATA_SOURCE_ERROR), "Data source error."));
-        }
-        else {
+        } else {
             const uint8_t* chan_data_array[2];
             chan_data_array[_xIndex] = _data->get_samples(0, sample_count-1, _xIndex);
             chan_data_array[_yIndex] = _data->get_samples(0, sample_count-1, _yIndex);

@@ -188,21 +188,16 @@ void Viewport::doPaint()
         if (_view.session().is_init_status())
         {
             paintCursors(p);
-        }
-        else if (_view.session().is_stopped_status())
-        {
+        } else if (_view.session().is_stopped_status()) {
             paintSignals(p, fore, back);
-        }
-        else if (_view.session().is_realtime_refresh())
-        {  
+        } else if (_view.session().is_realtime_refresh()) {  
             _view.session().have_new_realtime_refresh(false); // Try to reset refresh timer.
 
             if (_view.session().have_view_data() || _view.session().is_instant())
                 paintSignals(p, fore, back);
             else
                 paintProgress(p, fore, back);
-        }
-        else if (_view.session().is_running_status()){
+        } else if (_view.session().is_running_status()){
             if (_view.session().is_repeat_mode())
             {
                 paintSignals(p, fore, back);
@@ -215,14 +210,12 @@ void Viewport::doPaint()
                         _view.show_captured_progress(triggered, captured_progress);
                     }
                 }
-            }
-            else if (_type == TIME_VIEW) {
+            } else if (_type == TIME_VIEW) {
                 _view.repeat_unshow();
                 paintProgress(p, fore, back);
             }
         }     
-    }
-    else {
+    } else {
         paintSignals(p, fore, back);
     }
 
@@ -281,14 +274,12 @@ void Viewport::paintSignals(QPainter &p, QColor fore, QColor back)
             
                     logic_signal->paint_mid_align_sample(p, 0, t->get_view_rect().right(), fore, back, end_align_sample);
                     bFirst = false;
-                }
-                else{
+                } else {
                     t->paint_mid(p, 0, t->get_view_rect().right(), fore, back);
                 }               
             }                
         }
-    } 
-    else {
+    } else {
         if (_view.scale() != _curScale ||
             _view.offset() != _curOffset ||
             _view.get_signalHeight() != _curSignalHeight ||
@@ -356,20 +347,16 @@ void Viewport::paintSignals(QPainter &p, QColor fore, QColor back)
                     _view.hover_point().y() < max(cursorY0, cursorY1)) {
                     (*i)->paint(p, xrect, XCursor::XCur_Y, index);
                     hovered = true;
-                }
-                else if (qAbs(cursorY0 - _view.hover_point().y()) <= HitCursorMargin) {
+                } else if (qAbs(cursorY0 - _view.hover_point().y()) <= HitCursorMargin) {
                     (*i)->paint(p, xrect, XCursor::XCur_X0, index);
                     hovered = true;
-                }
-                else if (qAbs(cursorY1 - _view.hover_point().y()) <= HitCursorMargin) {
+                } else if (qAbs(cursorY1 - _view.hover_point().y()) <= HitCursorMargin) {
                     (*i)->paint(p, xrect, XCursor::XCur_X1, index);
                     hovered = true;
-                }
-                else {
+                } else {
                     (*i)->paint(p, xrect, XCursor::XCur_None, index);
                 }
-            }
-            else {
+            } else {
                 (*i)->paint(p, xrect, XCursor::XCur_None, index);
             }
 
@@ -424,8 +411,7 @@ void Viewport::paintSignals(QPainter &p, QColor fore, QColor back)
                         type_str += L_S(STR_PAGE_DLG, S_ID(IDS_DLG_VIEW_CAPTURE), "Capturing");
                         bDot = true;
                     }
-                } 
-                else if (type == DSO_TRIGGER_AUTO && !_view.session().trigd()) {
+                } else if (type == DSO_TRIGGER_AUTO && !_view.session().trigd()) {
                     type_str = L_S(STR_PAGE_DLG, S_ID(IDS_DLG_AUTO), "Auto");
 
                     if (_view.session().is_instant()){
@@ -433,12 +419,10 @@ void Viewport::paintSignals(QPainter &p, QColor fore, QColor back)
                         type_str += L_S(STR_PAGE_DLG, S_ID(IDS_DLG_VIEW_CAPTURE), "Capturing");
                         bDot = true;
                     }
-                } 
-                else if (_waiting_trig > 0) {
+                } else if (_waiting_trig > 0) {
                     type_str = L_S(STR_PAGE_DLG, S_ID(IDS_DLG_WAITING_TRIG), "Waiting Trig"); 
                     bDot = true;
-                } 
-                else {
+                } else {
                     type_str = L_S(STR_PAGE_DLG, S_ID(IDS_DLG_TRIG_D), "Trig'd");
                 }
 
@@ -559,8 +543,8 @@ void Viewport::paintProgress(QPainter &p, QColor fore, QColor back)
 
     if (!_transfer_started) {
         const int width = _view.get_view_width();
-        const QPoint cenLeftPos = QPoint(width / 2 - 0.05 * width, height() / 2);
-        const QPoint cenRightPos = QPoint(width / 2 + 0.05 * width, height() / 2);
+        const QPoint cenLeftPos = QPoint(width / 2.0 - 0.05 * width, height() / 2);
+        const QPoint cenRightPos = QPoint(width / 2.0 + 0.05 * width, height() / 2);
         const int trigger_radius = min(0.02 * width, 0.02 * height());
 
         QColor foreBack = fore;
@@ -592,8 +576,7 @@ void Viewport::paintProgress(QPainter &p, QColor fore, QColor back)
                            Qt::AlignCenter | Qt::AlignVCenter,
                            L_S(STR_PAGE_DLG, S_ID(IDS_DLG_TRIGGERED), "Triggered! ") + QString::number(captured_progress) 
                            + L_S(STR_PAGE_DLG, S_ID(IDS_DLG_CAPTURED), "% Captured"));
-            }
-            else {
+            } else {
                 p.drawText(status_rect,
                            Qt::AlignCenter | Qt::AlignVCenter,
                            L_S(STR_PAGE_DLG, S_ID(IDS_DLG_WAITING_FOR_TRIGGER), "Waiting for Trigger! ") + QString::number(captured_progress) 
@@ -603,8 +586,7 @@ void Viewport::paintProgress(QPainter &p, QColor fore, QColor back)
             prgRate(captured_progress);
         }
 
-    }
-    else {         
+    } else {         
         p.setPen(View::Green);
         QFont font=p.font();
         font.setPointSize(50);
@@ -640,8 +622,7 @@ void Viewport::mousePressEvent(QMouseEvent *event)
     {
         if (_view.session().get_device()->get_work_mode() == LOGIC) {
             _action_type = LOGIC_ZOOM;
-        }
-        else if (_view.session().get_device()->get_work_mode() == DSO) {
+        } else if (_view.session().get_device()->get_work_mode() == DSO) {
             if (_hover_hit) {
                 const int64_t index = _view.pixel2index(event->pos().x());
                 auto &cursor_list = _view.get_cursorList();
@@ -688,8 +669,7 @@ void Viewport::mousePressEvent(QMouseEvent *event)
                 const int64_t cursorX = _view.index2pixel((*i)->index());
                 if ((*i)->grabbed()) {
                     _view.get_ruler()->rel_grabbed_cursor();
-                }
-                else if (qAbs(cursorX - event->pos().x()) <= HitCursorMargin) {
+                } else if (qAbs(cursorX - event->pos().x()) <= HitCursorMargin) {
                     _view.get_ruler()->set_grabbed_cursor(*i);
                     _action_type = CURS_MOVE;
                     break;
@@ -713,8 +693,7 @@ void Viewport::mousePressEvent(QMouseEvent *event)
                     if (xcursor_list.empty())
                         _view.show_xcursors(false);
                     break;
-                }
-                else if ((*i)->get_map_rect(xrect).contains(_view.hover_point())) {
+                } else if ((*i)->get_map_rect(xrect).contains(_view.hover_point())) {
                     auto &sigs = _view.session().get_signals();
                     auto s = sigs.begin();
                     bool sig_looped = ((*i)->channel() == NULL);
@@ -779,8 +758,7 @@ void Viewport::mouseMoveEvent(QMouseEvent *event)
                     _mouse_down_offset + (_mouse_down_point - event->pos()).x());
             }
             _drag_strength = (_mouse_down_point - event->pos()).x();
-        }
-        else if (_type == FFT_VIEW) {
+        } else if (_type == FFT_VIEW) {
             for(auto t: _view.session().get_spectrum_traces()) {
                 if(t->enabled()) {
                     double delta = (_mouse_point - event->pos()).x();
@@ -856,8 +834,7 @@ void Viewport::mouseMoveEvent(QMouseEvent *event)
                                 if ((*i)->grabbed() == XCursor::XCur_Y) {
                                     double rate = (_view.hover_point().x() - xrect.left()) * 1.0 / xrect.width();                                    
                                     (*i)->set_value((*i)->grabbed(), min(rate, 1.0));
-                                }
-                                else {
+                                } else {
                                     int msy = _view.hover_point().y();
                                     int body_y = _view.get_body_height();
                                     if (msy > body_y)
@@ -924,8 +901,7 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event)
                     quickScroll = false; 
                     if (isMaxWindow && mvk > 0.4f){
                         quickScroll = true;
-                    }
-                    else if (!isMaxWindow && mvk > 0.25f){
+                    } else if (!isMaxWindow && mvk > 0.25f){
                         quickScroll = true;
                     }
                 }
@@ -982,8 +958,7 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event)
                         }
                     }
                 }
-            }
-            else if (_view.session().get_device()->get_work_mode() == DSO) {
+            } else if (_view.session().get_device()->get_work_mode() == DSO) {
                 // priority 0
                 if (_action_type == NO_ACTION && _hover_hit) {
                     _action_type = DSO_YM;
@@ -994,8 +969,7 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event)
                     _dso_ym_start = event->pos().y();
                 }
             }
-        }
-        else if (_action_type == DSO_YM) {
+        } else if (_action_type == DSO_YM) {
             if (event->button() == Qt::LeftButton) {
                 _dso_ym_end = event->pos().y();
                 _action_type = NO_ACTION;
@@ -1003,8 +977,7 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event)
                 _action_type = NO_ACTION;
                 _dso_ym_valid = false;
             }
-        }
-        else if (_action_type == DSO_TRIG_MOVE) {
+        } else if (_action_type == DSO_TRIG_MOVE) {
             if (_dso_trig_moved && event->button() == Qt::LeftButton) {
                 _drag_sig = NULL;
                 _action_type = NO_ACTION;
@@ -1017,14 +990,12 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event)
                      t->select(false);
                 }                   
             }
-        } 
-        else if (_action_type == DSO_XM_STEP0) {
+        } else if (_action_type == DSO_XM_STEP0) {
             if (event->button() == Qt::LeftButton) {
                 _action_type = DSO_XM_STEP1;
                 _dso_xm_valid = true;
             }
-        }
-        else if (_action_type == DSO_XM_STEP1) {
+        } else if (_action_type == DSO_XM_STEP1) {
             if (event->button() == Qt::LeftButton) {
                 _dso_xm_index[1] = _view.pixel2index(event->pos().x());
                 const uint64_t max_index = max(_dso_xm_index[0], _dso_xm_index[1]);
@@ -1032,13 +1003,11 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event)
                 _dso_xm_index[1] = max_index;
 
                 _action_type = DSO_XM_STEP2;
-            }
-            else if (event->button() == Qt::RightButton) {
+            } else if (event->button() == Qt::RightButton) {
                 clear_dso_xm();
                 measure_updated();
             }
-        }
-        else if (_action_type == DSO_XM_STEP2) {
+        } else if (_action_type == DSO_XM_STEP2) {
             if (event->button() == Qt::LeftButton) {
                 _dso_xm_index[2] = _view.pixel2index(event->pos().x());
                 uint64_t max_index = max(_dso_xm_index[1], _dso_xm_index[2]);
@@ -1050,13 +1019,11 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event)
                 _dso_xm_index[1] = max_index;
 
                 _action_type = NO_ACTION;
-            }
-            else if (event->button() == Qt::RightButton) {
+            } else if (event->button() == Qt::RightButton) {
                 clear_dso_xm();
                 measure_updated();
             }
-        }
-        else if (_action_type == CURS_MOVE) {
+        } else if (_action_type == CURS_MOVE) {
             if (_curs_moved && event->button() == Qt::LeftButton) {
                 _action_type = NO_ACTION;
                 _view.get_ruler()->rel_grabbed_cursor();
@@ -1075,44 +1042,37 @@ void Viewport::mouseReleaseEvent(QMouseEvent *event)
 
                 _xcurs_moved = false;
             }
-        }
-        else if (_action_type == LOGIC_EDGE) {
+        } else if (_action_type == LOGIC_EDGE) {
             _action_type = NO_ACTION;
             _edge_rising = 0;
             _edge_falling = 0;
-        }
-        else if (_action_type == LOGIC_JUMP) {
+        } else if (_action_type == LOGIC_JUMP) {
             _action_type = NO_ACTION;
             _edge_rising = 0;
             _edge_falling = 0;
             _edge_hit = false;
-        }
-        else if (_action_type == LOGIC_MOVE) {
+        } else if (_action_type == LOGIC_MOVE) {
             if (_mouse_down_point == event->pos()) {
                 _drag_strength = 0;
                 _drag_timer.stop();
                 _action_type = NO_ACTION;
-            }
-            else {
+            } else {
                 const double strength = _drag_strength*DragTimerInterval*1.0/_elapsed_time.elapsed();
                 if (_elapsed_time.elapsed() < 200 &&
                     abs(_drag_strength) < MinorDragOffsetUp &&
                     abs(strength) > MinorDragRateUp) {
                     _drag_timer.start(DragTimerInterval);
-                }
-                else if (_elapsed_time.elapsed() < 200 &&
+                } else if (_elapsed_time.elapsed() < 200 &&
                            abs(strength) > DragTimerInterval) {
                     _drag_strength = strength * 5;
                     _drag_timer.start(DragTimerInterval);
-                }
-                else {
+                } else {
                     _drag_strength = 0;
                     _drag_timer.stop();
                     _action_type = NO_ACTION;
                 }
             }
-        }
-        else if (_action_type == LOGIC_ZOOM) {
+        } else if (_action_type == LOGIC_ZOOM) {
             if (event->pos().x() != _mouse_down_point.x()) {
                 int64_t newOffset = _view.offset() + (min(event->pos().x(), _mouse_down_point.x()));
                 const double newScale = max(min(_view.scale() * abs(event->pos().x() - _mouse_down_point.x()) / _view.get_view_width(),
@@ -1143,8 +1103,7 @@ void Viewport::mouseDoubleClickEvent(QMouseEvent *event)
                 _view.set_preScale_preOffset();
             else
                 _view.set_scale_offset(_view.get_maxscale(), _view.get_min_offset());
-        }
-        else if (event->button() == Qt::LeftButton) {
+        } else if (event->button() == Qt::LeftButton) {
             bool logic = false;
             uint64_t index;
             uint64_t index0 = 0, index1 = 0, index2 = 0;
@@ -1169,8 +1128,7 @@ void Viewport::mouseDoubleClickEvent(QMouseEvent *event)
                     index = index0;
                 else
                     index = index1;
-            }
-            else {
+            } else {
                 index = _view.pixel2index(curX);
             }
 
@@ -1180,15 +1138,13 @@ void Viewport::mouseDoubleClickEvent(QMouseEvent *event)
         }
 
         update();
-    }
-    else if (_view.session().get_device()->get_work_mode() == DSO
+    } else if (_view.session().get_device()->get_work_mode() == DSO
              && _view.session().is_init_status() == false
              && event->button() == Qt::LeftButton) {
         if (_dso_xm_valid) {
             clear_dso_xm();
             measure_updated();
-        }
-        else if (_action_type == NO_ACTION) {
+        } else if (_action_type == NO_ACTION) {
             for(auto s : _view.session().get_signals()) {
                 if (s->get_view_rect().contains(event->pos())) {
                     _dso_xm_index[0] = _view.pixel2index(event->pos().x());
@@ -1218,7 +1174,7 @@ void Viewport::wheelEvent(QWheelEvent *event)
     int delta = 0;
     bool isVertical = true;
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     x = (int)event->position().x(); 
     int anglex = event->angleDelta().x();
     int angley = event->angleDelta().y();
@@ -1226,8 +1182,7 @@ void Viewport::wheelEvent(QWheelEvent *event)
     if (anglex == 0 || ABS_VAL(angley) >= ABS_VAL(anglex)){
         delta = angley;
         isVertical = true;
-    }
-    else{
+    } else {
         delta = anglex;
         isVertical = false; //hori direction
     }
@@ -1237,7 +1192,7 @@ void Viewport::wheelEvent(QWheelEvent *event)
     isVertical = event->orientation() == Qt::Vertical;
 #endif
 
-    double zoom_scale = delta / 80;
+    double zoom_scale = delta / 80.0f;
 
     if (ABS_VAL(delta) <= 80){
         zoom_scale = delta > 0 ? 1.5 : -1.5;
@@ -1253,8 +1208,7 @@ void Viewport::wheelEvent(QWheelEvent *event)
                 break;
             }
         }
-    }
-    else if (_type == TIME_VIEW)
+    } else if (_type == TIME_VIEW)
     {
         static bool bLstTime = false;
 
@@ -1270,8 +1224,7 @@ void Viewport::wheelEvent(QWheelEvent *event)
                 {  
                     last_time = QDateTime::currentMSecsSinceEpoch();
                     bLstTime = true;
-                }
-                else{
+                } else {
                     int64_t cur_time = QDateTime::currentMSecsSinceEpoch();
                     if (cur_time - last_time > 50){
                         double scale = delta > 1.5 ? 1 : (delta < -1.5 ? -1 : 0);
@@ -1279,17 +1232,13 @@ void Viewport::wheelEvent(QWheelEvent *event)
                         last_time = QDateTime::currentMSecsSinceEpoch();
                     }                   
                 } 
-            }
-            else
-            {
+            } else {
                 _view.zoom(-zoom_scale, x);
             }
 #else
             _view.zoom(zoom_scale, x);
 #endif
-        }
-        else
-        {   
+        } else {   
             bLstTime = false;
             (void)bLstTime;
 
@@ -1375,8 +1324,7 @@ void Viewport::set_receive_len(quint64 length)
         start_trigger_timer(333);
         _tigger_wait_times = 0;
         _is_checked_trig = false;
-    }
-    else {
+    } else {
         stop_trigger_timer();
 
         if (_sample_received + length > _view.session().cur_samplelimits())
@@ -1407,13 +1355,10 @@ void Viewport::set_receive_len(quint64 length)
                 if (_view.session().have_new_realtime_refresh(true) == false){
                     return;
                 }
-            }
-            else{
+            } else {
                 return;
             }
-        }
-        else if (_view.session().is_realtime_refresh())
-        {
+        } else if (_view.session().is_realtime_refresh()) {
             if (_view.session().have_new_realtime_refresh(true) == false){
                 return;
             }
@@ -1504,19 +1449,16 @@ void Viewport::measure()
                         _edge_hit = false;
                     }
                 }
-            } 
-            else if (s->signal_type() == SR_CHANNEL_DSO) {
+            } else if (s->signal_type() == SR_CHANNEL_DSO) {
                  view::DsoSignal *dsoSig = ( view::DsoSignal*)s;
                 if (s->enabled()) {
                     if (_measure_en && dsoSig->measure(_view.hover_point())) {
                         _measure_type = DSO_VALUE;
-                    }
-                    else {
+                    } else {
                         _measure_type = NO_MEASURE;
                     }
                 }
-            }
-            else if (s->signal_type() == SR_CHANNEL_ANALOG) {
+            } else if (s->signal_type() == SR_CHANNEL_ANALOG) {
                 view::AnalogSignal *analogSig = (view::AnalogSignal*)s;
                 if (s->enabled()) {
                     if (_measure_en && analogSig->measure(_view.hover_point())) {
@@ -1535,8 +1477,7 @@ void Viewport::measure()
                 _measure_type = NO_MEASURE;
             }
         }
-    }
-    else if (_type == FFT_VIEW) {
+    } else if (_type == FFT_VIEW) {
         for(auto t : _view.session().get_spectrum_traces()) {
             if(t->enabled()) {
                 t->measure(_mouse_point);
@@ -1622,8 +1563,7 @@ void Viewport::paintMeasure(QPainter &p, QColor fore, QColor back)
                     p.drawLine(hpoint.x(), dsoSig->get_view_rect().top(),
                                hpoint.x(), dsoSig->get_view_rect().bottom());
                 }
-            } 
-            else if (s->signal_type() == SR_CHANNEL_ANALOG) {
+            } else if (s->signal_type() == SR_CHANNEL_ANALOG) {
                 uint64_t index;
                 double value;
                 QPointF hpoint;
@@ -1915,8 +1855,7 @@ void Viewport::on_trigger_timer()
                 _view.get_viewstatus()->set_trig_time(_view.session().get_trig_time());
                 _view.get_viewstatus()->update();
             }
-        }
-        else{
+        } else {
             _is_checked_trig = true;
         }
     }
@@ -1938,14 +1877,12 @@ void Viewport::on_drag_timer()
         _drag_strength /= DragDamping;
         if (_drag_strength != 0)
             _drag_timer.start(DragTimerInterval);
-    }
-    else if (offset == _view.get_max_offset() ||
+    } else if (offset == _view.get_max_offset() ||
              offset == _view.get_min_offset()) {
         _drag_strength = 0;
         _drag_timer.stop();
         _action_type = NO_ACTION;
-    }
-    else if (_action_type == NO_ACTION){
+    } else if (_action_type == NO_ACTION){
         _drag_strength = 0;
         _drag_timer.stop();
     }

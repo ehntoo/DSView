@@ -191,8 +191,7 @@ void SearchComboBox::AddDataItem(QString id, QString name, void *data_handle)
                 if (o->_control->isHidden()){
                     o->_control->show();
                 }
-         }
-         else if (o->_control->isHidden() == false){
+         } else if (o->_control->isHidden() == false){
              o->_control->hide();
          }
      }

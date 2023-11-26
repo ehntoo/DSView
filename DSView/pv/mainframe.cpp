@@ -168,8 +168,7 @@ void MainFrame::closeEvent(QCloseEvent *event)
 
     if (_mainWindow->able_to_close()){
           event->accept();
-    }
-    else{
+    } else {
           event->ignore();
     }  
 }
@@ -378,15 +377,13 @@ bool MainFrame::eventFilter(QObject *object, QEvent *event)
             } 
             return true;
         }
-    }
-     else if (type == QEvent::MouseButtonPress) {
+    } else if (type == QEvent::MouseButtonPress) {
         if (mouse_event->button() == Qt::LeftButton) 
         if (_hit_border != None)
             _bDraging = true;
         _timer.start(50);
         _dragStartGeometry = geometry();
-    } 
-    else if (type == QEvent::MouseButtonRelease) {
+    } else if (type == QEvent::MouseButtonRelease) {
         if (mouse_event->button() == Qt::LeftButton) {         
             _bDraging = false;
             _timer.stop();
@@ -460,16 +457,12 @@ void MainFrame::readSettings()
       if (app.frameOptions.isMax)
       {
           showMaximized(); // show max by system api
-      }
-      else if (bReset)
-      { 
+      } else if (bReset) { 
           resize(screen_width / 2, screen_height / 1.5);
           const int origX = std::max(0, (screen_width - width()) / 2);
           const int origY = std::max(0, (screen_height - height()) / 2);
           move(origX, origY);
-      }
-      else
-      {
+      } else {
           resize(right - left, bottom - top);
           move(left, top);
       }

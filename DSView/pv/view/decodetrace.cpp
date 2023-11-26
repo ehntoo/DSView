@@ -296,8 +296,7 @@ void DecodeTrace::paint_mid(QPainter &p, int left, int right, QColor fore, QColo
                                         0, min_annWidth, fore, back, last_x);
                                 }
                             }
-                        }
-                        else {
+                        } else {
                             draw_nodetail(p, annotation_height, left, right, y, 0, fore, back);
                         }
 
@@ -370,8 +369,7 @@ void DecodeTrace::draw_annotation(const pv::data::decode::Annotation &a,
 	if (a.start_sample() == a.end_sample()){
 		draw_instant(a, p, fill, outline, text_color, h,
             start, y, min_annWidth);
-    }
-    else {
+    } else {
 		draw_range(a, p, fill, outline, text_color, h,
             start, end, y, fore, back);
     
@@ -582,8 +580,7 @@ int DecodeTrace::rows_size()
                     (*i).second)
                     size++;
             }
-        } 
-        else {
+        } else {
             size++;
         }
     }

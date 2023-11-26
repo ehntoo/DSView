@@ -77,8 +77,7 @@ bool LogicSignal::commit_trig()
     if (_trig == NONTRIG) {
         ds_trigger_probe_set(_index_list.front(), 'X', 'X');
         return false;
-    } 
-    else {
+    } else {
         ds_trigger_set_en(true);
         if (_trig == POSTRIG)
             ds_trigger_probe_set(_index_list.front(), 'R', 'X');
@@ -170,8 +169,7 @@ void LogicSignal::paint_mid_align(QPainter &p, int left, int right, QColor fore,
         }
         x = (*i).first;
         wave_lines.push_back(QLine(preX, preY, x, preY));
-    }
-    else {
+    } else {
         std::vector<std::pair<bool, bool>>::const_iterator i = _cur_pulses.begin();
         while (i != _cur_pulses.end() - 1) {
             if ((*i).first) {
@@ -304,8 +302,7 @@ bool LogicSignal::measure(const QPointF &p, uint64_t &index0, uint64_t &index1, 
         bool sample = _data->get_sample(index, get_index());
         if (index == 0){
             index0 = index;
-        }
-        else {
+        } else {
             index--;
             if (_data->get_pre_edge(index, sample, 1, get_index()))
                 index0 = index;
@@ -317,8 +314,7 @@ bool LogicSignal::measure(const QPointF &p, uint64_t &index0, uint64_t &index1, 
         index++;
         if (_data->get_nxt_edge(index, sample, end, 1, get_index())){
             index1 = index;
-        }
-        else {
+        } else {
             if (index0 == 0)
                 return false;
             index1 = end + 1;

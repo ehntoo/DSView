@@ -136,8 +136,7 @@ int main(int argc, char *argv[])
 	if (argcFinal - optind > 1) {
 		printf("Only one file can be openened.\n");
 		return 1;
-    } 
-	else if (argcFinal - optind == 1){
+    } else if (argcFinal - optind == 1){
         open_file = argvFinal[argcFinal - 1];		
 	}
 

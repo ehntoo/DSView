@@ -276,9 +276,7 @@ static int receive_data(int fd, int revents, const struct sr_dev_inst *sdi)
                 send_error_packet(sdi, vdev, &packet);
                 return FALSE;
             }
-        }
-        else if (vdev->version > 1)
-        {
+        } else if (vdev->version > 1) {
             channel = vdev->cur_channel;
             pl = sdi->channels;
 
@@ -337,9 +335,7 @@ static int receive_data(int fd, int revents, const struct sr_dev_inst *sdi)
                 dso.mq = SR_MQ_VOLTAGE;
                 dso.unit = SR_UNIT_VOLT;
                 dso.mqflags = SR_MQFLAG_AC;
-            }
-            else if (sdi->mode == ANALOG)
-            {
+            } else if (sdi->mode == ANALOG) {
                 packet.type = SR_DF_ANALOG;
                 packet.payload = &analog;
                 analog.probes = sdi->channels;
@@ -349,9 +345,7 @@ static int receive_data(int fd, int revents, const struct sr_dev_inst *sdi)
                 analog.unit = SR_UNIT_VOLT;
                 analog.mqflags = SR_MQFLAG_AC;
                 analog.data = vdev->buf;
-            }
-            else if (sdi->mode == LOGIC)
-            {   
+            } else if (sdi->mode == LOGIC) {   
                 // Only supports version 1 file.
                 if (vdev->version > 1){
                     assert(0);
@@ -373,9 +367,7 @@ static int receive_data(int fd, int revents, const struct sr_dev_inst *sdi)
             }
 
             ds_data_forward(sdi, &packet);
-        }
-        else
-        {
+        } else {
             /* done with this capture file */
             unzCloseCurrentFile(vdev->archive);
             vdev->capfile = 0;
@@ -383,9 +375,7 @@ static int receive_data(int fd, int revents, const struct sr_dev_inst *sdi)
             if (vdev->version == 1)
             {
                 vdev->cur_channel++;
-            }
-            else if (vdev->version > 1)
-            {
+            } else if (vdev->version > 1) {
                 vdev->cur_block++;
                 // if read to the last block, move to next channel
                 if (vdev->cur_block == vdev->num_blocks)
@@ -509,8 +499,7 @@ static int receive_data_logic_dso_v2(int fd, int revents, const struct sr_dev_in
                 if (unzLocateFile(vdev->archive, file_name, 0) == UNZ_OK){
                     pack_buffer->channel_dir_map[ch_index] = channel_dex - 1;
                     break;
-                }
-                else if (channel_dex > file_max_channel_count){
+                } else if (channel_dex > file_max_channel_count){
                     break;
                 }                    
             }
@@ -538,8 +527,7 @@ static int receive_data_logic_dso_v2(int fd, int revents, const struct sr_dev_in
                 if (sdi->mode == LOGIC){
                     snprintf(file_name, sizeof(file_name)-1, "L-%d/%d", 
                         pack_buffer->channel_dir_map[ch_index], vdev->cur_block);
-                }
-                else if (sdi->mode == DSO){
+                } else if (sdi->mode == DSO){
                     snprintf(file_name, sizeof(file_name)-1, "O-%d/0", 
                         pack_buffer->channel_dir_map[ch_index]);
                 }
@@ -581,9 +569,7 @@ static int receive_data_logic_dso_v2(int fd, int revents, const struct sr_dev_in
 
                         pack_buffer->block_buf_len = pack_buffer->block_data_len;
                     }
-                }
-                else
-                {
+                } else {
                     if (pack_buffer->block_data_len != fileInfo.uncompressed_size){
                         sr_err("The block size is not coincident:%s", file_name);
                         send_error_packet(sdi, vdev, &packet);
@@ -638,8 +624,7 @@ static int receive_data_logic_dso_v2(int fd, int revents, const struct sr_dev_in
                 sr_err("The block data is not align with 8 byte.");
                 break;
             }  
-        }
-        else{
+        } else {
             ptrWrite = (uint8_t*)pack_buffer->post_buf + pack_buffer->post_write_len;
 
             while (pack_buffer->post_write_len < pack_buffer->post_buf_len
@@ -672,8 +657,7 @@ static int receive_data_logic_dso_v2(int fd, int revents, const struct sr_dev_in
             logic.order = 0;
             logic.length = pack_buffer->post_write_len;
             logic.data = pack_buffer->post_buf;
-        }
-        else{
+        } else {
             packet.type = SR_DF_DSO;
             packet.payload = &dso;            
             dso.probes = sdi->channels;
@@ -795,8 +779,7 @@ static void free_temp_buffer(struct session_vdev *vdev)
             if (pack_buf->block_bufs[i] != NULL){
                 free(pack_buf->block_bufs[i]);
                 pack_buf->block_bufs[i] = NULL;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -1131,9 +1114,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
                     sr_err("%s: vdev->logic_buf malloc failed", __func__);
                 }
             }
-        }
-        else
-        {
+        } else {
             vdev->logic_buf = NULL;
         }
         break;
@@ -1337,7 +1318,7 @@ static int config_list(int key, GVariant **data,
     return SR_OK;
 }
 
-static int dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, gboolean prg)
+static int dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, bool prg)
 {
     (void)prg;
 
@@ -1348,9 +1329,7 @@ static int dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *statu
         vdev = sdi->priv;
         *status = vdev->mstatus;
         return SR_OK;
-    }
-    else
-    {
+    } else {
         return SR_ERR;
     }
 }
@@ -1414,9 +1393,7 @@ static int dev_acquisition_start(struct sr_dev_inst *sdi, void *cb_data)
         }
         vdev->capfile = 1;
         vdev->cur_channel = vdev->num_probes - 1;
-    }
-    else
-    {
+    } else {
         if (sdi->mode == LOGIC)
             vdev->cur_channel = 0;
         else
@@ -1450,8 +1427,7 @@ static int dev_acquisition_start(struct sr_dev_inst *sdi, void *cb_data)
     if ((sdi->mode == LOGIC && vdev->version > 1) 
             || (sdi->mode == DSO && vdev->version > 2)){
         sr_session_source_add(-1, 0, 0, receive_data_logic_dso_v2, sdi);
-    }
-    else{
+    } else {
         sr_session_source_add(-1, 0, 0, receive_data, sdi);
     }    
 
@@ -1578,9 +1554,9 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
     unz_file_info64 fileInfo;
 
     struct sr_channel *probe;
-    int devcnt, i, j;
+    // int devcnt, i, j;
     uint16_t probenum;
-    uint64_t tmp_u64, total_probes, enabled_probes;
+    uint64_t tmp_u64, total_probes;//, enabled_probes;
     uint16_t p;
     int64_t tmp_64;
     char **sections, **keys, *metafile, *val;
@@ -1651,15 +1627,15 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
         return SR_ERR;
     }
 
-    devcnt = 0;
+    // devcnt = 0;
     sections = g_key_file_get_groups(kf, NULL);
 
-    for (i = 0; sections[i]; i++)
+    for (size_t i = 0; sections[i]; i++)
     {
         if (!strcmp(sections[i], "version"))
         {
             keys = g_key_file_get_keys(kf, sections[i], NULL, NULL);
-            for (j = 0; keys[j]; j++)
+            for (size_t j = 0; keys[j]; j++)
             {
                 val = g_key_file_get_string(kf, sections[i], keys[j], NULL);
                 if (!strcmp(keys[j], "version"))
@@ -1673,90 +1649,65 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
         if (!strncmp(sections[i], "header", 6))
         {
             /* device section */
-            enabled_probes = total_probes = 0;
+            // enabled_probes = total_probes = 0;
+            total_probes = 0;
             keys = g_key_file_get_keys(kf, sections[i], NULL, NULL);
 
-            for (j = 0; keys[j]; j++)
+            for (size_t j = 0; keys[j]; j++)
             {
                 val = g_key_file_get_string(kf, sections[i], keys[j], NULL);
 
                 if (!strcmp(keys[j], "device mode"))
                 {
                     mode = strtoull(val, NULL, 10);
-                }
-                else if (!strcmp(keys[j], "capturefile"))
-                {
+                } else if (!strcmp(keys[j], "capturefile")) {
                     sdi->driver->config_set(SR_CONF_FILE_VERSION,
                                             g_variant_new_int16(version), sdi, NULL, NULL);
-                }
-                else if (!strcmp(keys[j], "samplerate"))
-                {
+                } else if (!strcmp(keys[j], "samplerate")) {
                     sr_parse_sizestring(val, &tmp_u64);
                     sdi->driver->config_set(SR_CONF_SAMPLERATE,
                                             g_variant_new_uint64(tmp_u64), sdi, NULL, NULL);
-                }
-                else if (!strcmp(keys[j], "total samples"))
-                {
+                } else if (!strcmp(keys[j], "total samples")) {
                     tmp_u64 = strtoull(val, NULL, 10);
                     sdi->driver->config_set(SR_CONF_LIMIT_SAMPLES,
                                             g_variant_new_uint64(tmp_u64), sdi, NULL, NULL);
-                }
-                else if (!strcmp(keys[j], "hDiv"))
-                {
+                } else if (!strcmp(keys[j], "hDiv")) {
                     tmp_u64 = strtoull(val, NULL, 10);
                     sdi->driver->config_set(SR_CONF_TIMEBASE,
                                             g_variant_new_uint64(tmp_u64), sdi, NULL, NULL);
-                }
-                else if (!strcmp(keys[j], "hDiv min"))
-                {
+                } else if (!strcmp(keys[j], "hDiv min")) {
                     tmp_u64 = strtoull(val, NULL, 10);
                     sdi->driver->config_set(SR_CONF_MIN_TIMEBASE,
                                             g_variant_new_uint64(tmp_u64), sdi, NULL, NULL);
-                }
-                else if (!strcmp(keys[j], "hDiv max"))
-                {
+                } else if (!strcmp(keys[j], "hDiv max")) {
                     tmp_u64 = strtoull(val, NULL, 10);
                     sdi->driver->config_set(SR_CONF_MAX_TIMEBASE,
                                             g_variant_new_uint64(tmp_u64), sdi, NULL, NULL);
-                }
-                else if (!strcmp(keys[j], "bits"))
-                {
+                } else if (!strcmp(keys[j], "bits")) {
                     tmp_u64 = strtoull(val, NULL, 10);
                     sdi->driver->config_set(SR_CONF_UNIT_BITS,
                                             g_variant_new_byte(tmp_u64), sdi, NULL, NULL);
-                }
-                else if (!strcmp(keys[j], "ref min"))
-                {
+                } else if (!strcmp(keys[j], "ref min")) {
                     tmp_u64 = strtoull(val, NULL, 10);
                     sdi->driver->config_set(SR_CONF_REF_MIN,
                                             g_variant_new_uint32(tmp_u64), sdi, NULL, NULL);
-                }
-                else if (!strcmp(keys[j], "ref max"))
-                {
+                } else if (!strcmp(keys[j], "ref max")) {
                     tmp_u64 = strtoull(val, NULL, 10);
                     sdi->driver->config_set(SR_CONF_REF_MAX,
                                             g_variant_new_uint32(tmp_u64), sdi, NULL, NULL);
-                }
-                else if (!strcmp(keys[j], "trigger time"))
-                {
+                } else if (!strcmp(keys[j], "trigger time")) {
                     tmp_64 = strtoll(val, NULL, 10);
                     sdi->driver->config_set(SR_CONF_TRIGGER_TIME,
                                             g_variant_new_int64(tmp_64), sdi, NULL, NULL);
-                }
-                else if (!strcmp(keys[j], "trigger pos"))
-                {
+                } else if (!strcmp(keys[j], "trigger pos")) {
                     tmp_u64 = strtoull(val, NULL, 10);
                     sdi->driver->config_set(SR_CONF_TRIGGER_POS,
                                             g_variant_new_uint64(tmp_u64), sdi, NULL, NULL);
-                }
-                else if (!strcmp(keys[j], "total blocks"))
-                {
+                } else if (!strcmp(keys[j], "total blocks")) {
                     tmp_u64 = strtoull(val, NULL, 10);
                     sdi->driver->config_set(SR_CONF_NUM_BLOCKS,
                                             g_variant_new_uint64(tmp_u64), sdi, NULL, NULL);
-                }
-                else if (!strcmp(keys[j], "total probes"))
-                {
+                } else if (!strcmp(keys[j], "total probes")) {
                     total_probes = strtoull(val, NULL, 10);
                     sdi->driver->config_set(SR_CONF_CAPTURE_NUM_PROBES,
                                             g_variant_new_uint64(total_probes), sdi, NULL, NULL);
@@ -1778,19 +1729,15 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                             sdi->channels = g_slist_append(sdi->channels, probe);
                         }
                     }
-                }
-                else if (!strncmp(keys[j], "probe", 5))
-                {
-                    enabled_probes++;
+                } else if (!strncmp(keys[j], "probe", 5)) {
+                    // enabled_probes++;
                     tmp_u64 = strtoul(keys[j] + 5, NULL, 10);
                     /* sr_session_save() */
                     if (version == 1)
                     {
                         sr_dev_probe_name_set(sdi, tmp_u64, val);
                         sr_dev_probe_enable(sdi, tmp_u64, TRUE);
-                    }
-                    else if (version > 1)
-                    {
+                    } else if (version > 1) {
                         channel_type = (mode == DSO) ? SR_CHANNEL_DSO : (mode == ANALOG) ? SR_CHANNEL_ANALOG
                                                                                          : SR_CHANNEL_LOGIC;
                         if (!(probe = sr_channel_new(tmp_u64, channel_type, TRUE, val)))
@@ -1802,14 +1749,10 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
 
                         sdi->channels = g_slist_append(sdi->channels, probe);
                     }
-                }
-                else if (!strncmp(keys[j], "trigger", 7))
-                {
+                } else if (!strncmp(keys[j], "trigger", 7)) {
                     probenum = strtoul(keys[j] + 7, NULL, 10);
                     sr_dev_trigger_set(sdi, probenum, val);
-                }
-                else if (!strncmp(keys[j], "enable", 6))
-                {
+                } else if (!strncmp(keys[j], "enable", 6)) {
                     probenum = strtoul(keys[j] + 6, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                      
@@ -1819,9 +1762,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_PROBE_EN,
                                                 g_variant_new_boolean(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "coupling", 8))
-                {
+                } else if (!strncmp(keys[j], "coupling", 8)) {
                     probenum = strtoul(keys[j] + 8, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1830,9 +1771,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_PROBE_COUPLING,
                                                 g_variant_new_byte(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "vDiv", 4))
-                {
+                } else if (!strncmp(keys[j], "vDiv", 4)) {
                     probenum = strtoul(keys[j] + 4, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1841,9 +1780,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_PROBE_VDIV,
                                                 g_variant_new_uint64(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "vFactor", 7))
-                {
+                } else if (!strncmp(keys[j], "vFactor", 7)) {
                     probenum = strtoul(keys[j] + 7, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1852,9 +1789,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_PROBE_FACTOR,
                                                 g_variant_new_uint64(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "vOffset", 7))
-                {
+                } else if (!strncmp(keys[j], "vOffset", 7)) {
                     probenum = strtoul(keys[j] + 7, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1863,9 +1798,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_PROBE_HW_OFFSET,
                                                 g_variant_new_uint16(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "vTrig", 5))
-                {
+                } else if (!strncmp(keys[j], "vTrig", 5)) {
                     probenum = strtoul(keys[j] + 5, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1874,9 +1807,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_TRIGGER_VALUE,
                                                 g_variant_new_byte(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "period", 6))
-                {
+                } else if (!strncmp(keys[j], "period", 6)) {
                     probenum = strtoul(keys[j] + 6, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1885,9 +1816,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_STATUS_PERIOD,
                                                 g_variant_new_uint32(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "pcnt", 4))
-                {
+                } else if (!strncmp(keys[j], "pcnt", 4)) {
                     probenum = strtoul(keys[j] + 4, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1896,9 +1825,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_STATUS_PCNT,
                                                 g_variant_new_uint32(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "max", 3))
-                {
+                } else if (!strncmp(keys[j], "max", 3)) {
                     probenum = strtoul(keys[j] + 3, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1907,9 +1834,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_STATUS_MAX,
                                                 g_variant_new_byte(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "min", 3))
-                {
+                } else if (!strncmp(keys[j], "min", 3)) {
                     probenum = strtoul(keys[j] + 3, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1918,9 +1843,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_STATUS_MIN,
                                                 g_variant_new_byte(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "plen", 4))
-                {
+                } else if (!strncmp(keys[j], "plen", 4)) {
                     probenum = strtoul(keys[j] + 4, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1929,9 +1852,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_STATUS_PLEN,
                                                 g_variant_new_uint32(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "llen", 4))
-                {
+                } else if (!strncmp(keys[j], "llen", 4)) {
                     probenum = strtoul(keys[j] + 4, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1940,9 +1861,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_STATUS_LLEN,
                                                 g_variant_new_uint32(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "level", 5))
-                {
+                } else if (!strncmp(keys[j], "level", 5)) {
                     probenum = strtoul(keys[j] + 5, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1951,9 +1870,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_STATUS_LEVEL,
                                                 g_variant_new_boolean(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "plevel", 6))
-                {
+                } else if (!strncmp(keys[j], "plevel", 6)) {
                     probenum = strtoul(keys[j] + 6, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1962,9 +1879,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_STATUS_PLEVEL,
                                                 g_variant_new_boolean(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "low", 3))
-                {
+                } else if (!strncmp(keys[j], "low", 3)) {
                     probenum = strtoul(keys[j] + 3, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1973,9 +1888,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_STATUS_LOW,
                                                 g_variant_new_byte(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "high", 4))
-                {
+                } else if (!strncmp(keys[j], "high", 4)) {
                     probenum = strtoul(keys[j] + 4, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1984,9 +1897,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_STATUS_HIGH,
                                                 g_variant_new_byte(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "rlen", 4))
-                {
+                } else if (!strncmp(keys[j], "rlen", 4)) {
                     probenum = strtoul(keys[j] + 4, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -1995,9 +1906,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_STATUS_RLEN,
                                                 g_variant_new_uint32(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "flen", 4))
-                {
+                } else if (!strncmp(keys[j], "flen", 4)) {
                     probenum = strtoul(keys[j] + 4, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -2006,9 +1915,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_STATUS_FLEN,
                                                 g_variant_new_uint32(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "rms", 3))
-                {
+                } else if (!strncmp(keys[j], "rms", 3)) {
                     probenum = strtoul(keys[j] + 3, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -2017,9 +1924,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_STATUS_RMS,
                                                 g_variant_new_uint64(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "mean", 4))
-                {
+                } else if (!strncmp(keys[j], "mean", 4)) {
                     probenum = strtoul(keys[j] + 4, NULL, 10);
                     tmp_u64 = strtoull(val, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
@@ -2028,9 +1933,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_STATUS_MEAN,
                                                 g_variant_new_uint32(tmp_u64), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "mapUnit", 7))
-                {
+                } else if (!strncmp(keys[j], "mapUnit", 7)) {
                     probenum = strtoul(keys[j] + 7, NULL, 10);
                     if (probenum < g_slist_length(sdi->channels))
                     {
@@ -2038,9 +1941,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_PROBE_MAP_UNIT,
                                                 g_variant_new_string(val), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "mapMax", 6))
-                {
+                } else if (!strncmp(keys[j], "mapMax", 6)) {
                     probenum = strtoul(keys[j] + 6, NULL, 10);
                     tmp_double = strtod(val, NULL);
                     if (probenum < g_slist_length(sdi->channels))
@@ -2049,9 +1950,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
                         sdi->driver->config_set(SR_CONF_PROBE_MAP_MAX,
                                                 g_variant_new_double(tmp_double), sdi, probe, NULL);
                     }
-                }
-                else if (!strncmp(keys[j], "mapMin", 6))
-                {
+                } else if (!strncmp(keys[j], "mapMin", 6)) {
                     probenum = strtoul(keys[j] + 6, NULL, 10);
                     tmp_double = strtod(val, NULL);
                     if (probenum < g_slist_length(sdi->channels))
@@ -2064,7 +1963,7 @@ static int sr_load_virtual_device_session(struct sr_dev_inst *sdi)
             }
             g_strfreev(keys);
         }
-        devcnt++;
+        // devcnt++;
     }
     g_strfreev(sections);
     g_key_file_free(kf);

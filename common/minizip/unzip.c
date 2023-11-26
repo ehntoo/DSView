@@ -217,9 +217,7 @@ local int unz64local_getByte(const zlib_filefunc64_32_def* pzlib_filefunc_def, v
     {
         *pi = (int)c;
         return UNZ_OK;
-    }
-    else
-    {
+    } else {
         if (ZERROR64(*pzlib_filefunc_def,filestream))
             return UNZ_ERRNO;
         else
@@ -679,9 +677,7 @@ local unzFile unzOpenInternal (const void *path,
             err=UNZ_ERRNO;
 
         us.gi.size_comment = 0;
-    }
-    else
-    {
+    } else {
         central_pos = unz64local_SearchCentralDir(&us.z_filefunc,us.filestream);
         if (central_pos==0)
             err=UNZ_ERRNO;
@@ -1066,9 +1062,7 @@ local int unz64local_GetCurrentFileInfoInternal (unzFile file,
                                                                                 err=UNZ_ERRNO;
                                                                 }
 
-            }
-            else
-            {
+            } else {
                 if (ZSEEK64(s->z_filefunc, s->filestream,dataSize,ZLIB_FILEFUNC_SEEK_CUR)!=0)
                     err=UNZ_ERRNO;
             }
@@ -1572,8 +1566,7 @@ extern int ZEXPORT unzOpenCurrentFile3 (unzFile file, int* method,
 #else
       pfile_in_zip_read_info->raw=1;
 #endif
-    }
-    else if ((s->cur_file_info.compression_method==Z_DEFLATED) && (!raw))
+    } else if ((s->cur_file_info.compression_method==Z_DEFLATED) && (!raw))
     {
       pfile_in_zip_read_info->stream.zalloc = (alloc_func)0;
       pfile_in_zip_read_info->stream.zfree = (free_func)0;
@@ -1791,9 +1784,7 @@ extern int ZEXPORT unzReadCurrentFile  (unzFile file, voidp buf, unsigned len)
             pfile_in_zip_read_info->stream.next_in += uDoCopy;
             pfile_in_zip_read_info->stream.total_out += uDoCopy;
             iRead += uDoCopy;
-        }
-        else if (pfile_in_zip_read_info->compression_method==Z_BZIP2ED)
-        {
+        } else if (pfile_in_zip_read_info->compression_method==Z_BZIP2ED) {
 #ifdef HAVE_BZIP2
             uLong uTotalOutBefore,uTotalOutAfter;
             const Bytef *bufBefore;

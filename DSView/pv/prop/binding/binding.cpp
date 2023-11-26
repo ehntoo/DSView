@@ -60,8 +60,7 @@ void Binding::add_properties_to_form(QFormLayout *layout, bool auto_commit, QFon
             layout->addRow(widget);
             widget->setFont(font);
             _row_num++;
-        }
-        else{
+        } else {
             const QString &lbstr = p->label();
             //remove data format options
             if (lbstr == "Data format"){

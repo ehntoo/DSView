@@ -21,6 +21,7 @@
 #ifndef LIBDSL_HARDWARE_DEMO_H
 #define LIBDSL_HARDWARE_DEMO_H
 
+#include <stdbool.h>
 #include <glib.h>
 #include "../../libsigrok-internal.h"
 #include <minizip/unzip.h>
@@ -213,13 +214,13 @@ struct session_vdev
     gdouble packet_time;
 
     //status
-    gboolean instant;
-    gboolean load_data;
-    gboolean vdiv_change;
-    gboolean offset_change;
-    gboolean timebase_change;
-    gboolean channel_mode_change;
-    gboolean logic_mem_limit;
+    bool instant;
+    bool load_data;
+    bool vdiv_change;
+    bool offset_change;
+    bool timebase_change;
+    bool channel_mode_change;
+    bool logic_mem_limit;
 
     //post
     uint64_t post_data_len;
@@ -399,7 +400,7 @@ static const uint8_t probeCoupling[] = {
     SR_AC_COUPLING,
 };
 
-static const gboolean default_ms_en[] = {
+static const bool default_ms_en[] = {
     FALSE, /* DSO_MS_BEGIN */
     TRUE,  /* DSO_MS_FREQ */
     FALSE, /* DSO_MS_PERD */
@@ -485,7 +486,7 @@ static int hw_dev_acquisition_start(struct sr_dev_inst *sdi,
 
 static int hw_dev_acquisition_stop(const struct sr_dev_inst *sdi, void *cb_data);
 
-static int hw_dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, gboolean prg);
+static int hw_dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, bool prg);
 
 static int load_virtual_device_session(struct sr_dev_inst *sdi);
 

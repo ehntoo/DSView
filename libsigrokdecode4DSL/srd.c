@@ -221,8 +221,7 @@ SRD_API int srd_init(const char *path)
 			Py_Finalize();
 			return ret;
 		}
-	}
-	else{ 
+	} else {
 		/* Locations relative to the XDG system data directories. */
 		sys_datadirs = g_get_system_data_dirs();
 		for (i = g_strv_length((char **)sys_datadirs); i > 0; i--)
@@ -254,8 +253,11 @@ SRD_API int srd_init(const char *path)
 		}
 	}
 
+/* No longer needed after python 3.9 */
+#if PY_VERSION_HEX < 0x03090000
 	/* Initialize the Python GIL (this also happens to acquire it). */
 	PyEval_InitThreads();
+#endif
 
 	/* Release the GIL (ignore return value, we don't need it here). */
 	PyEval_SaveThread();

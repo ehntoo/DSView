@@ -59,7 +59,7 @@ extern SRD_PRIV PyObject *mod_sigrokdecode;
 
 /** @endcond */
 
-static gboolean srd_check_init(void)
+static bool srd_check_init(void)
 {
 	if (max_session_id < 0) {
 		srd_err("Library is not initialized.");

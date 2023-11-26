@@ -35,7 +35,7 @@ struct context {
 	int num_enabled_channels;
 	GArray *channelindices;
 	uint8_t *prevsample;
-	gboolean header_done;
+	bool header_done;
 	int period;
 	int *channel_index;
 	uint64_t samplerate;
@@ -182,7 +182,7 @@ static int receive(const struct sr_output *o, const struct sr_datafeed_packet *p
 	unsigned int i;
 	int p, curbit, prevbit, index;
 	uint8_t *sample;
-	gboolean timestamp_written;
+	bool timestamp_written;
 
 	*out = NULL;
 	if (!o || !o->priv)

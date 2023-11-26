@@ -139,8 +139,7 @@ int DSDialog::exec()
          if (h > 0){
              _titleSpaceLine->setFixedHeight(h);
              _titleSpaceLine->setVisible(true);
-         }
-         else{
+         } else {
              _titleSpaceLine->setVisible(false);
          }        
      }

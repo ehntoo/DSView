@@ -555,9 +555,7 @@ void DecoderStack::decode_data(const uint64_t decode_start, const uint64_t decod
                         (u64_t)end_index, (u64_t)decode_end);
                 }
             }
-        }
-        else if (i >= _snapshot->get_ring_sample_count())
-        {   
+        } else if (i >= _snapshot->get_ring_sample_count()) {   
             // Wait the data is ready.
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
             continue;
@@ -576,8 +574,7 @@ void DecoderStack::decode_data(const uint64_t decode_start, const uint64_t decod
             if (sig_index == -1) {
                 chunk.push_back(NULL);
                 chunk_const.push_back(0);
-            }
-            else {
+            } else {
                 if (_snapshot->has_data(sig_index)) {
                     const uint8_t *data_ptr = _snapshot->get_samples(i, chunk_end, sig_index, &lbp);
                     chunk.push_back(data_ptr);
@@ -591,8 +588,7 @@ void DecoderStack::decode_data(const uint64_t decode_start, const uint64_t decod
                             lbp_array[j] = lbp;
                         }
                     }
-                }
-                else {
+                } else {
                     _error_message = L_S(STR_PAGE_MSG, S_ID(IDS_MSG_DECODERSTACK_DECODE_DATA_ERROR),
                                      "At least one of selected channels are not enabled.");
                     return;
@@ -734,8 +730,7 @@ void DecoderStack::execute_decode_stack()
     if (srd_session_start(session, &error) == SRD_OK){
        //need a lot time
         decode_data(decode_start, decode_end, session);
-    }
-    else if (error != NULL){
+    } else if (error != NULL){
         _error_message = QString::fromLocal8Bit(error);
     }
 

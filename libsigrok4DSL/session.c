@@ -141,7 +141,7 @@ SR_PRIV int sr_session_destroy(void)
  *
  * @return SR_OK upon success, SR_ERR on errors.
  */
-static int sr_session_iteration(gboolean block)
+static int sr_session_iteration(bool block)
 {
 	unsigned int i;
 	int ret;
@@ -493,8 +493,7 @@ static int _sr_session_source_remove(gintptr poll_object)
         g_free(session->sources);
         session->pollfds = NULL;
         session->sources = NULL;
-    } 
-	else {
+    } else {
         if (old != session->num_sources) {
             memmove(&session->pollfds[old], &session->pollfds[old+1],
                 (session->num_sources - old) * sizeof(GPollFD));

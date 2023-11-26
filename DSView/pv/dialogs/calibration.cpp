@@ -242,8 +242,7 @@ void Calibration::set_value(int value)
                 _device_agent->set_config_uint64(SR_CONF_PROBE_VGAIN, value+vgain_default, probe);          
             }
             break;
-        }
-        else if (sc->objectName() == VOFF+probe->index) {
+        } else if (sc->objectName() == VOFF+probe->index) {
            _device_agent->set_config_uint16(SR_CONF_PROBE_PREOFF, value, probe); 
             break;
         } else if (sc->objectName() == VCOMB+probe->index) {

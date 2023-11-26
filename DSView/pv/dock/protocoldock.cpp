@@ -92,9 +92,7 @@ ProtocolDock::ProtocolDock(QWidget *parent, view::View &view, SigSession *sessio
             if (repeatNammes != "")
                 repeatNammes += ",";
             repeatNammes += QString(dec->id);
-        }
-        else
-        {
+        } else {
             pro_key_table[prokey] = 1;
         }
     }
@@ -939,8 +937,7 @@ bool ProtocolDock::protocol_sort_callback(const DecoderInfoItem *o1, const Decod
      { 
          if (*rd == '['){
              start = rd++;
-         }
-         else if (*rd == ']'){
+         } else if (*rd == ']'){
              *rd = 0;
              break;
          }

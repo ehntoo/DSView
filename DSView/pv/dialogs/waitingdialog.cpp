@@ -207,8 +207,7 @@ void WaitingDialog::changeText()
                 _button_box.addButton(QDialogButtonBox::Save);
             }
         }
-    } 
-    else {
+    } else {
         tips->setText(tips->text()+".");
     }
 }

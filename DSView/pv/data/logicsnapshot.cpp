@@ -166,8 +166,7 @@ void LogicSnapshot::first_payload(const sr_datafeed_logic &logic, uint64_t total
                 _ch_index.push_back(probe->index);
             }
         }
-    }
-    else {
+    } else {
         for(auto& iter : _ch_data) {
             for(auto& iter_rn : iter) {
                 iter_rn.tog = 0;
@@ -225,8 +224,7 @@ void LogicSnapshot::append_cross_payload(const sr_datafeed_logic &logic)
 
     if (_sample_count + samples < _total_sample_count){
         _sample_count += samples;
-    }
-    else{
+    } else {
         if (_sample_count == _total_sample_count && !_is_loop)
             return;
         _sample_count = _total_sample_count;
@@ -238,8 +236,7 @@ void LogicSnapshot::append_cross_payload(const sr_datafeed_logic &logic)
             move_first_node_to_last();
             _loop_offset -= LeafBlockSamples * Scale;
             _lst_free_block_index = 0;
-        }
-        else{
+        } else {
             int free_count = _loop_offset / LeafBlockSamples;
             if (free_count > _lst_free_block_index){
                 free_head_blocks(free_count);
@@ -371,8 +368,7 @@ void LogicSnapshot::append_cross_payload(const sr_datafeed_logic &logic)
 
             write_ptr = (uint64_t*)lbp + offset / Scale;
             read_ptr = chans_read_addr[fill_chan];
-        } 
-        else if (read_ptr >= end_read_ptr) 
+        } else if (read_ptr >= end_read_ptr) 
         {  
             calc_mipmap(fill_chan, index0, index1, filled_sample, false);
 
@@ -558,8 +554,7 @@ void LogicSnapshot::calc_mipmap(unsigned int order, uint8_t index0, uint8_t inde
 
     if (*((uint64_t*)level3_ptr) != 0){
         _ch_data[order][index0].tog |= 1ULL << index1;
-    }
-    else if (isEnd){
+    } else if (isEnd){
         uint64_t ref_root = _cur_ref_block_indexs[order].root_index;
         uint64_t ref_lbp  = _cur_ref_block_indexs[order].lbp_index;
 
@@ -651,8 +646,7 @@ bool LogicSnapshot::get_sample_self(uint64_t index, int sig_index)
 
         if ((_ch_data[order][index0].tog & root_pos_mask) == 0) {
             return (_ch_data[order][index0].first & root_pos_mask) != 0;
-        }
-        else {
+        } else {
             uint64_t *lbp = (uint64_t*)_ch_data[order][index0].lbp[index1];
             return *(lbp + ((index & LeafMask) >> ScalePower)) & index_mask;
         }
@@ -788,8 +782,7 @@ bool LogicSnapshot::get_nxt_edge_self(uint64_t &index, bool last_sample, uint64_
                     if (min_level < ScaleLevel) {
                         uint64_t block_end = min(index | LeafMask, end);
                         edge_hit = block_nxt_edge(lbp, index, block_end, last_sample, min_level);
-                    }
-                    else {
+                    } else {
                         edge_hit = true;
                     }
 
@@ -797,12 +790,10 @@ bool LogicSnapshot::get_nxt_edge_self(uint64_t &index, bool last_sample, uint64_
                         break;
                     cur_mask = (~0ULL << (inner_tog_pos + 1));
                 }
-            }
-            else if (lbp_tog != 0) {
+            } else if (lbp_tog != 0) {
                 // lbp tog
                 edge_hit = lbp_nxt_edge(index, i, lbp_tog, lbp_tog_pos, false, Scale - 1, last_sample, sig_index);
-            }
-            else {
+            } else {
                 //index = (index + (1 << (LeafBlockPower + RootScalePower))) &
                 //        (~0ULL << (LeafBlockPower + RootScalePower));
                 index = (((i + 1) << (LeafBlockPower + RootScalePower)) - 1);
@@ -887,14 +878,12 @@ bool LogicSnapshot::get_pre_edge_self(uint64_t &index, bool last_sample,
                         break;
                     cur_mask = (~0ULL >> (RootScale - inner_tog_pos));
                 }
-            }
-            else if (lbp_tog != 0) {
+            } else if (lbp_tog != 0) {
                 // lbp tog
                 edge_hit = lbp_pre_edge(index, i, lbp_tog, lbp_tog_pos, false, 0, last_sample, sig_index);
                 if (lbp_tog_pos == 0)
                     break;
-            }
-            else {
+            } else {
                 break;
             }
         }
@@ -930,9 +919,7 @@ bool LogicSnapshot::lbp_nxt_edge(uint64_t &index, uint64_t root_index, uint64_t 
         {
             edge_hit = false;
             break;
-        }
-        else if (lbp_tog_index > index)
-        {
+        } else if (lbp_tog_index > index) {
             index = lbp_tog_index;
             edge_hit = true;
             break;
@@ -943,9 +930,7 @@ bool LogicSnapshot::lbp_nxt_edge(uint64_t &index, uint64_t root_index, uint64_t 
         if ((lbp_tog_pos < Scale) && (lbp_tog != 0))
         {
             lbp_tog_pos = bsf_folded(lbp_tog);
-        }
-        else
-        {
+        } else {
             break;
         }
     }
@@ -1066,9 +1051,7 @@ bool LogicSnapshot::lbp_pre_edge(uint64_t &index, uint64_t root_index, uint64_t 
         {
             edge_hit = false;
             break;
-        }
-        else if (lbp_tog_index < index)
-        {
+        } else if (lbp_tog_index < index) {
             index = lbp_tog_index + 1;
             edge_hit = true;
             break;
@@ -1079,9 +1062,7 @@ bool LogicSnapshot::lbp_pre_edge(uint64_t &index, uint64_t root_index, uint64_t 
             lbp_tog_pos--;
             lbp_tog &= (~0ULL >> (Scale - lbp_tog_pos - 1));
             lbp_tog_pos = (lbp_tog != 0) ? bsr64(lbp_tog) : 0;
-        }
-        else
-        {
+        } else {
             lbp_tog = 0;
         }
     }
@@ -1288,27 +1269,20 @@ bool LogicSnapshot::pattern_search_self(int64_t start, int64_t end, int64_t &ind
             if (flagList[i] == '0')
             {
                 macthed += !val;
-            }
-            else if (flagList[i] == '1')
-            {
+            } else if (flagList[i] == '1') {
                 macthed += val;
-            } 
-            else if (flagList[i] == 'R')
+            } else if (flagList[i] == 'R')
             {
                 if (isNext)
                     macthed += (lstValues[i] == 0 && val == 1);
                 else
                     macthed += (lstValues[i] == 1 && val == 0);
-            }
-            else if (flagList[i] == 'F')
-            {
+            } else if (flagList[i] == 'F') {
                 if (isNext)
                     macthed += (lstValues[i] == 1 && val == 0);
                 else
                     macthed += (lstValues[i] == 0 && val == 1);
-            }
-            else if (flagList[i] == 'C')
-            {   
+            } else if (flagList[i] == 'C') {   
                 if (isNext)
                     macthed += (lstValues[i] == 0 && val == 1) || (lstValues[i] == 1 && val == 0);
                 else
@@ -1356,23 +1330,19 @@ uint64_t LogicSnapshot::get_block_size(int block_index)
     {
         if (block_index > 0 && block_index < block_num - 1) {
             return LeafBlockSamples / 8;
-        }
-        else if (block_index == 0){
+        } else if (block_index == 0){
             samples = min(_ring_sample_count + (_loop_offset % (uint64_t)LeafBlockSamples),
                         (uint64_t)LeafBlockSamples) - (_loop_offset % (uint64_t)LeafBlockSamples);
             return samples/8;
-        }
-        else{
+        } else {
             samples = (_ring_sample_count + _loop_offset) - (_ring_sample_count + _loop_offset - 1)
                     / LeafBlockSamples * LeafBlockSamples;
             return samples/8;
         }
-    }
-    else{
+    } else {
         if (block_index < block_num - 1) {
             return LeafBlockSamples / 8;
-        }
-        else {
+        } else {
             if (_ring_sample_count % LeafBlockSamples == 0)
                 return LeafBlockSamples / 8;
             else

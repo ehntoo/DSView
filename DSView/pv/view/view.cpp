@@ -274,8 +274,7 @@ bool View::zoom(double steps, int offset)
     if (_device_agent->get_work_mode() != DSO) {
         _scale *= std::pow(3.0/2.0, -steps);
         _scale = max(min(_scale, _maxscale), _minscale);
-    } 
-    else {
+    } else {
         if (_session->is_running_status() && _session->is_instant()){
             return ret;
         }
@@ -393,8 +392,7 @@ bool View::compare_trace_v_offsets(const Trace *a, const Trace *b)
     if (a1->get_type() != b1->get_type()){
         v1 = a1->get_type();
         v2 = b1->get_type();
-    } 
-    else if (a1->get_type() == SR_CHANNEL_DSO || a1->get_type() == SR_CHANNEL_ANALOG){
+    } else if (a1->get_type() == SR_CHANNEL_DSO || a1->get_type() == SR_CHANNEL_ANALOG){
         v1 = a1->get_index();
         v2 = b1->get_index();
     } 
@@ -647,8 +645,7 @@ void View::signals_changed(const Trace* eventTrace)
     for(auto t : traces) {
         if (_trace_view_map[t->get_type()] == TIME_VIEW){
             time_traces.push_back(t);
-        }
-        else if (_trace_view_map[t->get_type()] == FFT_VIEW){
+        } else if (_trace_view_map[t->get_type()] == FFT_VIEW){
             if (t->enabled())
                 fft_traces.push_back(t);
         }
@@ -673,8 +670,7 @@ void View::signals_changed(const Trace* eventTrace)
             t->set_totalHeight(_fft_viewport->height());
             t->set_v_offset(_fft_viewport->geometry().bottom());
         }
-    }
-    else {
+    } else {
         _fft_viewport->setVisible(false);
         _vsplitter->refresh();
 
@@ -721,17 +717,14 @@ void View::signals_changed(const Trace* eventTrace)
                 actualMargin /= 2;
                 _signalHeight = max(1.0, (_time_viewport->height()
                                           - 2 * actualMargin * label_size) * 1.0 / total_rows);
-            }
-            else {
+            } else {
                 _signalHeight = (height >= max_height) ? max_height : height;
             }
-        }
-        else if (_device_agent->get_work_mode() == DSO) {
+        } else if (_device_agent->get_work_mode() == DSO) {
             _signalHeight = (_header->height()
                              - horizontalScrollBar()->height()
                              - 2 * actualMargin * label_size) * 1.0 / total_rows;
-        }
-        else {
+        } else {
             _signalHeight = (int)((height <= 0) ? 1 : height);
         }
 
@@ -779,9 +772,7 @@ void View::signals_changed(const Trace* eventTrace)
             {
                 auto sig = dynamic_cast<view::DsoSignal*>(t);
                 sig->set_scale(sig->get_view_rect().height());              
-            }
-            else if (t->signal_type() == SR_CHANNEL_ANALOG)
-            {
+            } else if (t->signal_type() == SR_CHANNEL_ANALOG) {
                 auto sig = dynamic_cast<view::AnalogSignal*>(t);
                 sig->set_scale(sig->get_totalHeight());
             }
@@ -1095,8 +1086,7 @@ int View::get_view_width()
         for(auto s : _session->get_signals()) {
             view_width = max(view_width, s->get_view_rect().width());
         }
-    }
-    else {
+    } else {
         view_width = _viewcenter->width();
     }
 
@@ -1110,8 +1100,7 @@ int View::get_view_height()
         for(auto s : _session->get_signals()) {
             view_height = max(view_height, s->get_view_rect().height());
         }
-    }
-    else {
+    } else {
         view_height = _viewcenter->height();
     }
 

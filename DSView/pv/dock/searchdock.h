@@ -67,10 +67,10 @@ public:
     SearchDock(QWidget *parent, pv::view::View &view, SigSession *session);
     ~SearchDock();
 
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *) override;
 
 private:
-    void changeEvent(QEvent *event);
+    void changeEvent(QEvent *event) override;
     void retranslateUi();
     void reStyle();
 

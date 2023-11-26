@@ -24,6 +24,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <inttypes.h>
+#include <stdbool.h>
 #include <glib.h>  
 #include <log/xlog.h>
 
@@ -404,9 +405,9 @@ struct sr_datafeed_dso {
     /** Bitmap with extra information about the MQ. */
     uint64_t mqflags;
     /** samplerate different from last packet */
-    gboolean samplerate_tog;
+    bool samplerate_tog;
     /** trig flag */
-    gboolean trig_flag;
+    bool trig_flag;
     /** trig channel */
     uint8_t trig_ch;
     /** The analog value(s). The data is interleaved according to
@@ -653,7 +654,7 @@ struct sr_channel {
     /* The index field will go: use g_slist_length(sdi->channels) instead. */
     uint16_t index;
     int type;
-	gboolean enabled;
+	bool enabled;
 	char *name;
 	char *trigger;
     uint8_t bits;
@@ -679,7 +680,7 @@ struct sr_channel {
     double cali_comb_fgain2;
     double cali_comb_fgain3;
 
-    gboolean map_default;
+    bool map_default;
     const char *map_unit;
     double map_min;
     double map_max;
@@ -716,11 +717,11 @@ struct sr_status {
 
     uint16_t pkt_id;
     uint32_t vlen;
-    gboolean stream_mode;
-    gboolean measure_valid;
+    bool stream_mode;
+    bool measure_valid;
     uint32_t sample_divider;
-    gboolean sample_divider_tog;
-    gboolean trig_flag;
+    bool sample_divider_tog;
+    bool trig_flag;
     uint8_t  trig_ch;
     uint8_t  trig_offset;
 
@@ -730,8 +731,8 @@ struct sr_status {
     uint32_t ch0_cyc_tlen;
     uint32_t ch0_cyc_plen;
     uint32_t ch0_cyc_llen;
-    gboolean ch0_level_valid;
-    gboolean ch0_plevel;
+    bool ch0_level_valid;
+    bool ch0_plevel;
     uint8_t ch0_low_level;
     uint8_t ch0_high_level;
     uint32_t ch0_cyc_rlen;
@@ -748,8 +749,8 @@ struct sr_status {
     uint32_t ch1_cyc_tlen;
     uint32_t ch1_cyc_plen;
     uint32_t ch1_cyc_llen;
-    gboolean ch1_level_valid;
-    gboolean ch1_plevel;
+    bool ch1_level_valid;
+    bool ch1_plevel;
     uint8_t ch1_low_level;
     uint8_t ch1_high_level;
     uint32_t ch1_cyc_rlen;
@@ -1239,7 +1240,7 @@ SR_API char *sr_time_string(uint64_t time);
 SR_API char *sr_voltage_string(uint64_t v_p, uint64_t v_q);
 SR_API int sr_parse_sizestring(const char *sizestring, uint64_t *size);
 SR_API uint64_t sr_parse_timestring(const char *timestring);
-SR_API gboolean sr_parse_boolstring(const char *boolstring);
+SR_API bool sr_parse_boolstring(const char *boolstring);
 SR_API int sr_parse_period(const char *periodstr, uint64_t *p, uint64_t *q);
 SR_API int sr_parse_voltage(const char *voltstr, uint64_t *p, uint64_t *q);
 
@@ -1492,7 +1493,7 @@ SR_API const struct sr_config_info* ds_get_actived_device_config_info(int key);
 
 SR_API const struct sr_config_info* ds_get_actived_device_config_info_by_name(const char *optname);
 
-SR_API int ds_get_actived_device_status(struct sr_status *status, gboolean prg);
+SR_API int ds_get_actived_device_status(struct sr_status *status, bool prg);
 
 SR_API struct sr_config *ds_new_config(int key, GVariant *data);
 
@@ -1506,9 +1507,9 @@ SR_API int ds_get_actived_device_init_status(int *status);
 SR_API int ds_dsl_option_value_to_code(int work_mode, int config_id, const char *value);
 
 /*----------channel----------*/
-SR_API int ds_enable_device_channel(const struct sr_channel *ch, gboolean enable);
+SR_API int ds_enable_device_channel(const struct sr_channel *ch, bool enable);
 
-SR_API int ds_enable_device_channel_index(int ch_index, gboolean enable);
+SR_API int ds_enable_device_channel_index(int ch_index, bool enable);
 
 SR_API int ds_set_device_channel_name(int ch_index, const char *name);
 

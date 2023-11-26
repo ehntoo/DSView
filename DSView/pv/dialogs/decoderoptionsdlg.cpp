@@ -250,8 +250,7 @@ void DecoderOptionsDlg::load_options_view()
         sclw -= 20;
 #endif
         scroll->setFixedSize(sclw, srcHeight - other_height);
-    }
-    else{
+    } else {
         dlg->setFixedSize(w + 20,dlgHeight);
     }
  
@@ -266,11 +265,8 @@ void DecoderOptionsDlg::load_decoder_forms(QWidget *container)
 	using pv::data::decode::Decoder; 
 	assert(container); 
 
-    int dex = 0;
- 
     for(auto dec : _trace->decoder()->stack()) 
     { 
-        ++dex;
         QWidget *panel = new QWidget(container);
         QFormLayout *form = new QFormLayout();
         form->setContentsMargins(0,0,0,0);
@@ -342,8 +338,7 @@ void DecoderOptionsDlg::update_decode_range()
         int cusrsor_index = view->get_cursor_index_by_key(_cursor1);
         if (cusrsor_index != -1){
             decode_start = view->get_cursor_samples(cusrsor_index);
-        }
-        else{
+        } else {
             decode_start = 0;
             _cursor1 = 0;
         }        
@@ -358,8 +353,7 @@ void DecoderOptionsDlg::update_decode_range()
         int cusrsor_index = view->get_cursor_index_by_key(_cursor2);
         if (cusrsor_index != -1){
             decode_end = view->get_cursor_samples(cusrsor_index);
-        }
-        else{
+        } else {
             decode_end = last_samples;
             _cursor2 = 0;
         }       
@@ -421,8 +415,7 @@ void DecoderOptionsDlg::create_decoder_form(
 
         if (lang_str != NULL && bLang){
             desc_str = lang_str;
-        }
-        else{
+        } else {
             desc_str = pdch->desc;
         }
 
@@ -451,8 +444,7 @@ void DecoderOptionsDlg::create_decoder_form(
 
         if (lang_str != NULL && bLang){
             desc_str = lang_str;
-        }
-        else{
+        } else {
             desc_str = pdch->desc;
         }
 

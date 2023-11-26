@@ -111,8 +111,7 @@ uint64_t DeviceAgent::get_sample_limit()
 	if (gvar != NULL) {
         v = g_variant_get_uint64(gvar);
 		g_variant_unref(gvar);
-	}
-    else {
+	} else {
 		v = 0U;
 	}
 
@@ -131,8 +130,7 @@ uint64_t DeviceAgent::get_sample_rate()
 	if (gvar != NULL) {
         v = g_variant_get_uint64(gvar);
 		g_variant_unref(gvar);
-	}
-    else {
+	} else {
 		v = 0U;
 	}
 
@@ -151,8 +149,7 @@ uint64_t DeviceAgent::get_time_base()
 	if (gvar != NULL) {
         v = g_variant_get_uint64(gvar);
 		g_variant_unref(gvar);
-	}
-    else {
+	} else {
 		v = 0U;
 	}
 
@@ -252,7 +249,7 @@ const struct sr_config_info *DeviceAgent::get_config_info(int key)
     return ds_get_actived_device_config_info(key);
 }
 
-bool DeviceAgent::get_device_status(struct sr_status &status, gboolean prg)
+bool DeviceAgent::get_device_status(struct sr_status &status, bool prg)
 {   
     assert(_dev_handle);
 
@@ -455,7 +452,7 @@ bool DeviceAgent::get_config_bool(int key, bool &value, const sr_channel *ch, co
     GVariant* gvar = get_config(key, ch, cg);
     
     if (gvar != NULL) {
-        gboolean v = g_variant_get_boolean(gvar);
+        bool v = g_variant_get_boolean(gvar);
         value = v > 0;
         g_variant_unref(gvar);
         return true;

@@ -555,7 +555,7 @@ SRD_API int srd_inst_stack(struct srd_session *sess,
 	 * for the stacked PDs. We warn if that's not the case, but it's
 	 * not a hard error for the time being.
 	 */
-	gboolean at_least_one_match = FALSE;
+	bool at_least_one_match = FALSE;
 	for (GSList *out = di_bottom->decoder->outputs; out; out = out->next) {
 		const char *o = out->data;
 		for (GSList *in = di_top->decoder->inputs; in; in = in->next) {
@@ -759,7 +759,7 @@ SRD_PRIV int srd_inst_start(struct srd_decoder_inst *di, char **error)
  * @private
  */
 __attribute__((always_inline))
-static inline gboolean sample_matches(uint8_t old_sample, uint8_t sample, struct srd_term *term)
+static inline bool sample_matches(uint8_t old_sample, uint8_t sample, struct srd_term *term)
 {
 	/* Caller ensures term != NULL. */
 
@@ -819,7 +819,7 @@ SRD_PRIV void condition_list_free(struct srd_decoder_inst *di)
 	di->condition_list = NULL;
 }
 
-static gboolean have_non_null_conds(const struct srd_decoder_inst *di)
+static bool have_non_null_conds(const struct srd_decoder_inst *di)
 {
 	GSList *l, *cond;
 
@@ -884,8 +884,8 @@ static void update_old_pins_array_initial_pins(struct srd_decoder_inst *di)
 	}
 }
 
-static gboolean term_matches(struct srd_decoder_inst *di,
-        struct srd_term *term, gboolean *skip_allow)
+static bool term_matches(struct srd_decoder_inst *di,
+        struct srd_term *term, bool *skip_allow)
 {
 	uint8_t old_sample, sample;
     int bit_offset, ch;
@@ -914,8 +914,8 @@ static gboolean term_matches(struct srd_decoder_inst *di,
 	return sample_matches(old_sample, sample, term);
 }
 
-static gboolean all_terms_match(struct srd_decoder_inst *di,
-        const GSList *cond, gboolean *skip_allow)
+static bool all_terms_match(struct srd_decoder_inst *di,
+        const GSList *cond, bool *skip_allow)
 {
 	const GSList *l;
 	struct srd_term *term;
@@ -935,13 +935,13 @@ static gboolean all_terms_match(struct srd_decoder_inst *di,
 	return TRUE;
 }
 
-static gboolean 
+static bool 
 find_match(struct srd_decoder_inst *di)
 {
     uint64_t j;
 	GSList *l, *cond;
-    gboolean skip_allow;
-    gboolean all_skip_allow = TRUE;
+    bool skip_allow;
+    bool all_skip_allow = TRUE;
 
 	/* Caller ensures di != NULL. */
 
@@ -1020,7 +1020,7 @@ find_match(struct srd_decoder_inst *di)
  *
  * @private
  */
-SRD_PRIV int process_samples_until_condition_match(struct srd_decoder_inst *di, gboolean *found_match)
+SRD_PRIV int process_samples_until_condition_match(struct srd_decoder_inst *di, bool *found_match)
 {
 	if (!di || !found_match)
 		return SRD_ERR_ARG;
@@ -1103,8 +1103,7 @@ static gpointer di_thread(gpointer data)
 			char *err_str = PyBytes_AsString(py_bytes);
 			srd_err("python method decode() returns an error:\n %s", err_str);
 			di->python_proc_error = g_strdup(err_str);
-		}
-		else{
+		} else {
 			di->python_proc_error = g_strdup("python method decode() returns an unknown type error!");
 		}
 

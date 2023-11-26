@@ -291,7 +291,7 @@ SR_API int ds_trigger_set_mode(uint16_t mode)
 /*
  *
  */
-SR_PRIV uint16_t ds_trigger_get_mask0(uint16_t stage, uint16_t msc, uint16_t lsc, gboolean qutr_mode, gboolean half_mode)
+SR_PRIV uint16_t ds_trigger_get_mask0(uint16_t stage, uint16_t msc, uint16_t lsc, bool qutr_mode, bool half_mode)
 {
     assert(stage <= TriggerStages);
     assert(lsc <= msc);
@@ -323,7 +323,7 @@ SR_PRIV uint16_t ds_trigger_get_mask0(uint16_t stage, uint16_t msc, uint16_t lsc
 
     return mask;
 }
-SR_PRIV uint16_t ds_trigger_get_mask1(uint16_t stage, uint16_t msc, uint16_t lsc, gboolean qutr_mode, gboolean half_mode)
+SR_PRIV uint16_t ds_trigger_get_mask1(uint16_t stage, uint16_t msc, uint16_t lsc, bool qutr_mode, bool half_mode)
 {
     assert(stage <= TriggerStages);
     assert(lsc <= msc);
@@ -355,7 +355,7 @@ SR_PRIV uint16_t ds_trigger_get_mask1(uint16_t stage, uint16_t msc, uint16_t lsc
 
     return mask;
 }
-SR_PRIV uint16_t ds_trigger_get_value0(uint16_t stage, uint16_t msc, uint16_t lsc, gboolean qutr_mode, gboolean half_mode)
+SR_PRIV uint16_t ds_trigger_get_value0(uint16_t stage, uint16_t msc, uint16_t lsc, bool qutr_mode, bool half_mode)
 {
     assert(stage <= TriggerStages);
     assert(lsc <= msc);
@@ -387,7 +387,7 @@ SR_PRIV uint16_t ds_trigger_get_value0(uint16_t stage, uint16_t msc, uint16_t ls
 
     return value;
 }
-SR_PRIV uint16_t ds_trigger_get_value1(uint16_t stage, uint16_t msc, uint16_t lsc, gboolean qutr_mode, gboolean half_mode)
+SR_PRIV uint16_t ds_trigger_get_value1(uint16_t stage, uint16_t msc, uint16_t lsc, bool qutr_mode, bool half_mode)
 {
     assert(stage <= TriggerStages);
     assert(lsc <= msc);
@@ -419,7 +419,7 @@ SR_PRIV uint16_t ds_trigger_get_value1(uint16_t stage, uint16_t msc, uint16_t ls
 
     return value;
 }
-SR_PRIV uint16_t ds_trigger_get_edge0(uint16_t stage, uint16_t msc, uint16_t lsc, gboolean qutr_mode, gboolean half_mode)
+SR_PRIV uint16_t ds_trigger_get_edge0(uint16_t stage, uint16_t msc, uint16_t lsc, bool qutr_mode, bool half_mode)
 {
     assert(stage <= TriggerStages);
     assert(lsc <= msc);
@@ -452,7 +452,7 @@ SR_PRIV uint16_t ds_trigger_get_edge0(uint16_t stage, uint16_t msc, uint16_t lsc
 
     return edge;
 }
-SR_PRIV uint16_t ds_trigger_get_edge1(uint16_t stage, uint16_t msc, uint16_t lsc, gboolean qutr_mode, gboolean half_mode)
+SR_PRIV uint16_t ds_trigger_get_edge1(uint16_t stage, uint16_t msc, uint16_t lsc, bool qutr_mode, bool half_mode)
 {
     assert(stage <= TriggerStages);
     assert(lsc <= msc);

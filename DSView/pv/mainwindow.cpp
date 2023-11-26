@@ -331,9 +331,7 @@ namespace pv
                     on_load_file(tmp_file);
                     tmp_file = "";
                 });
-            }
-            else
-            {
+            } else {
                 dsv_err("file is not exists:%s", file_name.c_str());
                 MsgBox::Show(L_S(STR_PAGE_MSG, S_ID(IDS_MSG_OPEN_FILE_ERROR), "Open file error!"), ldFileName, NULL);
             }
@@ -508,9 +506,7 @@ namespace pv
             _trigger_widget->update_view();
             _trigger_dock->setVisible(visible);
             _dso_trigger_dock->setVisible(false);
-        }
-        else
-        {
+        } else {
             _dso_trigger_widget->update_view();
             _trigger_dock->setVisible(false);
             _dso_trigger_dock->setVisible(visible);
@@ -883,46 +879,37 @@ namespace pv
 
                 if (info->datatype == SR_T_BOOL){
                     gvar = g_variant_new_boolean(sessionObj[info->name].toInt());
-                }
-                else if (info->datatype == SR_T_UINT64){
+                } else if (info->datatype == SR_T_UINT64){
                     //from string text.
                     gvar = g_variant_new_uint64(sessionObj[info->name].toString().toULongLong());         
-                }
-                else if (info->datatype == SR_T_UINT8){
+                } else if (info->datatype == SR_T_UINT8){
                     if (sessionObj[info->name].toString() != "")
                         gvar = g_variant_new_byte(sessionObj[info->name].toString().toUInt());
                     else
                         gvar = g_variant_new_byte(sessionObj[info->name].toInt());                       
-                }
-                else if (info->datatype == SR_T_INT16){
+                } else if (info->datatype == SR_T_INT16){
                     gvar = g_variant_new_int16(sessionObj[info->name].toInt());
-                }
-                else if (info->datatype == SR_T_FLOAT){
+                } else if (info->datatype == SR_T_FLOAT){
                     if (sessionObj[info->name].toString() != "")
                         gvar = g_variant_new_double(sessionObj[info->name].toString().toDouble());
                     else
                         gvar = g_variant_new_double(sessionObj[info->name].toDouble()); 
-                }
-                else if (info->datatype == SR_T_CHAR){
+                } else if (info->datatype == SR_T_CHAR){
                     gvar = g_variant_new_string(sessionObj[info->name].toString().toLocal8Bit().data());
-                }
-                else if (info->datatype == SR_T_LIST)
-                { 
+                } else if (info->datatype == SR_T_LIST) { 
                     id = 0;
 
                     if (format_ver > 2){
                         // Is new version format.
                         id = sessionObj[info->name].toInt();
-                    }
-                    else{
+                    } else {
                         const char *fd_key = sessionObj[info->name].toString().toLocal8Bit().data();
                         id = ds_dsl_option_value_to_code(conf_dev_mode, info->key, fd_key);
                         if (id == -1){
                             dsv_err("Convert failed, key:\"%s\", value:\"%s\""
                                 ,info->name, fd_key);
                             id = 0; //set default value.
-                        }
-                        else{
+                        } else {
                             dsv_info("Convert success, key:\"%s\", value:\"%s\", get code:%d"
                                 ,info->name, fd_key, id);
                         }
@@ -969,9 +956,7 @@ namespace pv
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             for (const GSList *l = _device_agent->get_channels(); l; l = l->next)
             {
                 sr_channel *const probe = (sr_channel *)l->data;
@@ -1042,9 +1027,7 @@ namespace pv
                     }
                 }
             }
-        }
-        else
-        {
+        } else {
             for (auto s : _session->get_signals())
             {
                 for (const QJsonValue &value : sessionObj["channel"].toArray())
@@ -1394,15 +1377,11 @@ namespace pv
             _myTrans.load(":/my_" + QString::number(language));
             qApp->installTranslator(&_myTrans);
             retranslateUi();
-        }
-        else if (language == LAN_EN)
-        {
+        } else if (language == LAN_EN) {
             qApp->removeTranslator(&_qtTrans);
             qApp->removeTranslator(&_myTrans);
             retranslateUi();
-        }
-        else
-        {
+        } else {
             dsv_err("%s%d", "Unknown language code:", language);
         }
     }
@@ -1670,8 +1649,7 @@ namespace pv
             if (!sf.exists()){
                 dsv_info("Try to load the low version profile.");
                 ses_name =  gen_config_file_path(false);
-            }
-            else{
+            } else {
                 bExist = true;
             }
 
@@ -1685,9 +1663,7 @@ namespace pv
             } 
 
             file =  ses_name;
-        }
-        else if (_device_agent->is_demo())
-        {
+        } else if (_device_agent->is_demo()) {
             QDir dir(GetFirmwareDir());
             if (dir.exists())
             {
@@ -1735,8 +1711,7 @@ namespace pv
             {
                 QString estr = error.errorString();
                 dsv_err("File::get_session(), parse json error:\"%s\"!", estr.toUtf8().data());
-            }
-            else{
+            } else {
                 bSucesss = true;
             }
 
@@ -1774,8 +1749,7 @@ namespace pv
             {
                 QString estr = error.errorString();
                 dsv_err("MainWindow::get_decoder_json_from_file(), parse json error:\"%s\"!", estr.toUtf8().data());
-            }
-            else{
+            } else {
                 bSucesss = true;
             }
 
@@ -1883,9 +1857,7 @@ namespace pv
                 QTimer::singleShot(100, this, [this](){
                     _session->start_capture(true);
                 });
-            }
-            else if (_device_agent->is_demo())
-            {
+            } else if (_device_agent->is_demo()) {
                 if(_device_agent->get_work_mode() == LOGIC)
                 {
                     _pattern_mode = _device_agent->get_demo_operation_mode();
@@ -1992,9 +1964,7 @@ namespace pv
                         _session->stop_capture();
 
                     on_save();
-                }
-                else
-                {   
+                } else {   
                     if (_session->is_working())
                         _session->stop_capture();
                     
@@ -2023,8 +1993,7 @@ namespace pv
             if (confirm_to_store_data()){
                 _is_auto_switch_device = true;
                 on_save();
-            }
-            else{
+            } else {
                 _session->set_default_device();
             }
             break;
@@ -2036,9 +2005,7 @@ namespace pv
             {
                 _is_auto_switch_device = false;
                 _session->set_default_device();
-            }
-            else
-            {
+            } else {
                 ds_device_handle devh = _sampling_bar->get_next_device_handle();
                 if (devh != NULL_HANDLE)
                 {
@@ -2124,8 +2091,7 @@ namespace pv
                     _frame->setMinimumHeight(win_height);
                 else
                     _frame->setMinimumHeight(Min_Height);
-            }
-            else{
+            } else {
                 _frame->setMinimumHeight(Min_Height);
             }
         }  

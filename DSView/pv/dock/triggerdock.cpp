@@ -218,12 +218,10 @@ void TriggerDock::adv_trigger()
                                           "Stream Mode Don't Support Advanced Trigger!"));
             MsgBox::Show(strMsg);
             _simple_radioButton->setChecked(true);
-        }
-        else {
+        } else {
             widget_enable(0);
         }
-    }
-    else if (_session->get_device()->is_file() == false){
+    } else if (_session->get_device()->is_file() == false){
         QString strMsg(L_S(STR_PAGE_MSG, S_ID(IDS_MSG_AD_TRIGGER_NEED_HARDWARE),
                                       "Advanced Trigger need DSLogic Hardware Support!"));
         MsgBox::Show(strMsg);
@@ -325,8 +323,7 @@ bool TriggerDock::commit_trigger()
     if (_simple_radioButton->isChecked()) {
         ds_trigger_set_mode(SIMPLE_TRIGGER);
         return false;
-    }
-    else {
+    } else {
         ds_trigger_set_en(true);
         if (_adv_tabWidget->currentIndex() == 0)
             ds_trigger_set_mode(ADV_TRIGGER);
@@ -873,8 +870,7 @@ void TriggerDock::setup_adv_tab()
         serial_glayout->addWidget(serial5_value_exp_label, row++, 1, 1, 3);
         serial_glayout->addWidget(_serial_edge_label, row, 0);
         serial_glayout->addWidget(_serial_edge_lineEdit, row++, 1, 1, 3);
-    }
-    else {
+    } else {
         QLabel *serial0_value_exp_label = new QLabel("15 ---------- 8 7 ----------- 0 ", _serial_groupBox);
         serial0_value_exp_label->setFont(font);
         serial_glayout->addWidget(serial0_value_exp_label, row++, 1, 1, 3);
@@ -1038,7 +1034,7 @@ void TriggerDock::on_serial_value_changed(const QString &v)
             }
 
             char tmp[10];
-            sprintf(tmp, "%02lX", val);
+            snprintf(tmp, sizeof(tmp), "%02lX", val);
             _serial_hex_lineEdit->setText(QString(tmp));
         }       
     }

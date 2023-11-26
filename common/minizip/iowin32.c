@@ -61,13 +61,11 @@ static void win32_translate_open_mode(int mode,
         *lpdwDesiredAccess = GENERIC_READ;
         *lpdwCreationDisposition = OPEN_EXISTING;
         *lpdwShareMode = FILE_SHARE_READ;
-    }
-    else if (mode & ZLIB_FILEFUNC_MODE_EXISTING)
+    } else if (mode & ZLIB_FILEFUNC_MODE_EXISTING)
     {
         *lpdwDesiredAccess = GENERIC_WRITE | GENERIC_READ;
         *lpdwCreationDisposition = OPEN_EXISTING;
-    }
-    else if (mode & ZLIB_FILEFUNC_MODE_CREATE)
+    } else if (mode & ZLIB_FILEFUNC_MODE_CREATE)
     {
         *lpdwDesiredAccess = GENERIC_WRITE | GENERIC_READ;
         *lpdwCreationDisposition = CREATE_ALWAYS;

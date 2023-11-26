@@ -90,8 +90,7 @@ void ViewStatus::paintEvent(QPaintEvent *)
 
         p.setPen(View::Blue);
         p.drawText(this->rect(), Qt::AlignCenter | Qt::AlignVCenter, _capture_status);
-    } 
-    else if (mode == DSO) {
+    } else if (mode == DSO) {
         fore.setAlpha(View::BackAlpha);
 
         for(size_t i = 0; i < _mrects.size(); i++) {
@@ -134,8 +133,7 @@ void ViewStatus::paintEvent(QPaintEvent *)
                 int width = p.boundingRect(rect, title).width();
                 p.drawText(QRect(rect.left()+10+rect.height(), rect.top(), width, rect.height()),
                            Qt::AlignLeft | Qt::AlignVCenter, title);
-            }
-            else {
+            } else {
                 p.drawText(rect, Qt::AlignCenter | Qt::AlignVCenter, L_S(STR_PAGE_DLG, S_ID(IDS_DLG_MEASURE), "Measure") + QString::number(i));
             }
         }
@@ -172,8 +170,7 @@ void ViewStatus::reload()
                 std::get<1>(rect_tuple) = -1;
                 std::get<2>(rect_tuple) = DSO_MS_BEGIN;
                 _mrects.push_back(rect_tuple);
-            }
-            else {
+            } else {
                 std::get<0>(_mrects[i]) = rect;
             }
         }

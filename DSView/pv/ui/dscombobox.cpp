@@ -80,8 +80,7 @@ DsComboBox::DsComboBox(QWidget *parent) : QComboBox(parent)
     
     if (AppConfig::Instance().frameOptions.style == THEME_STYLE_DARK){       
         popup->setStyleSheet("background-color:#262626;");
-    }
-    else{
+    } else {
         popup->setStyleSheet("background-color:#white;");
     }
  }

@@ -43,7 +43,7 @@
  */
 
 /** @private */
-SR_PRIV struct sr_channel *sr_channel_new(uint16_t index, int type, gboolean enabled, const char *name)
+SR_PRIV struct sr_channel *sr_channel_new(uint16_t index, int type, bool enabled, const char *name)
 {
 	struct sr_channel *probe;
 
@@ -118,7 +118,7 @@ SR_PRIV int sr_dev_probe_name_set(const struct sr_dev_inst *sdi,
  * @since 0.2.0
  */
 SR_PRIV int sr_dev_probe_enable(const struct sr_dev_inst *sdi, int probenum,
-		gboolean state)
+		bool state)
 {
 	GSList *l;
 	struct sr_channel *probe;
@@ -313,7 +313,7 @@ SR_PRIV void sr_serial_dev_inst_free(struct sr_serial_dev_inst *serial)
 	g_free(serial);
 }
 
-SR_PRIV int sr_enable_device_channel(struct sr_dev_inst *sdi, const struct sr_channel *probe, gboolean enable)
+SR_PRIV int sr_enable_device_channel(struct sr_dev_inst *sdi, const struct sr_channel *probe, bool enable)
 {
 	GSList *l;
 	int ret;

@@ -389,7 +389,7 @@ SR_API uint64_t sr_parse_timestring(const char *timestring)
 	return time_msec;
 }
 
-SR_API gboolean sr_parse_boolstring(const char *boolstr)
+SR_API bool sr_parse_boolstring(const char *boolstr)
 {
 	if (!boolstr)
 		return FALSE;

@@ -19,9 +19,6 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
  */
 
-#include <boost/bind.hpp>
- 
-
 #include <QMetaObject>
 #include <QFileDialog> 
 #include <QDesktopServices>
@@ -220,8 +217,7 @@ void LogoBar::on_actionIssue_triggered()
  {
      if (AppConfig::Instance().frameOptions.language == LAN_CN){
          QDesktopServices::openUrl(QUrl(QLatin1String("https://dreamsourcelab.cn/download/")));
-     }
-     else{
+     } else {
          QDesktopServices::openUrl(QUrl(QLatin1String("https://www.dreamsourcelab.com/download/")));
      }
  }
@@ -318,8 +314,7 @@ void LogoBar::on_open_log_file()
     QFile qf(get_dsv_log_path());
     if (qf.exists()){
         QDesktopServices::openUrl( QUrl("file:///" + get_dsv_log_path()));
-    }
-    else{
+    } else {
         QString strMsg(L_S(STR_PAGE_MSG, S_ID(IDS_MSG_FILE_NOT_EXIST), "Not exist!"));
         MsgBox::Show(strMsg);
     }        
@@ -341,8 +336,7 @@ void LogoBar::on_clear_log_file()
                 }
             }
         }
-    }
-    else{
+    } else {
         QString strMsg(L_S(STR_PAGE_MSG, S_ID(IDS_MSG_FILE_NOT_EXIST), "Not exist!"));
         MsgBox::Show(strMsg);
     }  

@@ -206,8 +206,7 @@ void DeviceOptions::accept()
             if (probe->enabled)
                 hasEnabled = true;
         }
-    }
-    else {
+    } else {
         hasEnabled = true;
     }
 
@@ -223,8 +222,7 @@ void DeviceOptions::accept()
         }
 
         QDialog::accept();
-    }
-    else {
+    } else {
         QString strMsg(L_S(STR_PAGE_MSG, S_ID(IDS_MSG_ALL_CHANNEL_DISABLE), "All channel disabled! Please enable at least one channel."));
         MsgBox::Show(strMsg);
     }
@@ -266,8 +264,7 @@ QLayout * DeviceOptions::get_property_form(QWidget * parent)
             QWidget *wid = p->get_widget(parent, true);
             wid->setFont(font);
             layout->addWidget(wid, i, 1);
-        }
-        else{
+        } else {
             QWidget *wid = p->get_widget(parent);
             wid->setFont(font);
             layout->addWidget(wid, i, 1);
@@ -479,8 +476,7 @@ void DeviceOptions::zero_adj()
 
     if (bRet) {
         _device_agent->set_config_bool(SR_CONF_ZERO, true);
-    } 
-    else {
+    } else {
         _device_agent->set_config_bool(SR_CONF_ZERO, false);
     }
 }
@@ -518,8 +514,7 @@ void DeviceOptions::mode_check_timeout()
                 }
             }
         } 
-    }
-    else if (_device_agent->is_demo())
+    } else if (_device_agent->is_demo())
     {
         QString opt_mode = _device_agent->get_demo_operation_mode();
         if (opt_mode != _demo_operation_mode){
@@ -604,8 +599,7 @@ void DeviceOptions::channel_checkbox_clicked(QCheckBox *sc)
 
             sc->setChecked(false);
         }
-    }
-    else if (_device_agent->get_work_mode() == ANALOG) {
+    } else if (_device_agent->get_work_mode() == ANALOG) {
         if (sc != NULL) {
             QGridLayout *const layout = (QGridLayout *)sc->property("Layout").value<void *>();
             int i = layout->count();
@@ -641,8 +635,7 @@ void DeviceOptions::channel_checkbox_clicked(QCheckBox *sc)
 
                     if (map_default && w->objectName() == "map-row"){
                         w->setEnabled(false);
-                    }
-                    else{
+                    } else {
                         w->setEnabled(sc->isChecked());
                     }
                 }
@@ -707,8 +700,7 @@ void DeviceOptions::analog_probes(QGridLayout &layout)
             if (p->name().contains("Map Default")) {
                 pow->setProperty("index", probe->index);
                 connect(pow, SIGNAL(clicked()), this, SLOT(analog_channel_check()));
-            }
-            else {
+            } else {
                 if (probe_checkBox->isChecked() && p->name().contains("Map")) {
                     bool map_default = true;
 
@@ -758,8 +750,7 @@ QString DeviceOptions::dynamic_widget(QLayout *lay)
         logic_probes(*grid);
         //tr
         return L_S(STR_PAGE_DLG, S_ID(IDS_DLG_CHANNEL), "Channel");
-    } 
-    else if (mode == DSO) {
+    } else if (mode == DSO) {
         bool have_zero;
       
         if (_device_agent->get_config_bool(SR_CONF_HAVE_ZERO, have_zero)) {
@@ -787,8 +778,7 @@ QString DeviceOptions::dynamic_widget(QLayout *lay)
                 return L_S(STR_PAGE_DLG, S_ID(IDS_DLG_CALIBRATION), "Calibration");
             }
         }
-    } 
-    else if (mode == ANALOG) {
+    } else if (mode == ANALOG) {
         QGridLayout *grid = dynamic_cast<QGridLayout*>(lay);
         assert(grid);
         analog_probes(*grid);
@@ -882,9 +872,7 @@ void DeviceOptions::try_resize_scroll()
         this->setFixedSize(w + 12, srcHeight);
         _scroll_panel->setFixedSize(w, srcHeight - exth);
         _scroll->setFixedSize(sclw, srcHeight - exth);
-    }
-    else
-    { 
+    } else { 
         this->setFixedSize(w + 12, dlgHeight);
         _scroll_panel->setFixedSize(w, contentHeight);
         _scroll->setFixedSize(sclw, contentHeight);

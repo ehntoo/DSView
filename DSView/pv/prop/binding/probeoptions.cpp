@@ -20,7 +20,7 @@
  */
 
 #include "probeoptions.h"
-#include <boost/bind.hpp>
+#include <boost/bind/bind.hpp>
 #include <QObject>
 #include <stdint.h>
 #include "../bool.h"
@@ -123,7 +123,7 @@ void ProbeOptions::bind_bool(const QString &name, const QString label, int key)
 {
 	_properties.push_back(
         new Bool(name, label, bind(config_getter, _probe, key),
-            bind(config_setter, _probe, key, _1)));
+            bind(config_setter, _probe, key, boost::placeholders::_1)));
 }
 
 void ProbeOptions::bind_enum(const QString &name, const QString label, int key,
@@ -142,7 +142,7 @@ void ProbeOptions::bind_enum(const QString &name, const QString label, int key,
 	_properties.push_back(
         new Enum(name, label, values,
             bind(config_getter, _probe, key),
-            bind(config_setter,  _probe, key, _1)));
+            bind(config_setter,  _probe, key, boost::placeholders::_1)));
 }
 
 void ProbeOptions::bind_int(const QString &name, const QString label, int key, QString suffix,
@@ -151,7 +151,7 @@ void ProbeOptions::bind_int(const QString &name, const QString label, int key, Q
 	_properties.push_back(
         new Int(name, label, suffix, range,
             bind(config_getter,  _probe, key),
-            bind(config_setter,  _probe, key, _1)));
+            bind(config_setter,  _probe, key, boost::placeholders::_1)));
 }
 
 void ProbeOptions::bind_double(const QString &name, const QString label, int key, QString suffix,
@@ -161,7 +161,7 @@ void ProbeOptions::bind_double(const QString &name, const QString label, int key
     _properties.push_back(
         new Double(name, label, decimals, suffix, range, step,
             bind(config_getter,  _probe, key),
-            bind(config_setter,  _probe, key, _1)));
+            bind(config_setter,  _probe, key, boost::placeholders::_1)));
 }
 
 void ProbeOptions::bind_vdiv(const QString &name, const QString label,

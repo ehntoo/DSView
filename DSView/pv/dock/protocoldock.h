@@ -91,7 +91,7 @@ public:
     void update_view_status();
 
 private:
-    void changeEvent(QEvent *event);
+    void changeEvent(QEvent *event) override;
     void retranslateUi();
     void reStyle();
     int get_protocol_index_by_id(QString id);

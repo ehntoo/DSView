@@ -147,8 +147,7 @@ void SearchDock::on_previous()
         QString strMsg(L_S(STR_PAGE_MSG, S_ID(IDS_MSG_SEARCH_AT_START), "Search cursor at the start position!"));
         MsgBox::Show(strMsg);
         return;
-    }
-    else {
+    } else {
         QFuture<void> future;
         future = QtConcurrent::run([&]{
             last_pos -= last_hit;

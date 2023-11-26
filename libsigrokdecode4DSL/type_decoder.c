@@ -85,8 +85,7 @@ static int py_parse_ann_data(PyObject *list_obj, char ***out_strv, int list_size
 		if (PyUnicode_Check(py_tmp)){
 			text_items[text_num] = py_tmp;
 			text_num++;
-		}
-		else if (PyLong_Check(py_tmp)){
+		} else if (PyLong_Check(py_tmp)){
 			py_numobj = py_tmp;	
 		}	
 	}
@@ -150,8 +149,7 @@ static int py_parse_ann_data(PyObject *list_obj, char ***out_strv, int list_size
 					
 					up_ptr++;
 				}
-			}
-			else if (nstr > 0){
+			} else if (nstr > 0){
 				// Remove the first letter.
 				str_tmp = g_strdup(str+1);
 				free(str);
@@ -615,7 +613,7 @@ static PyObject *Decoder_register(PyObject *self, PyObject *args,
 	char *proto_id, *meta_name, *meta_descr;
 	char *keywords[] = { "output_type", "proto_id", "meta", NULL };
 	PyGILState_STATE gstate;
-	gboolean is_meta;
+	bool is_meta;
 	GSList *l;
 	struct srd_pd_output *cmp;
 
@@ -796,7 +794,7 @@ static int get_current_pinvalues(const struct srd_decoder_inst *di)
  *
  * @return SRD_OK upon success, a negative error code otherwise.
  */
-static int create_term_list(PyObject *py_dict, GSList **term_list, gboolean cur_matched)
+static int create_term_list(PyObject *py_dict, GSList **term_list, bool cur_matched)
 {
 	Py_ssize_t pos = 0;
 	PyObject *py_key, *py_value;
@@ -831,8 +829,7 @@ static int create_term_list(PyObject *py_dict, GSList **term_list, gboolean cur_
                 memset(term, 0, sizeof(struct srd_term));
 				term->type = get_term_type(term_str);
 				term->channel = PyLong_AsLong(py_key);
-			}
-			else{
+			} else {
 				srd_err("%s,ERROR:failed to alloc memory.", __func__);
 			}
 			
@@ -851,8 +848,7 @@ static int create_term_list(PyObject *py_dict, GSList **term_list, gboolean cur_
 				term->type = SRD_TERM_SKIP;
 				term->num_samples_to_skip = num_samples_to_skip;
 				term->num_samples_already_skipped = cur_matched ? (term->num_samples_to_skip != 0) : 0;
-			}
-			else{
+			} else {
 				srd_err("%s,ERROR:failed to alloc memory.", __func__);
 			}	
 			
@@ -1023,8 +1019,7 @@ static int set_skip_condition(struct srd_decoder_inst *di, uint64_t count)
 		term->num_samples_to_skip = count;
 		term->num_samples_already_skipped = di->abs_cur_matched ? (term->num_samples_to_skip != 0) : 0;
 		term_list = g_slist_append(NULL, term);
-	}
-	else{
+	} else {
 		srd_err("%s,ERROR:failed to alloc memory.", __func__);
 	}
 
@@ -1039,7 +1034,7 @@ static PyObject *Decoder_wait(PyObject *self, PyObject *args)
 {
 	int ret;
 	uint64_t skip_count;
-	gboolean found_match;
+	bool found_match;
 	struct srd_decoder_inst *di;
     PyGILState_STATE gstate; 
 
@@ -1212,8 +1207,7 @@ static PyObject *Decoder_has_channel(PyObject *self, PyObject *args)
 	if (di->dec_channelmap[idx] == -1){
 		Py_INCREF(Py_False);
 		return Py_False;
-	}
-	else{
+	} else {
 		Py_INCREF(Py_True);
 		return Py_True;
 	}

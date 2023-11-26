@@ -55,7 +55,7 @@ public:
     }
 
 private:
-    void changeEvent(QEvent *event);
+    void changeEvent(QEvent *event) override;
     void retranslateUi();
     void reStyle();
 

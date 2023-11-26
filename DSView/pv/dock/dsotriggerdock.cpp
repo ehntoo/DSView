@@ -320,12 +320,10 @@ bool DsoTriggerDock::check_trig_channel()
     if (DSO_TRIGGER_CH0 == id && !b0){
         dsv_err("ERROR: The trigger channel is disabled");
         return false;
-    }
-    else if (DSO_TRIGGER_CH1 == id && !b1){
+    } else if (DSO_TRIGGER_CH1 == id && !b1){
         dsv_err("ERROR: The trigger channel is disabled");
         return false;
-    }
-    else if (DSO_TRIGGER_CH0A1 == id && (!b0 || !b1)){
+    } else if (DSO_TRIGGER_CH0A1 == id && (!b0 || !b1)){
         dsv_err("ERROR: The trigger channel is disabled");
         return false;
     }

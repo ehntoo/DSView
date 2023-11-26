@@ -356,9 +356,7 @@ int do_extract_currentfile(uf,popt_extract_without_path,popt_overwrite,password)
             printf("creating directory: %s\n",filename_inzip);
             mymkdir(filename_inzip);
         }
-    }
-    else
-    {
+    } else {
         const char* write_filename;
         int skip=0;
 
@@ -554,9 +552,7 @@ int main(argc,argv)
     {
         do_help();
         return 0;
-    }
-    else
-    {
+    } else {
         for (i=1;i<argc;i++)
         {
             if ((*argv[i])=='-')
@@ -588,9 +584,7 @@ int main(argc,argv)
                         i++;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 if (zipfilename == NULL)
                     zipfilename = argv[i];
                 else if ((filename_to_extract==NULL) && (!opt_extractdir))

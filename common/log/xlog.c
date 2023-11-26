@@ -331,12 +331,10 @@ XLOG_API int xlog_reset_log_file(xlog_context* ctx, int receiver_index, const ch
         if (fh == NULL){
             strcpy(ctx->_error, "open file error");
             ret = -1;
-        }
-        else{
+        } else {
             ctx->_receivers[receiver_index]._file = fh;
         }
-    }
-    else{
+    } else {
         ret = -1;
     }
 

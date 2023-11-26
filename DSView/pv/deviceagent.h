@@ -22,6 +22,7 @@
 #ifndef DEVICE_AGENT_H
 #define DEVICE_AGENT_H
  
+#include <stdbool.h>
 #include <glib.h>
 #include <stdint.h>
 #include <libsigrok.h>
@@ -220,7 +221,7 @@ public:
 
   const struct sr_config_info* get_config_info(int key);
 
-  bool get_device_status(struct sr_status &status, gboolean prg);
+  bool get_device_status(struct sr_status &status, bool prg);
 
   struct sr_config* new_config(int key, GVariant *data);
 

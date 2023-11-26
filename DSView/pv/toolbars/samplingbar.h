@@ -105,7 +105,7 @@ namespace pv
             void sig_store_session_data();
 
         private: 
-            void changeEvent(QEvent *event);
+            void changeEvent(QEvent *event) override;
             void retranslateUi();
             void reStyle();
             void set_sample_rate(uint64_t sample_rate);

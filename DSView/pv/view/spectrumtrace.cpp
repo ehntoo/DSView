@@ -218,8 +218,8 @@ QString SpectrumTrace::format_freq(double freq, unsigned precision)
         char buffer[20] = {0};
         char format[10] = {0}; 
         QString units = FreqPrefixes[prefix] + "Hz";
-        sprintf(format, "%%.%df", (int)precision);    
-        sprintf(buffer, format, freq / divider);
+        snprintf(format, sizeof(format), "%%.%df", (int)precision);    
+        snprintf(buffer, sizeof(buffer), format, freq / divider);
         strcat(buffer, units.toUtf8().data());
         return QString(buffer);
     }
@@ -425,8 +425,8 @@ void SpectrumTrace::paint_fore(QPainter &p, int left, int right, QColor fore, QC
             QString vol_str = QString::number(tick_vol, 'f', Pricision) + unit;
             double vol_width = p.boundingRect(0, 0, INT_MAX, INT_MAX,
                 AlignLeft | AlignTop, vol_str).width();
-            p.drawLine(width, y, width-TickHeight/2, y);
-            p.drawText(width-TickHeight-vol_width, y-text_height/2, vol_width, text_height,
+            p.drawLine(width, y, width-TickHeight/2.0, y);
+            p.drawText(width-TickHeight-vol_width, y-text_height/2.0, vol_width, text_height,
                        AlignCenter | AlignTop | TextDontClip, vol_str);
             blank_right = min(width-TickHeight-vol_width, blank_right);
         }

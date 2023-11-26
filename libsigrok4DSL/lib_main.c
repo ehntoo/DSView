@@ -378,9 +378,7 @@ SR_API int ds_active_device(ds_device_handle handle)
 			destroy_device_instance(lib_ctx.actived_device_instance);
 			lib_ctx.actived_device_instance = NULL;
 			lib_ctx.is_delay_destory_actived_device = 0;
-		}
-		else
-		{
+		} else {
 			sr_info("Close the previous device, name:\"%s\"", 
 					lib_ctx.actived_device_instance->name);
 			close_device_instance(lib_ctx.actived_device_instance);
@@ -411,9 +409,7 @@ SR_API int ds_active_device(ds_device_handle handle)
 			{
 				lib_ctx.actived_device_instance = dev;
 				dev->actived_times++;
-			}
-			else
-			{  
+			} else {  
 				// Failed to switch new device.
 				if(lib_ctx.device_list != NULL && old_dev == NULL){
 					old_dev = lib_ctx.device_list->data;					
@@ -424,8 +420,7 @@ SR_API int ds_active_device(ds_device_handle handle)
 						sr_err("Open device error! Will switch to \"%s\", handle:%p.",
 							old_dev->name,
 							old_dev->handle);
-					}
-					else{
+					} else {
 						sr_err("Open device error! Will switch to \"%s\".",
 							old_dev->name);
 					}
@@ -882,9 +877,7 @@ SR_API int ds_release_actived_device()
 		sr_info("Release current actived device. name:\"%s\", handle:%p", 
 			lib_ctx.actived_device_instance->name,
 			lib_ctx.actived_device_instance->handle);
-	}
-	else
-	{
+	} else {
 		sr_info("Release current actived device. name:\"%s\"", 
 			lib_ctx.actived_device_instance->name);
 	}	
@@ -994,7 +987,7 @@ SR_API const struct sr_config_info *ds_get_actived_device_config_info(int key)
 	return sr_config_info_get(key);
 }
 
-SR_API int ds_get_actived_device_status(struct sr_status *status, gboolean prg)
+SR_API int ds_get_actived_device_status(struct sr_status *status, bool prg)
 {
 	if (lib_ctx.actived_device_instance == NULL)
 	{
@@ -1035,7 +1028,7 @@ SR_API int ds_get_actived_device_init_status(int *status)
 }
 
 /**-----------channel -------------*/
-SR_API int ds_enable_device_channel(const struct sr_channel *ch, gboolean enable)
+SR_API int ds_enable_device_channel(const struct sr_channel *ch, bool enable)
 {
 	if (lib_ctx.actived_device_instance == NULL)
 	{
@@ -1044,7 +1037,7 @@ SR_API int ds_enable_device_channel(const struct sr_channel *ch, gboolean enable
 	return sr_enable_device_channel(lib_ctx.actived_device_instance, ch, enable);
 }
 
-SR_API int ds_enable_device_channel_index(int ch_index, gboolean enable)
+SR_API int ds_enable_device_channel_index(int ch_index, bool enable)
 {
 	if (lib_ctx.actived_device_instance == NULL)
 	{
@@ -1261,16 +1254,12 @@ static void hotplug_event_listen_callback(struct libusb_context *ctx, struct lib
 			if (lib_ctx.detach_device_handle == NULL)
 			{
 				sr_err("The detached device handle is null, but the status is waitting for reconnect.");
-			}
-			else
-			{
+			} else {
 				if (update_device_handle(lib_ctx.detach_device_handle, dev) == SR_OK)
 				{
 					bDone = 1;
 					sr_info("----------One device loose contact, but it reconnect success.");
-				}
-				else
-				{
+				} else {
 					sr_err("Update reconnected device handle error! can't find the old.");
 				}
 				lib_ctx.detach_device_handle = NULL;
@@ -1282,9 +1271,7 @@ static void hotplug_event_listen_callback(struct libusb_context *ctx, struct lib
 			lib_ctx.attach_device_handle = dev;
 		}
 		lib_ctx.is_waitting_reconnect = 0;
-	}
-	else if (event == USB_EV_HOTPLUG_DETTACH)
-	{
+	} else if (event == USB_EV_HOTPLUG_DETTACH) {
 		sr_info("----------One device detached,handle:%p", dev);
 
 		if (lib_ctx.detach_device_handle != NULL)
@@ -1308,9 +1295,7 @@ static void hotplug_event_listen_callback(struct libusb_context *ctx, struct lib
 		lib_ctx.is_waitting_reconnect = 1;
 		lib_ctx.check_reconnect_times = 0;
 		lib_ctx.detach_device_handle = dev;
-	}
-	else
-	{
+	} else {
 		sr_err("Unknown usb device event");
 	}
 }
@@ -1398,9 +1383,7 @@ static void process_detach_event()
 				sr_info("The current device will be delayed for destruction, handle:%p", dev->handle);
 				lib_ctx.is_delay_destory_actived_device = 1;
 				ev = DS_EV_CURRENT_DEVICE_DETACH;
-			}
-			else
-			{
+			} else {
 				destroy_device_instance(dev);
 			}
 

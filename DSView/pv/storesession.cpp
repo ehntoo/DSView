@@ -194,15 +194,12 @@ bool StoreSession::save_start()
         {
             _has_error = true;
             _error = m_zipDoc.GetError();
-        }
-        else
-        {
+        } else {
             if (_thread.joinable()) _thread.join();
             _thread = std::thread(&StoreSession::save_proc, this, snapshot);
             return !_has_error;
         }
-    }
-    else{
+    } else {
          _error = L_S(STR_PAGE_MSG, S_ID(IDS_MSG_STORESESS_SAVESTART_ERROR7), "Generate zip file failed.");
     }
 
@@ -282,8 +279,7 @@ void StoreSession::save_logic(pv::data::LogicSnapshot *logic_snapshot)
 
     if (_canceled || num == 0){
         QFile::remove(_file_name);
-    }
-    else {
+    } else {
         bool bret = m_zipDoc.Close();
         m_zipDoc.Release();
 
@@ -341,8 +337,7 @@ void StoreSession::save_analog(pv::data::AnalogSnapshot *analog_snapshot)
                 buf += (size - _unit_count);
                 if (tmp)
                     free(tmp);
-            } 
-            else { 
+            } else { 
                 MakeChunkName(chunk_name, i, 0, ch_type, HEADER_FORMAT_VERSION);
                 ret = m_zipDoc.AddFromBuffer(chunk_name, (const char*)buf, size) ? SR_OK : -1;
 
@@ -369,8 +364,7 @@ void StoreSession::save_analog(pv::data::AnalogSnapshot *analog_snapshot)
 
     if (_canceled || num == 0){
         QFile::remove(_file_name);
-    }
-    else {
+    } else {
         bool bret = m_zipDoc.Close();
         m_zipDoc.Release();
 
@@ -427,8 +421,7 @@ void StoreSession::save_dso(pv::data::DsoSnapshot *dso_snapshot)
 
     if (_canceled || size == 0 || ch_num == 0){
         QFile::remove(_file_name);
-    }
-    else {
+    } else {
         bool bret = m_zipDoc.Close();
         m_zipDoc.Release();
 
@@ -449,11 +442,9 @@ void StoreSession::save_proc(data::Snapshot *snapshot)
 
     if ((logic_snapshot = dynamic_cast<data::LogicSnapshot*>(snapshot))) {
         save_logic(logic_snapshot);
-    }
-    else if ((analog_snapshot = dynamic_cast<data::AnalogSnapshot*>(snapshot))) {
+    } else if ((analog_snapshot = dynamic_cast<data::AnalogSnapshot*>(snapshot))) {
         save_analog(analog_snapshot);
-    }
-    else if ((dso_snapshot = dynamic_cast<data::DsoSnapshot*>(snapshot))) {
+    } else if ((dso_snapshot = dynamic_cast<data::DsoSnapshot*>(snapshot))) {
         save_dso(dso_snapshot);
     }
 }
@@ -464,26 +455,25 @@ bool StoreSession::meta_gen(data::Snapshot *snapshot, std::string &str)
     struct sr_channel *probe;
     int probecnt;
     char *s;
-    struct sr_status status;
     char meta[300] = {0};
   
-    sprintf(meta, "%s", "[version]\n"); str += meta;
-    sprintf(meta, "version = %d\n", HEADER_FORMAT_VERSION); str += meta;
-    sprintf(meta, "%s", "[header]\n"); str += meta;
+    snprintf(meta, sizeof(meta), "%s", "[version]\n"); str += meta;
+    snprintf(meta, sizeof(meta), "version = %d\n", HEADER_FORMAT_VERSION); str += meta;
+    snprintf(meta, sizeof(meta), "%s", "[header]\n"); str += meta;
 
     int mode = _session->get_device()->get_work_mode();
 
     if (true) {
-        sprintf(meta, "driver = %s\n", _session->get_device()->driver_name().toLocal8Bit().data()); str += meta;
-        sprintf(meta, "device mode = %d\n", mode); str += meta;
+        snprintf(meta, sizeof(meta), "driver = %s\n", _session->get_device()->driver_name().toLocal8Bit().data()); str += meta;
+        snprintf(meta, sizeof(meta), "device mode = %d\n", mode); str += meta;
     }
  
-    sprintf(meta, "capturefile = data\n"); str += meta;
-    sprintf(meta, "total samples = %" PRIu64 "\n", snapshot->get_sample_count()); str += meta;
+    snprintf(meta, sizeof(meta), "capturefile = data\n"); str += meta;
+    snprintf(meta, sizeof(meta), "total samples = %" PRIu64 "\n", snapshot->get_sample_count()); str += meta;
 
     if (mode != LOGIC) {
-        sprintf(meta, "total probes = %d\n", snapshot->get_channel_num()); str += meta;
-        sprintf(meta, "total blocks = %d\n", snapshot->get_block_num()); str += meta;
+        snprintf(meta, sizeof(meta), "total probes = %d\n", snapshot->get_channel_num()); str += meta;
+        snprintf(meta, sizeof(meta), "total blocks = %d\n", snapshot->get_block_num()); str += meta;
     }
 
     data::LogicSnapshot *logic_snapshot = NULL;
@@ -494,13 +484,13 @@ bool StoreSession::meta_gen(data::Snapshot *snapshot, std::string &str)
             if (probe->enabled && logic_snapshot->has_data(probe->index))
                 to_save_probes++;
         }
-        sprintf(meta, "total probes = %d\n", to_save_probes); str += meta;
-        sprintf(meta, "total blocks = %d\n", logic_snapshot->get_block_num()); str += meta;
+        snprintf(meta, sizeof(meta), "total probes = %d\n", to_save_probes); str += meta;
+        snprintf(meta, sizeof(meta), "total blocks = %d\n", logic_snapshot->get_block_num()); str += meta;
     }
 
     s = sr_samplerate_string(_session->cur_snap_samplerate());
 
-    sprintf(meta, "samplerate = %s\n", s); str += meta;
+    snprintf(meta, sizeof(meta), "samplerate = %s\n", s); str += meta;
 
     uint64_t tmp_u64;
     int tmp_u8;
@@ -508,48 +498,46 @@ bool StoreSession::meta_gen(data::Snapshot *snapshot, std::string &str)
 
     if (mode == DSO) {
         if (_session->get_device()->get_config_uint64(SR_CONF_TIMEBASE, tmp_u64)) {
-            sprintf(meta, "hDiv = %" PRIu64 "\n", tmp_u64); str += meta;
+            snprintf(meta, sizeof(meta), "hDiv = %" PRIu64 "\n", tmp_u64); str += meta;
         }
 
         if (_session->get_device()->get_config_uint64(SR_CONF_MAX_TIMEBASE, tmp_u64)) {
-            sprintf(meta, "hDiv max = %" PRIu64 "\n", tmp_u64); str += meta;
+            snprintf(meta, sizeof(meta), "hDiv max = %" PRIu64 "\n", tmp_u64); str += meta;
         }
 
         if (_session->get_device()->get_config_uint64(SR_CONF_MIN_TIMEBASE, tmp_u64)) {
-            sprintf(meta, "hDiv min = %" PRIu64 "\n", tmp_u64); str += meta;
+            snprintf(meta, sizeof(meta), "hDiv min = %" PRIu64 "\n", tmp_u64); str += meta;
         }
  
         if (_session->get_device()->get_config_byte(SR_CONF_UNIT_BITS, tmp_u8)) {
-            sprintf(meta, "bits = %d\n", tmp_u8); str += meta;
+            snprintf(meta, sizeof(meta), "bits = %d\n", tmp_u8); str += meta;
         }
  
         if (_session->get_device()->get_config_uint32(SR_CONF_REF_MIN, tmp_u32)) {
-            sprintf(meta, "ref min = %d\n", tmp_u32); str += meta;
+            snprintf(meta, sizeof(meta), "ref min = %d\n", tmp_u32); str += meta;
         }
 
         if (_session->get_device()->get_config_uint32(SR_CONF_REF_MAX, tmp_u32)) {
-            sprintf(meta, "ref max = %d\n", tmp_u32); str += meta;
+            snprintf(meta, sizeof(meta), "ref max = %d\n", tmp_u32); str += meta;
         }
-    }
-    else if (mode == LOGIC) {
-        sprintf(meta, "trigger time = %lld\n", _session->get_session_time().toMSecsSinceEpoch()); str += meta;
-    }
-    else if (mode == ANALOG) {
+    } else if (mode == LOGIC) {
+        snprintf(meta, sizeof(meta), "trigger time = %lld\n", _session->get_session_time().toMSecsSinceEpoch()); str += meta;
+    } else if (mode == ANALOG) {
         data::AnalogSnapshot *analog_snapshot = NULL;
         if ((analog_snapshot = dynamic_cast<data::AnalogSnapshot*>(snapshot))) {
             uint8_t tmp_u8 = analog_snapshot->get_unit_bytes();
-            sprintf(meta, "bits = %d\n", tmp_u8*8); str += meta;
+            snprintf(meta, sizeof(meta), "bits = %d\n", tmp_u8*8); str += meta;
         }
 
         if (_session->get_device()->get_config_uint32(SR_CONF_REF_MIN, tmp_u32)) {
-            sprintf(meta, "ref min = %d\n", tmp_u32); str += meta;
+            snprintf(meta, sizeof(meta), "ref min = %d\n", tmp_u32); str += meta;
         }
 
         if (_session->get_device()->get_config_uint32(SR_CONF_REF_MAX, tmp_u32)) {
-            sprintf(meta, "ref max = %d\n", tmp_u32); str += meta;
+            snprintf(meta, sizeof(meta), "ref max = %d\n", tmp_u32); str += meta;
         }
     }
-    sprintf(meta, "trigger pos = %" PRIu64 "\n", _session->get_trigger_pos()); str += meta;
+    snprintf(meta, sizeof(meta), "trigger pos = %" PRIu64 "\n", _session->get_trigger_pos()); str += meta;
 
     probecnt = 0; 
 
@@ -566,28 +554,28 @@ bool StoreSession::meta_gen(data::Snapshot *snapshot, std::string &str)
         if (probe->name)
         {
             int sigdex = (mode == LOGIC) ? probe->index : probecnt;
-            sprintf(meta, "probe%d = %s\n", sigdex, probe->name);
+            snprintf(meta, sizeof(meta), "probe%d = %s\n", sigdex, probe->name);
             str += meta;
         }
 
         if (probe->trigger){
-            sprintf(meta, " trigger%d = %s\n", probecnt, probe->trigger); 
+            snprintf(meta, sizeof(meta), " trigger%d = %s\n", probecnt, probe->trigger); 
             str += meta;
         }
 
         if (mode == DSO)
         {
-            sprintf(meta, " enable%d = %d\n", probecnt, probe->enabled);
+            snprintf(meta, sizeof(meta), " enable%d = %d\n", probecnt, probe->enabled);
             str += meta;
-            sprintf(meta, " coupling%d = %d\n", probecnt, probe->coupling);
+            snprintf(meta, sizeof(meta), " coupling%d = %d\n", probecnt, probe->coupling);
             str += meta;
-            sprintf(meta, " vDiv%d = %" PRIu64 "\n", probecnt, probe->vdiv);
+            snprintf(meta, sizeof(meta), " vDiv%d = %" PRIu64 "\n", probecnt, probe->vdiv);
             str += meta;
-            sprintf(meta, " vFactor%d = %" PRIu64 "\n", probecnt, probe->vfactor);
+            snprintf(meta, sizeof(meta), " vFactor%d = %" PRIu64 "\n", probecnt, probe->vfactor);
             str += meta;
-            sprintf(meta, " vOffset%d = %d\n", probecnt, probe->hw_offset);
+            snprintf(meta, sizeof(meta), " vOffset%d = %d\n", probecnt, probe->hw_offset);
             str += meta;
-            sprintf(meta, " vTrig%d = %d\n", probecnt, probe->trig_value);
+            snprintf(meta, sizeof(meta), " vTrig%d = %d\n", probecnt, probe->trig_value);
             str += meta;
 
             if (_session->dso_status_is_valid())
@@ -596,83 +584,79 @@ bool StoreSession::meta_gen(data::Snapshot *snapshot, std::string &str)
                 
                 if (probe->index == 0)
                 {
-                    sprintf(meta, " period%d = %" PRIu32 "\n", probecnt, status.ch0_cyc_tlen);
+                    snprintf(meta, sizeof(meta), " period%d = %" PRIu32 "\n", probecnt, status.ch0_cyc_tlen);
                     str += meta;
-                    sprintf(meta, " pcnt%d = %" PRIu32 "\n", probecnt, status.ch0_cyc_cnt);
+                    snprintf(meta, sizeof(meta), " pcnt%d = %" PRIu32 "\n", probecnt, status.ch0_cyc_cnt);
                     str += meta;
-                    sprintf(meta, " max%d = %d\n", probecnt, status.ch0_max);
+                    snprintf(meta, sizeof(meta), " max%d = %d\n", probecnt, status.ch0_max);
                     str += meta;
-                    sprintf(meta, " min%d = %d\n", probecnt, status.ch0_min);
+                    snprintf(meta, sizeof(meta), " min%d = %d\n", probecnt, status.ch0_min);
                     str += meta;
-                    sprintf(meta, " plen%d = %" PRIu32 "\n", probecnt, status.ch0_cyc_plen);
+                    snprintf(meta, sizeof(meta), " plen%d = %" PRIu32 "\n", probecnt, status.ch0_cyc_plen);
                     str += meta;
-                    sprintf(meta, " llen%d = %" PRIu32 "\n", probecnt, status.ch0_cyc_llen);
+                    snprintf(meta, sizeof(meta), " llen%d = %" PRIu32 "\n", probecnt, status.ch0_cyc_llen);
                     str += meta;
-                    sprintf(meta, " level%d = %d\n", probecnt, status.ch0_level_valid);
+                    snprintf(meta, sizeof(meta), " level%d = %d\n", probecnt, status.ch0_level_valid);
                     str += meta;
-                    sprintf(meta, " plevel%d = %d\n", probecnt, status.ch0_plevel);
+                    snprintf(meta, sizeof(meta), " plevel%d = %d\n", probecnt, status.ch0_plevel);
                     str += meta;
-                    sprintf(meta, " low%d = %" PRIu32 "\n", probecnt, status.ch0_low_level);
+                    snprintf(meta, sizeof(meta), " low%d = %" PRIu32 "\n", probecnt, status.ch0_low_level);
                     str += meta;
-                    sprintf(meta, " high%d = %" PRIu32 "\n", probecnt, status.ch0_high_level);
+                    snprintf(meta, sizeof(meta), " high%d = %" PRIu32 "\n", probecnt, status.ch0_high_level);
                     str += meta;
-                    sprintf(meta, " rlen%d = %" PRIu32 "\n", probecnt, status.ch0_cyc_rlen);
+                    snprintf(meta, sizeof(meta), " rlen%d = %" PRIu32 "\n", probecnt, status.ch0_cyc_rlen);
                     str += meta;
-                    sprintf(meta, " flen%d = %" PRIu32 "\n", probecnt, status.ch0_cyc_flen);
+                    snprintf(meta, sizeof(meta), " flen%d = %" PRIu32 "\n", probecnt, status.ch0_cyc_flen);
                     str += meta;
-                    sprintf(meta, " rms%d = %" PRIu64 "\n", probecnt, status.ch0_acc_square);
+                    snprintf(meta, sizeof(meta), " rms%d = %" PRIu64 "\n", probecnt, status.ch0_acc_square);
                     str += meta;
-                    sprintf(meta, " mean%d = %" PRIu32 "\n", probecnt, status.ch0_acc_mean);
+                    snprintf(meta, sizeof(meta), " mean%d = %" PRIu32 "\n", probecnt, status.ch0_acc_mean);
                     str += meta;
-                }
-                else
-                {
-                    sprintf(meta, " period%d = %" PRIu32 "\n", probecnt, status.ch1_cyc_tlen);
+                } else {
+                    snprintf(meta, sizeof(meta), " period%d = %" PRIu32 "\n", probecnt, status.ch1_cyc_tlen);
                     str += meta;
-                    sprintf(meta, " pcnt%d = %" PRIu32 "\n", probecnt, status.ch1_cyc_cnt);
+                    snprintf(meta, sizeof(meta), " pcnt%d = %" PRIu32 "\n", probecnt, status.ch1_cyc_cnt);
                     str += meta;
-                    sprintf(meta, " max%d = %d\n", probecnt, status.ch1_max);
+                    snprintf(meta, sizeof(meta), " max%d = %d\n", probecnt, status.ch1_max);
                     str += meta;
-                    sprintf(meta, " min%d = %d\n", probecnt, status.ch1_min);
+                    snprintf(meta, sizeof(meta), " min%d = %d\n", probecnt, status.ch1_min);
                     str += meta;
-                    sprintf(meta, " plen%d = %" PRIu32 "\n", probecnt, status.ch1_cyc_plen);
+                    snprintf(meta, sizeof(meta), " plen%d = %" PRIu32 "\n", probecnt, status.ch1_cyc_plen);
                     str += meta;
-                    sprintf(meta, " llen%d = %" PRIu32 "\n", probecnt, status.ch1_cyc_llen);
+                    snprintf(meta, sizeof(meta), " llen%d = %" PRIu32 "\n", probecnt, status.ch1_cyc_llen);
                     str += meta;
-                    sprintf(meta, " level%d = %d\n", probecnt, status.ch1_level_valid);
+                    snprintf(meta, sizeof(meta), " level%d = %d\n", probecnt, status.ch1_level_valid);
                     str += meta;
-                    sprintf(meta, " plevel%d = %d\n", probecnt, status.ch1_plevel);
+                    snprintf(meta, sizeof(meta), " plevel%d = %d\n", probecnt, status.ch1_plevel);
                     str += meta;
-                    sprintf(meta, " low%d = %" PRIu32 "\n", probecnt, status.ch1_low_level);
+                    snprintf(meta, sizeof(meta), " low%d = %" PRIu32 "\n", probecnt, status.ch1_low_level);
                     str += meta;
-                    sprintf(meta, " high%d = %" PRIu32 "\n", probecnt, status.ch1_high_level);
+                    snprintf(meta, sizeof(meta), " high%d = %" PRIu32 "\n", probecnt, status.ch1_high_level);
                     str += meta;
-                    sprintf(meta, " rlen%d = %" PRIu32 "\n", probecnt, status.ch1_cyc_rlen);
+                    snprintf(meta, sizeof(meta), " rlen%d = %" PRIu32 "\n", probecnt, status.ch1_cyc_rlen);
                     str += meta;
-                    sprintf(meta, " flen%d = %" PRIu32 "\n", probecnt, status.ch1_cyc_flen);
+                    snprintf(meta, sizeof(meta), " flen%d = %" PRIu32 "\n", probecnt, status.ch1_cyc_flen);
                     str += meta;
-                    sprintf(meta, " rms%d = %" PRIu64 "\n", probecnt, status.ch1_acc_square);
+                    snprintf(meta, sizeof(meta), " rms%d = %" PRIu64 "\n", probecnt, status.ch1_acc_square);
                     str += meta;
-                    sprintf(meta, " mean%d = %" PRIu32 "\n", probecnt, status.ch1_acc_mean);
+                    snprintf(meta, sizeof(meta), " mean%d = %" PRIu32 "\n", probecnt, status.ch1_acc_mean);
                     str += meta;
                 }
             }
-        }
-        else if (mode == ANALOG)
-        {
-            sprintf(meta, " enable%d = %d\n", probecnt, probe->enabled);
+        } else if (mode == ANALOG) {
+            snprintf(meta, sizeof(meta), " enable%d = %d\n", probecnt, probe->enabled);
             str += meta;
-            sprintf(meta, " coupling%d = %d\n", probecnt, probe->coupling);
+            snprintf(meta, sizeof(meta), " coupling%d = %d\n", probecnt, probe->coupling);
             str += meta;
-            sprintf(meta, " vDiv%d = %" PRIu64 "\n", probecnt, probe->vdiv);
+            snprintf(meta, sizeof(meta), " vDiv%d = %" PRIu64 "\n", probecnt, probe->vdiv);
             str += meta;
-            sprintf(meta, " vOffset%d = %d\n", probecnt, probe->hw_offset);
+            snprintf(meta, sizeof(meta), " vOffset%d = %d\n", probecnt, probe->hw_offset);
             str += meta;
-            sprintf(meta, " mapUnit%d = %s\n", probecnt, probe->map_unit);
+            snprintf(meta, sizeof(meta), " mapUnit%d = %s\n", probecnt, probe->map_unit);
             str += meta;
-            sprintf(meta, " mapMax%d = %lf\n", probecnt, probe->map_max);
+            snprintf(meta, sizeof(meta), " mapMax%d = %lf\n", probecnt, probe->map_max);
             str += meta;
-            sprintf(meta, " mapMin%d = %lf\n", probecnt, probe->map_min);
+            snprintf(meta, sizeof(meta), " mapMin%d = %lf\n", probecnt, probe->map_min);
             str += meta;
         }
         probecnt++;
@@ -728,9 +712,7 @@ bool StoreSession::export_start()
     if (_outModule == NULL)
     {
         _error = L_S(STR_PAGE_DLG, S_ID(IDS_MSG_STORESESS_EXPORTSTART_ERROR4), "Invalid export format.");
-    }
-    else
-    {
+    } else {
         if (_thread.joinable()) _thread.join();
         _thread = std::thread(&StoreSession::export_proc, this, snapshot);
         return !_has_error;
@@ -814,8 +796,7 @@ void StoreSession::export_proc(data::Snapshot *snapshot)
     if (gvar != NULL) {
         src = _session->get_device()->new_config(SR_CONF_REF_MIN, gvar);
         g_variant_unref(gvar);
-    } 
-    else {
+    } else {
         src = _session->get_device()->new_config(SR_CONF_REF_MIN, g_variant_new_uint32(1));
     }
 
@@ -825,8 +806,7 @@ void StoreSession::export_proc(data::Snapshot *snapshot)
     if (gvar != NULL) {
         src = _session->get_device()->new_config(SR_CONF_REF_MAX, gvar);
         g_variant_unref(gvar);
-    }
-    else {
+    } else {
         src = _session->get_device()->new_config(SR_CONF_REF_MAX, g_variant_new_uint32((1 << bits) - 1));
     }
     meta.config = g_slist_append(meta.config, src);
@@ -987,7 +967,7 @@ void StoreSession::export_proc(data::Snapshot *snapshot)
         unsigned int usize = 8192;        
         struct sr_datafeed_analog ap;
         
-        unsigned char* read_buf = (unsigned char*)data_buffer;
+        // unsigned char* read_buf = (unsigned char*)data_buffer;
 
         const uint64_t ring_start = analog_snapshot->get_ring_start();
  
@@ -1269,8 +1249,7 @@ bool StoreSession::load_decoders(dock::ProtocolDock *widget, QJsonArray &dec_arr
                     }
                     dec->set_probes(probe_map);
                     options_obj = dec_obj["options"].toObject();
-                }
-                else {
+                } else {
                     for(const QJsonValue &value : dec_obj["stacked decoders"].toArray()) {
                         QJsonObject stacked_obj = value.toObject();
                         if (QString::fromUtf8(d->id) == stacked_obj["id"].toString()) {
@@ -1295,47 +1274,39 @@ bool StoreSession::load_decoders(dock::ProtocolDock *widget, QJsonArray &dec_arr
                             double vi = options_obj[opt->id].toDouble();
                             if (vs != "") vi = vs.toDouble();
                             new_value = g_variant_new_double(vi);
-                        }
-                        else if (g_variant_is_of_type(opt->def, G_VARIANT_TYPE("x"))) {
+                        } else if (g_variant_is_of_type(opt->def, G_VARIANT_TYPE("x"))) {
                             const GVariantType *const type = g_variant_get_type(opt->def);
 
                             if (g_variant_type_equal(type, G_VARIANT_TYPE_BYTE)){
                                 int vi = options_obj[opt->id].toInt();                               
                                 if (vs != "") vi = vs.toInt();
                                 new_value = g_variant_new_byte(vi);
-                            }
-                            else if (g_variant_type_equal(type, G_VARIANT_TYPE_INT16)){
+                            } else if (g_variant_type_equal(type, G_VARIANT_TYPE_INT16)){
                                 int vi = options_obj[opt->id].toInt();                               
                                 if (vs != "") vi = vs.toInt();
                                 new_value = g_variant_new_int16(vi);
-                            }
-                            else if (g_variant_type_equal(type, G_VARIANT_TYPE_UINT16)){
+                            } else if (g_variant_type_equal(type, G_VARIANT_TYPE_UINT16)){
                                 int vi = options_obj[opt->id].toInt();                               
                                 if (vs != "") vi = vs.toInt();
                                 new_value = g_variant_new_uint16(vi);
-                            }
-                            else if (g_variant_type_equal(type, G_VARIANT_TYPE_INT32)){
+                            } else if (g_variant_type_equal(type, G_VARIANT_TYPE_INT32)){
                                 int vi = options_obj[opt->id].toInt();                               
                                 if (vs != "") vi = vs.toInt();
                                 new_value = g_variant_new_int32(vi);
-                            }
-                            else if (g_variant_type_equal(type, G_VARIANT_TYPE_UINT32)){
+                            } else if (g_variant_type_equal(type, G_VARIANT_TYPE_UINT32)){
                                 int vi = options_obj[opt->id].toInt();                               
                                 if (vs != "") vi = vs.toInt();
                                 new_value = g_variant_new_uint32(vi);
-                            }
-                            else if (g_variant_type_equal(type, G_VARIANT_TYPE_INT64)){
+                            } else if (g_variant_type_equal(type, G_VARIANT_TYPE_INT64)){
                                 int vi = options_obj[opt->id].toInt();                               
                                 if (vs != "") vi = vs.toInt();
                                 new_value = g_variant_new_int64(vi);
-                            }
-                            else if (g_variant_type_equal(type, G_VARIANT_TYPE_UINT64)){
+                            } else if (g_variant_type_equal(type, G_VARIANT_TYPE_UINT64)){
                                 int vi = options_obj[opt->id].toInt();                               
                                 if (vs != "") vi = vs.toInt();
                                 new_value = g_variant_new_uint64(vi);
                             }
-                        }
-                        else if (g_variant_is_of_type(opt->def, G_VARIANT_TYPE("s"))) {
+                        } else if (g_variant_is_of_type(opt->def, G_VARIANT_TYPE("s"))) {
                             new_value = g_variant_new_string(vs.toUtf8().data());
                         }
 
@@ -1516,8 +1487,7 @@ QString StoreSession::MakeExportFile(bool bDlg)
     if (app.userHistory.exportFormat != "" 
             && _session->get_device()->get_work_mode() == LOGIC){
         selfilter.append(app.userHistory.exportFormat);
-    }
-    else{
+    } else {
         selfilter.append(".csv");
     }
 
@@ -1598,9 +1568,7 @@ void StoreSession::MakeChunkName(char *chunk_name, int chunk_num, int index, int
                                                    : (type == SR_CHANNEL_ANALOG) ? "A"
                                                                                  : "U";
         snprintf(chunk_name, 15, "%s-%d/%d", type_name, index, chunk_num);
-    }
-    else
-    {
+    } else {
         snprintf(chunk_name, 15, "data");
     }
 }

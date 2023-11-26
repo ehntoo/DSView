@@ -154,8 +154,7 @@ void AnalogSnapshot::first_payload(const sr_datafeed_analog &analog, uint64_t to
                 if (!isOk)
                     break;
             }
-        }
-        else {
+        } else {
             isOk = false;
         }
     }
@@ -181,8 +180,7 @@ void AnalogSnapshot::first_payload(const sr_datafeed_analog &analog, uint64_t to
         _memory_failed = false;
         append_payload(analog);
         _last_ended = false;
-    }
-    else {
+    } else {
         free_data();
         free_envelop();
         _memory_failed = true;
@@ -220,8 +218,7 @@ void AnalogSnapshot::append_data(void *data, uint64_t samples, uint16_t pitch)
                 data, samples * bytes_per_sample);
             _ring_sample_count += samples;
         }
-    }
-    else {
+    } else {
         while(samples--) {
             if (_unit_pitch == 0) {
                 if (_sample_count < _total_sample_count)

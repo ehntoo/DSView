@@ -81,7 +81,7 @@
  * 'N' read until non-whitespace, and ungetc() the character
  * '$' read until $end
  */
-static gboolean read_until(FILE *file, GString *dest, char mode)
+static bool read_until(FILE *file, GString *dest, char mode)
 {
 	char prev[4] = "";
 	long startpos = ftell(file);
@@ -125,9 +125,9 @@ static gboolean read_until(FILE *file, GString *dest, char mode)
 /* Reads a single VCD section from input file and parses it to structure.
  * e.g. $timescale 1ps $end  => "timescale" "1ps"
  */
-static gboolean parse_section(FILE *file, gchar **name, gchar **contents)
+static bool parse_section(FILE *file, gchar **name, gchar **contents)
 {
-	gboolean status;
+	bool status;
 	GString *sname, *scontents;
 	
 	/* Skip any initial white-space */
@@ -210,11 +210,11 @@ static void remove_empty_parts(gchar **parts)
 /* Parse VCD header to get values for context structure.
  * The context structure should be zeroed before calling this.
  */
-static gboolean parse_header(FILE *file, struct context *ctx)
+static bool parse_header(FILE *file, struct context *ctx)
 {
 	uint64_t p, q;
 	gchar *name = NULL, *contents = NULL;
-	gboolean status = FALSE;
+	bool status = FALSE;
 	struct probe *probe;
 
 	while (parse_section(file, &name, &contents))
@@ -225,9 +225,7 @@ static gboolean parse_header(FILE *file, struct context *ctx)
 		{
 			status = TRUE;
 			break;
-		}
-		else if (g_strcmp0(name, "timescale") == 0)
-		{
+		} else if (g_strcmp0(name, "timescale") == 0) {
 			/* The standard allows for values 1, 10 or 100
 			 * and units s, ms, us, ns, ps and fs. */
 			if (sr_parse_period(contents, &p, &q) == SR_OK)
@@ -241,14 +239,10 @@ static gboolean parse_header(FILE *file, struct context *ctx)
 				}
 				
 				sr_dbg("Samplerate: %llu", (u64_t)ctx->samplerate);
-			}
-			else
-			{
+			} else {
 				sr_err("Parsing timescale failed.");
 			}
-		}
-		else if (g_strcmp0(name, "var") == 0)
-		{
+		} else if (g_strcmp0(name, "var") == 0) {
 			/* Format: $var type size identifier reference $end */
 			gchar **parts = g_strsplit_set(contents, " \r\n\t", 0);
 			remove_empty_parts(parts);
@@ -256,21 +250,13 @@ static gboolean parse_header(FILE *file, struct context *ctx)
 			if (g_strv_length(parts) != 4)
 			{
 				sr_warn("$var section should have 4 items");
-			}
-			else if (g_strcmp0(parts[0], "reg") != 0 && g_strcmp0(parts[0], "wire") != 0)
-			{
+			} else if (g_strcmp0(parts[0], "reg") != 0 && g_strcmp0(parts[0], "wire") != 0) {
 				sr_info("Unsupported signal type: '%s'", parts[0]);
-			}
-			else if (strtol(parts[1], NULL, 10) != 1)
-			{
+			} else if (strtol(parts[1], NULL, 10) != 1) {
 				sr_info("Unsupported signal size: '%s'", parts[1]);
-			}
-			else if (ctx->probecount >= ctx->maxprobes)
-			{
+			} else if (ctx->probecount >= ctx->maxprobes) {
 				sr_warn("Skipping '%s' because only %d probes requested.", parts[3], ctx->maxprobes);
-			}
-			else
-			{
+			} else {
 				sr_info("Probe %d is '%s' identified by '%s'.", ctx->probecount, parts[3], parts[2]);
 				probe = malloc(sizeof(struct probe));
 				
@@ -279,8 +265,7 @@ static gboolean parse_header(FILE *file, struct context *ctx)
 					probe->name = g_strdup(parts[3]);
 					ctx->probes = g_slist_append(ctx->probes, probe);
 					ctx->probecount++;
-				}
-				else{
+				} else {
 					sr_err("%s,ERROR:failed to alloc memory.", __func__);
 				}
 			}
@@ -302,7 +287,7 @@ static int format_match(const char *filename)
 {
 	FILE *file;
 	gchar *name = NULL, *contents = NULL;
-	gboolean status;
+	bool status;
 	
     file = fopen(filename, "r");
 	if (file == NULL)
@@ -459,17 +444,11 @@ static void parse_contents(FILE *file, const struct sr_dev_inst *sdi, struct con
 			{
 				ctx->skip = timestamp;
 				prev_timestamp = timestamp;
-			}
-			else if (ctx->skip > 0 && timestamp < (uint64_t)ctx->skip)
-			{
+			} else if (ctx->skip > 0 && timestamp < (uint64_t)ctx->skip) {
 				prev_timestamp = ctx->skip;
-			}
-			else if (timestamp == prev_timestamp)
-			{
+			} else if (timestamp == prev_timestamp) {
 				/* Ignore repeated timestamps (e.g. sigrok outputs these) */
-			}
-			else
-			{
+			} else {
 				if (ctx->compress != 0 && timestamp - prev_timestamp > ctx->compress)
 				{
 					/* Compress long idle periods */
@@ -482,9 +461,7 @@ static void parse_contents(FILE *file, const struct sr_dev_inst *sdi, struct con
 				send_samples(sdi, prev_values, timestamp - prev_timestamp);
 				prev_timestamp = timestamp;
 			}
-		}
-		else if (token->str[0] == '$' && token->len > 1)
-		{
+		} else if (token->str[0] == '$' && token->len > 1) {
 			/* This is probably a $dumpvars, $comment or similar.
 			 * $dump* contain useful data, but other tags will be skipped until $end. */
 			if (g_strcmp0(token->str, "$dumpvars") == 0 ||
@@ -493,21 +470,15 @@ static void parse_contents(FILE *file, const struct sr_dev_inst *sdi, struct con
 			    g_strcmp0(token->str, "$end") == 0)
 			{
 				/* Ignore, parse contents as normally. */
-			}
-			else
-			{
+			} else {
 				/* Skip until $end */
 				read_until(file, NULL, '$');
 			}
-		}
-		else if (strchr("bBrR", token->str[0]) != NULL)
-		{
+		} else if (strchr("bBrR", token->str[0]) != NULL) {
 			/* A vector value. Skip it and also the following identifier. */
 			read_until(file, NULL, 'N');
 			read_until(file, NULL, 'W');
-		}
-		else if (strchr("01xXzZ", token->str[0]) != NULL)
-		{
+		} else if (strchr("01xXzZ", token->str[0]) != NULL) {
 			/* A new 1-bit sample value */
 			int i, bit;
 			GSList *l;
@@ -516,8 +487,7 @@ static void parse_contents(FILE *file, const struct sr_dev_inst *sdi, struct con
 			bit = (token->str[0] == '1');
 		
 			g_string_erase(token, 0, 1);
-			if (token->len == 0)
-			{
+			if (token->len == 0) {
 				/* There was a space between value and identifier.
 				 * Read in the rest.
 				 */
@@ -525,12 +495,10 @@ static void parse_contents(FILE *file, const struct sr_dev_inst *sdi, struct con
 				read_until(file, token, 'W');
 			}
 			
-			for (i = 0, l = ctx->probes; i < ctx->probecount && l; i++, l = l->next)
-			{
+			for (i = 0, l = ctx->probes; i < ctx->probecount && l; i++, l = l->next) {
 				probe = l->data;
 
-				if (g_strcmp0(token->str, probe->identifier) == 0)
-				{
+				if (g_strcmp0(token->str, probe->identifier) == 0) {
 					sr_dbg("Probe %d new value %d.", i, bit);
 				
 					/* Found our probe */
@@ -543,13 +511,10 @@ static void parse_contents(FILE *file, const struct sr_dev_inst *sdi, struct con
 				}
 			}
 			
-			if (i == ctx->probecount)
-			{
+			if (i == ctx->probecount) {
 				sr_dbg("Did not find probe for identifier '%s'.", token->str);
 			}
-		}
-		else
-		{
+		} else {
 			sr_warn("Skipping unknown token '%s'.", token->str);
 		}
 		

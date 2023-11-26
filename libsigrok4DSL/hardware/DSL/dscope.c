@@ -186,7 +186,8 @@ static GSList *scan(GSList *options)
     struct sr_usb_dev_inst *usb;
     struct sr_config *src;
     const struct DSL_profile *prof;
-	GSList *l, *devices, *conn_devices;
+	// GSList *l, *devices, *conn_devices;
+	GSList *devices, *conn_devices;
 	struct libusb_device_descriptor des;
 	libusb_device **devlist;
     libusb_device *device_handle = NULL;
@@ -210,7 +211,7 @@ static GSList *scan(GSList *options)
         sr_info("Scan DSCope device...");
 
 	conn = NULL;
-	for (l = options; l; l = l->next) {
+	for (GSList *l = options; l; l = l->next) {
 		src = l->data;
 		switch (src->key) {
         case SR_CONF_CONN:
@@ -242,13 +243,16 @@ static GSList *scan(GSList *options)
         
 		if (conn) {
 			usb = NULL;
-			for (l = conn_devices; l; l = l->next) {
+            int device_found = 0;
+			for (GSList *l = conn_devices; l; l = l->next) {
 				usb = l->data;
 				if (usb->bus == libusb_get_bus_number(device_handle)
-					&& usb->address == libusb_get_device_address(device_handle))
+					&& usb->address == libusb_get_device_address(device_handle)) {
+                    device_found = 1;
 					break;
+                }
 			}
-			if (!l)
+			if (!device_found)
 				/* This device matched none of the ones that
 				 * matched the conn specification. */
 				continue;
@@ -352,8 +356,7 @@ static GSList *scan(GSList *options)
 
             devices = g_slist_append(devices, sdi);
             num++;       
-		}
-        else {
+		} else {
             char *firmware;
             char *res_path = DS_RES_PATH;
             if (!(firmware = malloc(strlen(res_path)+strlen(prof->firmware) + 5))) {
@@ -610,7 +613,7 @@ static int dso_init(const struct sr_dev_inst *sdi)
     return ret;
 }
 
-static gboolean dso_load_eep(struct sr_dev_inst *sdi, struct sr_channel *probe, gboolean fpga_done)
+static bool dso_load_eep(struct sr_dev_inst *sdi, struct sr_channel *probe, bool fpga_done)
 {
     struct DSL_context *devc;
     int ret, i;
@@ -692,7 +695,7 @@ static gboolean dso_load_eep(struct sr_dev_inst *sdi, struct sr_channel *probe, 
     return TRUE;
 }
 
-static int dso_zero(const struct sr_dev_inst *sdi, gboolean reset)
+static int dso_zero(const struct sr_dev_inst *sdi, bool reset)
 {
     struct DSL_context *devc = sdi->priv;
     GSList *l;
@@ -720,9 +723,9 @@ static int dso_zero(const struct sr_dev_inst *sdi, gboolean reset)
     const double margin_pass = 0.3;
     int end_cnt = 0;
     const int branch_done_cnt = (devc->profile->usb_speed == LIBUSB_SPEED_SUPER) ? 10 : 2;
-    static gboolean warm_done = FALSE;
-    static gboolean trans_fix_done = FALSE;
-    static gboolean mid_zero_done = FALSE;
+    static bool warm_done = FALSE;
+    static bool trans_fix_done = FALSE;
+    static bool mid_zero_done = FALSE;
     static double margin[2];
     //static double offset[2];
     double acc_mean = 0;
@@ -1403,40 +1406,33 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         dsl_adjust_probes(sdi, num_probes);
         dsl_adjust_samplerate(devc);
         sr_dbg("%s: setting mode to %d", __func__, sdi->mode);
-    } 
-    else if (id == SR_CONF_OPERATION_MODE) {
+    } else if (id == SR_CONF_OPERATION_MODE) {
         nv = g_variant_get_int16(data);
         if (nv == DS_OP_NORMAL) {
             devc->op_mode = DS_OP_NORMAL;
             devc->test_mode = SR_TEST_NONE;
-        }
-        else if (nv == DS_OP_INTEST) {
+        } else if (nv == DS_OP_INTEST) {
             devc->op_mode = DS_OP_INTEST;
             devc->test_mode = SR_TEST_INTERNAL;
-        } 
-        else {
+        } else {
             ret = SR_ERR;
         }
         sr_dbg("%s: setting pattern to %d",
             __func__, devc->op_mode);
-    } 
-    else if (id == SR_CONF_BANDWIDTH_LIMIT) {
+    } else if (id == SR_CONF_BANDWIDTH_LIMIT) {
         nv = g_variant_get_int16(data);
         if (nv == BW_FULL) {
             devc->bw_limit = BW_FULL;
             dsl_wr_reg(sdi, CTR0_ADDR, bmBW20M_CLR);
-        } 
-        else if (nv == BW_20M) {
+        } else if (nv == BW_20M) {
             devc->bw_limit = BW_20M;
             dsl_wr_reg(sdi, CTR0_ADDR, bmBW20M_SET);
-        } 
-        else {
+        } else {
             ret = SR_ERR;
         }
         sr_dbg("%s: setting bandwidth limit to %d",
             __func__, devc->bw_limit);
-    } 
-    else if (id == SR_CONF_PROBE_EN) {
+    } else if (id == SR_CONF_PROBE_EN) {
         ch->enabled = g_variant_get_boolean(data);
 
         if (sdi->mode == DSO) {
@@ -1838,10 +1834,10 @@ static int dso_tune(const struct sr_dev_inst *sdi)
 
 static int dev_open(struct sr_dev_inst *sdi)
 {
-    gboolean fpga_done;
+    bool fpga_done;
     int ret;
     GSList *l;
-    gboolean zeroed;
+    bool zeroed;
     struct DSL_context *devc = sdi->priv;
 
     if ((ret = dsl_dev_open(di, sdi, &fpga_done)) == SR_OK) {
@@ -2119,7 +2115,7 @@ static int dev_acquisition_stop(const struct sr_dev_inst *sdi, void *cb_data)
     return ret;
 }
 
-static int dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, gboolean prg)
+static int dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, bool prg)
 {
     int ret = dsl_dev_status_get(sdi, status, prg);
     return ret;

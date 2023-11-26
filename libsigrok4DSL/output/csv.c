@@ -35,7 +35,7 @@ struct context {
 	uint64_t samplerate;
     uint64_t limit_samples;
 	char separator;
-	gboolean header_done;
+	bool header_done;
 	int *channel_index;
     int *channel_unit;
     float *channel_scale;
@@ -202,7 +202,6 @@ static int receive(const struct sr_output *o, const struct sr_datafeed_packet *p
     GSList *l;
 	struct context *ctx;
 	int idx;
-	uint64_t i, j;
     unsigned char *p, c;
     double tmpv;
     struct sr_channel *ch;
@@ -237,7 +236,7 @@ static int receive(const struct sr_output *o, const struct sr_datafeed_packet *p
 			*out = g_string_sized_new(512);
 		}
 
-		for (i = 0; i <= logic->length - logic->unitsize; i += logic->unitsize) {
+		for (size_t i = 0; i <= logic->length - logic->unitsize; i += logic->unitsize) {
             ctx->index++;
 
             if (packet->bExportOriginalData == 0){
@@ -248,7 +247,7 @@ static int receive(const struct sr_output *o, const struct sr_datafeed_packet *p
             tmpv = (double)(ctx->index-1) / (double)ctx->samplerate;
             g_string_append_printf(*out, "%0.15g", tmpv); 
 
-            for (j = 0; j < ctx->num_enabled_channels; j++) {
+            for (size_t j = 0; j < ctx->num_enabled_channels; j++) {
                 idx = j;
 				p = logic->data + i + idx / 8;
 				c = *p & (1 << (idx % 8));
@@ -268,8 +267,8 @@ static int receive(const struct sr_output *o, const struct sr_datafeed_packet *p
             *out = g_string_sized_new(512);
         }
 
-        for (i = 0; i < (uint64_t)dso->num_samples; i++) {
-            for (j = 0; j < ctx->num_enabled_channels; j++) {
+        for (size_t i = 0; i < (uint64_t)dso->num_samples; i++) {
+            for (size_t j = 0; j < ctx->num_enabled_channels; j++) {
                 idx = ctx->channel_index[j];
                 p = dso->data + i * ctx->num_enabled_channels + idx * ((ctx->num_enabled_channels > 1) ? 1 : 0);
                 g_string_append_printf(*out, "%0.5f", (ctx->channel_offset[j] - *p) *
@@ -293,7 +292,7 @@ static int receive(const struct sr_output *o, const struct sr_datafeed_packet *p
        }
 
        int enalbe_channel_flags[8];
-       int ch_num = 0;
+       size_t ch_num = 0;
 
        for (l = o->sdi->channels; l; l = l->next){
             ch = l->data;
@@ -309,10 +308,10 @@ static int receive(const struct sr_output *o, const struct sr_datafeed_packet *p
        double mmin = 0;
        void *ptr;
 
-       for (i = 0; i < (uint64_t)analog->num_samples; i++) {
+       for (size_t i = 0; i < (uint64_t)analog->num_samples; i++) {
             ch_cfg_dex = 0;
 
-           for (j = 0; j < ch_num; j++) {
+           for (size_t j = 0; j < ch_num; j++) {
               // idx = ctx->channel_index[j];
              //  p = analog->data + i * ctx->num_enabled_channels + idx * ((ctx->num_enabled_channels > 1) ? 1 : 0);
 

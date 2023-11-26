@@ -29,7 +29,7 @@
 #include <QMenu>
 #include "../interface/icallbacks.h"
 
-class DockOptions;
+struct DockOptions;
 
 namespace pv {
 
@@ -49,7 +49,7 @@ public:
     void update_view_status();
 
 private:
-    void changeEvent(QEvent *event);
+    void changeEvent(QEvent *event) override;
     void retranslateUi();
     void reStyle();
     DockOptions* getDockOptions();

@@ -271,8 +271,7 @@ uint64_t AnalogSignal::get_factor()
     ret = session->get_device()->get_config_uint64(SR_CONF_PROBE_FACTOR,factor,_probe, NULL);
     if (ret) {
         return factor;
-    } 
-    else { 
+    } else { 
         dsv_err("ERROR: config_get SR_CONF_PROBE_FACTOR failed.");
         return 1;
     }
@@ -442,8 +441,7 @@ void AnalogSignal::paint_mid(QPainter &p, int left, int right, QColor fore, QCol
             start_pixel, start_index, show_length,
             samples_per_pixel, order,
             top, bottom, width);
-    }
-    else{
+    } else {
         paint_envelope(p, _data, zeroY,
             start_pixel, start_index, show_length,
             samples_per_pixel, order,

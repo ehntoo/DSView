@@ -72,8 +72,7 @@ DSMessageBox::DSMessageBox(QWidget *parent,const QString title) :
 
     if (!title.isEmpty()){
         _titlebar->setTitle(title);
-    }
-    else{
+    } else {
         _titlebar->setTitle(L_S(STR_PAGE_MSG, S_ID(IDS_MSG_MESSAGE), "Message"));
     }
     

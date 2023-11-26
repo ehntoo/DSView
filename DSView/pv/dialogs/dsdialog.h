@@ -55,7 +55,7 @@ public:
     inline QVBoxLayout *layout(){return _main_layout;}
     void setTitle(QString title);
     void reload(); 
-    int exec();
+    int exec() override;
 
     inline bool IsClickYes(){
         return _clickYes;
@@ -73,8 +73,8 @@ public:
     void show();
 
 protected:
-    void accept();
-    void reject();
+    void accept() override;
+    void reject() override;
 
 private:
     void build_base(bool hasClose); 

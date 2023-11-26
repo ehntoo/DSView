@@ -436,8 +436,7 @@ static GSList *scan(GSList *options)
 
             devices = g_slist_append(devices, sdi);
             num++;   
-		}
-        else {
+		} else {
             char *firmware;
             char *res_path = DS_RES_PATH;
             if (!(firmware = malloc(strlen(res_path)+strlen(prof->firmware) + 5))) {
@@ -768,17 +767,13 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
     ret = SR_OK;
     if (id == SR_CONF_CLOCK_TYPE) {
         devc->clock_type = g_variant_get_boolean(data);
-    } 
-    else if (id == SR_CONF_RLE_SUPPORT) {
+    } else if (id == SR_CONF_RLE_SUPPORT) {
         devc->rle_support = g_variant_get_boolean(data);
-    } 
-    else if (id == SR_CONF_CLOCK_EDGE) {
+    } else if (id == SR_CONF_CLOCK_EDGE) {
         devc->clock_edge = g_variant_get_boolean(data);
-    } 
-    else if (id == SR_CONF_LIMIT_SAMPLES) {
+    } else if (id == SR_CONF_LIMIT_SAMPLES) {
         devc->limit_samples = g_variant_get_uint64(data);
-    } 
-    else if (id == SR_CONF_PROBE_VDIV) {
+    } else if (id == SR_CONF_PROBE_VDIV) {
         ch->vdiv = g_variant_get_uint64(data);
         if (sdi->mode != LOGIC) {
             ret = dsl_wr_dso(sdi, dso_cmd_gen(sdi, ch, SR_CONF_PROBE_VDIV));
@@ -789,16 +784,13 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         else
             sr_dbg("%s: setting VDIV of channel %d to %d mv failed",
                 __func__, ch->index, ch->vdiv);
-    } 
-    else if (id == SR_CONF_PROBE_FACTOR) {
+    } else if (id == SR_CONF_PROBE_FACTOR) {
         ch->vfactor = g_variant_get_uint64(data);
         sr_dbg("%s: setting Factor of channel %d to %d", __func__,
                ch->index, ch->vfactor);
-    } 
-    else if (id == SR_CONF_TIMEBASE) {
+    } else if (id == SR_CONF_TIMEBASE) {
         devc->timebase = g_variant_get_uint64(data);
-    } 
-    else if (id == SR_CONF_PROBE_COUPLING) {
+    } else if (id == SR_CONF_PROBE_COUPLING) {
         ch->coupling = g_variant_get_byte(data);
         if (ch->coupling == SR_GND_COUPLING)
             ch->coupling = SR_DC_COUPLING;
@@ -811,8 +803,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         else
             sr_dbg("%s: setting AC COUPLING of channel %d to %d failed",
                 __func__, ch->index, ch->coupling);
-    } 
-    else if (id == SR_CONF_TRIGGER_SLOPE) {
+    } else if (id == SR_CONF_TRIGGER_SLOPE) {
         devc->trigger_slope = g_variant_get_byte(data);
         if (sdi->mode == DSO) {
             ret = dsl_wr_dso(sdi, dso_cmd_gen(sdi, NULL, SR_CONF_TRIGGER_SLOPE));
@@ -823,8 +814,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         else
             sr_dbg("%s: setting DSO Trigger Slope to %d failed",
                 __func__, devc->trigger_slope);
-    } 
-    else if (id == SR_CONF_TRIGGER_VALUE) {
+    } else if (id == SR_CONF_TRIGGER_VALUE) {
         ch->trig_value = g_variant_get_byte(data);
         if (sdi->mode == DSO) {
             ret = dsl_wr_dso(sdi, dso_cmd_gen(sdi, ch, SR_CONF_TRIGGER_VALUE));
@@ -835,8 +825,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         else
             sr_dbg("%s: setting DSO Trigger Value to %d failed",
                 __func__, ch->index, ch->trig_value);
-    } 
-    else if (id == SR_CONF_HORIZ_TRIGGERPOS) {
+    } else if (id == SR_CONF_HORIZ_TRIGGERPOS) {
         if (sdi->mode == DSO) {
             devc->trigger_hrate = g_variant_get_byte(data);
             //devc->trigger_hpos = devc->trigger_hrate * dsl_en_ch_num(sdi) * devc->limit_samples / 200.0;
@@ -854,8 +843,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         } else {
             devc->trigger_hpos = g_variant_get_byte(data) * devc->limit_samples / 100.0;
         }
-    } 
-    else if (id == SR_CONF_TRIGGER_HOLDOFF) {
+    } else if (id == SR_CONF_TRIGGER_HOLDOFF) {
         devc->trigger_holdoff = g_variant_get_uint64(data);
         if (sdi->mode == DSO) {
             ret = dsl_wr_dso(sdi, dso_cmd_gen(sdi, NULL, SR_CONF_TRIGGER_HOLDOFF));
@@ -866,8 +854,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         else
             sr_dbg("%s: setting Trigger Holdoff Time to %d failed",
                 __func__, devc->trigger_holdoff);
-    } 
-    else if (id == SR_CONF_TRIGGER_MARGIN) {
+    } else if (id == SR_CONF_TRIGGER_MARGIN) {
         devc->trigger_margin = g_variant_get_byte(data);
         if (sdi->mode == DSO) {
             ret = dsl_wr_dso(sdi, dso_cmd_gen(sdi, NULL, SR_CONF_TRIGGER_MARGIN));
@@ -878,16 +865,14 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         else
             sr_dbg("%s: setting Trigger Margin to %d failed",
                 __func__, devc->trigger_margin);
-    } 
-    else if (id == SR_CONF_SAMPLERATE) {
+    } else if (id == SR_CONF_SAMPLERATE) {
         if (devc->test_mode == SR_TEST_NONE) {
             devc->cur_samplerate = g_variant_get_uint64(data);
             if(sdi->mode != LOGIC) {
                 ret = dsl_wr_dso(sdi, dso_cmd_gen(sdi, 0, SR_CONF_SAMPLERATE));
             }
         }
-    } 
-    else if (id == SR_CONF_FILTER) {
+    } else if (id == SR_CONF_FILTER) {
         nv = g_variant_get_int16(data);
         if (nv == SR_FILTER_NONE || nv == SR_FILTER_1T) 
             devc->filter = nv;
@@ -896,11 +881,9 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         
         sr_dbg("%s: setting filter to %d",
             __func__, devc->filter);
-    } 
-    else if (id == SR_CONF_RLE) {
+    } else if (id == SR_CONF_RLE) {
         devc->rle_mode = g_variant_get_boolean(data);
-    } 
-    else if (id == SR_CONF_INSTANT) {
+    } else if (id == SR_CONF_INSTANT) {
         if (sdi->mode == DSO) {
             devc->instant = g_variant_get_boolean(data);
             if (dsl_en_ch_num(sdi) != 0) {
@@ -910,8 +893,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
                     devc->limit_samples = devc->profile->dev_caps.dso_depth / dsl_en_ch_num(sdi);
             }
         }
-    } 
-    else if (id == SR_CONF_DEVICE_MODE) {
+    } else if (id == SR_CONF_DEVICE_MODE) {
         sdi->mode = g_variant_get_int16(data);
         if (sdi->mode == LOGIC) {
             dsl_wr_reg(sdi, CTR0_ADDR, bmSCOPE_CLR);
@@ -926,8 +908,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
                     break;
                 }
             }
-        } 
-        else if (sdi->mode == DSO) {
+        } else if (sdi->mode == DSO) {
             dsl_wr_reg(sdi, CTR0_ADDR, bmSCOPE_SET);
             ret = dsl_wr_dso(sdi, dso_cmd_gen(sdi, NULL, SR_CONF_DSO_SYNC));
             if (ret != SR_OK)
@@ -945,8 +926,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
                 }
             }
             devc->limit_samples = devc->profile->dev_caps.dso_depth / num_probes;
-        } 
-        else if (sdi->mode == ANALOG)  {
+        } else if (sdi->mode == ANALOG)  {
             dsl_wr_reg(sdi, CTR0_ADDR, bmSCOPE_SET);
             ret = dsl_wr_dso(sdi, dso_cmd_gen(sdi, NULL, SR_CONF_DSO_SYNC));
             if (ret != SR_OK)
@@ -963,8 +943,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
                     break;
                 }
             }
-        } 
-        else {
+        } else {
             ret = SR_ERR;
         }
         assert(num_probes != 0);
@@ -976,8 +955,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         if (sdi->mode != LOGIC) {
             dso_init(sdi);
         }
-    } 
-    else if (id == SR_CONF_OPERATION_MODE) {
+    } else if (id == SR_CONF_OPERATION_MODE) {
         nv = g_variant_get_int16(data);
 
         if (sdi->mode == LOGIC && devc->op_mode != nv) 
@@ -995,8 +973,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
                         break;
                     }
                 }
-            } 
-            else if (nv == LO_OP_STREAM) {
+            } else if (nv == LO_OP_STREAM) {
                 devc->op_mode = LO_OP_STREAM;
                 devc->test_mode = SR_TEST_NONE;
                 devc->stream = TRUE;
@@ -1009,14 +986,12 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
                         break;
                     }
                 }
-            } 
-            else if (nv == LO_OP_INTEST) {
+            } else if (nv == LO_OP_INTEST) {
                 devc->op_mode = LO_OP_INTEST;
                 devc->test_mode = SR_TEST_INTERNAL;
                 devc->ch_mode = devc->profile->dev_caps.intest_channel;
                 devc->stream = !(devc->profile->dev_caps.feature_caps & CAPS_FEATURE_BUF);
-            } 
-            else {
+            } else {
                 ret = SR_ERR;
             }
 
@@ -1032,14 +1007,12 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         }
         sr_dbg("%s: setting pattern to %d",
             __func__, devc->op_mode);
-    } 
-    else if (id == SR_CONF_BUFFER_OPTIONS) {
+    } else if (id == SR_CONF_BUFFER_OPTIONS) {
         nv = g_variant_get_int16(data);
         if (sdi->mode == LOGIC && (nv == SR_BUF_STOP || nv == SR_BUF_UPLOAD)) {
               devc->buf_options = nv;
         }
-    } 
-    else if (id == SR_CONF_CHANNEL_MODE) {
+    } else if (id == SR_CONF_CHANNEL_MODE) {
         nv = g_variant_get_int16(data);
         if (sdi->mode == LOGIC) {
             for (i = 0; i < ARRAY_SIZE(channel_modes); i++) {
@@ -1055,8 +1028,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         }
         sr_dbg("%s: setting channel mode to %d",
             __func__, devc->ch_mode);
-    }
-    else if (id == SR_CONF_THRESHOLD) {    
+    } else if (id == SR_CONF_THRESHOLD) {    
         nv = g_variant_get_int16(data);    
         if (sdi->mode == LOGIC && nv != devc->th_level) {
             if (nv == SR_TH_3V3) 
@@ -1096,16 +1068,14 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
             sr_dbg("%s: setting threshold to %d",
                 __func__, devc->th_level);
         }
-    } 
-    else if (id == SR_CONF_VTH) {
+    } else if (id == SR_CONF_VTH) {
         devc->vth = g_variant_get_double(data);
 
         if (devc->profile->dev_caps.feature_caps & CAPS_FEATURE_MAX25_VTH)
             ret = dsl_wr_reg(sdi, VTH_ADDR, (uint8_t)(devc->vth/3.3*(1.0/2.0)*255));
         else
             ret = dsl_wr_reg(sdi, VTH_ADDR, (uint8_t)(devc->vth/3.3*(1.5/2.5)*255));
-    } 
-    else if (id == SR_CONF_MAX_HEIGHT) {
+    } else if (id == SR_CONF_MAX_HEIGHT) {
         stropt = g_variant_get_string(data, NULL);
         for (i = 0; i < ARRAY_SIZE(maxHeights); i++) {
             if (!strcmp(stropt, maxHeights[i])) {
@@ -1115,8 +1085,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         }
         sr_dbg("%s: setting Signal Max Height to %d",
             __func__, devc->max_height);
-    } 
-    else if (id == SR_CONF_PROBE_EN) {
+    } else if (id == SR_CONF_PROBE_EN) {
         ch->enabled = g_variant_get_boolean(data);
         if (sdi->mode == DSO) {
             ret = dsl_wr_dso(sdi, dso_cmd_gen(sdi, ch, SR_CONF_PROBE_EN));
@@ -1135,13 +1104,11 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         else
             sr_dbg("%s: setting ENABLE of channel %d to %d",
                 __func__, ch->index, ch->enabled);
-    } 
-    else if (id == SR_CONF_PROBE_OFFSET) {
+    } else if (id == SR_CONF_PROBE_OFFSET) {
         ch->offset = g_variant_get_uint16(data);
         sr_dbg("%s: setting OFFSET of channel %d to %d", __func__,
                ch->index, ch->offset);
-    } 
-    else if (id == SR_CONF_TRIGGER_SOURCE) {
+    } else if (id == SR_CONF_TRIGGER_SOURCE) {
         devc->trigger_source = g_variant_get_byte(data);
         if (sdi->mode == DSO) {
             ret = dsl_wr_dso(sdi, dso_cmd_gen(sdi, NULL, SR_CONF_TRIGGER_SOURCE));
@@ -1152,8 +1119,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         else
             sr_dbg("%s: setting DSO Trigger Source to %d failed",
                 __func__, devc->trigger_source);
-    } 
-    else if (id == SR_CONF_TRIGGER_CHANNEL) {
+    } else if (id == SR_CONF_TRIGGER_CHANNEL) {
         devc->trigger_source = (g_variant_get_byte(data) << 4) + (devc->trigger_source & 0x0f);
         if (sdi->mode == DSO) {
             ret = dsl_wr_dso(sdi, dso_cmd_gen(sdi, NULL, SR_CONF_TRIGGER_SOURCE));
@@ -1164,15 +1130,12 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         else
             sr_dbg("%s: setting DSO Trigger Source to %d failed",
                 __func__, devc->trigger_source);
-    } 
-    else if (id == SR_CONF_STREAM) {
+    } else if (id == SR_CONF_STREAM) {
         devc->stream = g_variant_get_boolean(data);
-    }
-    else if (id == SR_CONF_LOOP_MODE){
+    } else if (id == SR_CONF_LOOP_MODE){
         devc->is_loop = g_variant_get_boolean(data);
         sr_info("Set device loop mode:%d", devc->is_loop);
-    }
-    else {
+    } else {
         ret = SR_ERR_NA;
 	}
 
@@ -1265,7 +1228,7 @@ static int config_list(int key, GVariant **data, const struct sr_dev_inst *sdi,
 
 static int dev_open(struct sr_dev_inst *sdi)
 {
-    gboolean fpga_done;
+    bool fpga_done;
     int ret;
     struct DSL_context *devc;
 
@@ -1456,8 +1419,7 @@ static int dev_acquisition_start(struct sr_dev_inst *sdi, void *cb_data)
     if ((ret = command_ctl_wr(usb->devhdl, wr_cmd)) != SR_OK) {
         sr_err("%s: Stop DSLogic acquisition failed!", __func__);
         return ret;
-    } 
-    else {
+    } else {
         sr_info("%s: Stop Previous DSLogic acquisition!", __func__);
     }
 
@@ -1523,7 +1485,7 @@ static int dev_acquisition_stop(const struct sr_dev_inst *sdi, void *cb_data)
     return ret;
 }
 
-static int dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, gboolean prg)
+static int dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, bool prg)
 {
     int ret = dsl_dev_status_get(sdi, status, prg);
     return ret;

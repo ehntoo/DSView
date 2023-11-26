@@ -207,8 +207,7 @@ void DsoSnapshot::first_payload(const sr_datafeed_dso &dso, uint64_t total_sampl
         _memory_failed = false;
         append_payload(dso);
         _last_ended = false;
-    }
-    else {
+    } else {
         std::lock_guard<std::mutex> lock(_mutex);
         free_data();
         free_envelop();
@@ -237,8 +236,7 @@ void DsoSnapshot::append_data(void *data, uint64_t samples, bool instant)
         if(_sample_count + samples > _total_sample_count)
             samples = _total_sample_count - _sample_count;
         _sample_count += samples;
-    }
-    else {
+    } else {
         _sample_count = samples;
     }
 

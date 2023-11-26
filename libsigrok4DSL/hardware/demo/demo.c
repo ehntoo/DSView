@@ -72,13 +72,13 @@ static int b_load_directory = 0;
 static char* demo_mode_names[3] = {"logic", "dso", "analog"};
 
 static const struct DEMO_channels logic_channel_modes[] = {
-    {DEMO_LOGIC125x16,  LOGIC,  SR_CHANNEL_LOGIC,  16, 1, SR_MHZ(1), SR_Mn(1),
+    {(enum DEMO_CHANNEL_ID) DEMO_LOGIC125x16,  LOGIC,  SR_CHANNEL_LOGIC,  16, 1, SR_MHZ(1), SR_Mn(1),
      SR_KHZ(50), SR_MHZ(125), "Use 16 Channels (Max 125MHz)"},
-    {DEMO_LOGIC250x12,  LOGIC,  SR_CHANNEL_LOGIC,  12, 1, SR_MHZ(1), SR_Mn(1),
+    {(enum DEMO_CHANNEL_ID) DEMO_LOGIC250x12,  LOGIC,  SR_CHANNEL_LOGIC,  12, 1, SR_MHZ(1), SR_Mn(1),
      SR_KHZ(50), SR_MHZ(250), "Use 12 Channels (Max 250MHz)"},
-    {DEMO_LOGIC500x6,  LOGIC,  SR_CHANNEL_LOGIC,  6, 1, SR_MHZ(1), SR_Mn(1),
+    {(enum DEMO_CHANNEL_ID) DEMO_LOGIC500x6,  LOGIC,  SR_CHANNEL_LOGIC,  6, 1, SR_MHZ(1), SR_Mn(1),
      SR_KHZ(50), SR_MHZ(500), "Use 6 Channels (Max 500MHz)"},
-    {DEMO_LOGIC1000x3,  LOGIC,  SR_CHANNEL_LOGIC,  3, 1, SR_MHZ(1), SR_Mn(1),
+    {(enum DEMO_CHANNEL_ID) DEMO_LOGIC1000x3,  LOGIC,  SR_CHANNEL_LOGIC,  3, 1, SR_MHZ(1), SR_Mn(1),
      SR_KHZ(50), SR_GHZ(1), "Use 3 Channels (Max 1GHz)"},
 };
 
@@ -174,8 +174,8 @@ static void dso_status_update(struct session_vdev *vdev)
     uint8_t ch_min = DSO_MID_VAL;
     uint32_t total_val = 0;
 
-    gboolean temp_plevel;
-    gboolean first_plevel = FALSE;
+    bool temp_plevel;
+    bool first_plevel = FALSE;
     uint32_t temp_llen = 0;
 
     for(int i = 0 ; i<DSO_PACKET_LEN ; i += 2)
@@ -229,14 +229,11 @@ static void dso_status_update(struct session_vdev *vdev)
                             status->ch0_cyc_tlen = status->ch1_cyc_tlen += temp_llen;
                             status->ch0_cyc_llen = status->ch1_cyc_llen = 0;
                             temp_llen = 0;
-                        }
-                        else{
+                        } else {
                             status->ch0_cyc_llen = status->ch1_cyc_llen = temp_llen;
                         }
                     }
-                }
-                else
-                {
+                } else {
                     status->ch0_cyc_flen++;
                     status->ch1_cyc_flen++;
                     if(val == ch_min)
@@ -249,21 +246,17 @@ static void dso_status_update(struct session_vdev *vdev)
                             status->ch0_cyc_tlen = status->ch1_cyc_tlen += temp_llen;
                             status->ch0_cyc_llen = status->ch1_cyc_llen = 0;
                             temp_llen = 0;
-                        }
-                        else{
+                        } else {
                             status->ch0_cyc_llen = status->ch1_cyc_llen = temp_llen;
                         }
                     }
                 }
-            }
-            else
-            {
+            } else {
                 if(val == ch_max || val == ch_min)
                 {
                     if(val == ch_max){
                         temp_plevel = status->ch0_plevel = status->ch1_plevel = FALSE;
-                    }
-                    else{
+                    } else {
                         temp_plevel = status->ch0_plevel = status->ch1_plevel = TRUE;
                     }
                     first_plevel = TRUE;
@@ -279,8 +272,7 @@ static void dso_status_update(struct session_vdev *vdev)
 
     if(vdev->sample_generator != PATTERN_RANDOM){
         status->ch0_acc_mean = status->ch1_acc_mean =  DSO_MID_VAL*pack_buffer->post_len/2;
-    }
-    else{
+    } else {
         status->ch0_acc_mean = status->ch1_acc_mean =  total_val;
     }
     status->ch0_acc_square = status->ch1_acc_square =  ch_max*pack_buffer->post_len/2*7;
@@ -327,8 +319,7 @@ static int init_analog_random_data(struct session_vdev * vdev)
     {
         if(i % 2 == 0){
             *(uint8_t*)(vdev->data_buf + i) = ANALOG_RANDOM_DATA;
-        }
-        else{
+        } else {
             *(uint8_t*)(vdev->data_buf + i) = *(uint8_t*)(vdev->data_buf + i -1);
         }
     }
@@ -515,8 +506,7 @@ static int reset_dsl_path(struct sr_dev_inst *sdi, uint8_t pattern_mode)
         strcat(file_path,".demo");
 
         sdi->path = g_strdup(file_path);
-    }
-    else{
+    } else {
         sdi->path = g_strdup("");
     }
     
@@ -603,13 +593,10 @@ static int init_random_data(struct session_vdev *vdev)
         {
             memset(vdev->data_buf+i,probe_status[cur_probe],1);
             probe_count[cur_probe] -= 1;
-        }
-        else
-        {
+        } else {
             if(probe_status[cur_probe] == LOGIC_HIGH_LEVEL){
                 probe_status[cur_probe] = LOGIC_LOW_LEVEL;
-            }
-            else{
+            } else {
                 probe_status[cur_probe] = LOGIC_HIGH_LEVEL;
             }
             probe_count[cur_probe] = rand()%SR_KB(1);
@@ -739,8 +726,7 @@ static int hw_dev_close(struct sr_dev_inst *sdi)
                 {
                     safe_free(pack_buf->block_bufs[i]);
                     pack_buf->block_bufs[i] = NULL;
-                }
-                else{
+                } else {
                     break;
                 }
             }
@@ -861,8 +847,7 @@ static int config_get(int id, GVariant **data, const struct sr_dev_inst *sdi,
         case LOGIC:
             if(vdev->sample_generator == PATTERN_RANDOM){
                 *data = g_variant_new_uint64(LOGIC_HW_DEPTH);
-            }
-            else{
+            } else {
                 *data = g_variant_new_uint64(vdev->total_samples);
             }
             break;
@@ -967,8 +952,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
                                                           sdi->mode == DSO ? DEFAULT_DSO_FILE : DEFAULT_ANALOG_FILE));
         if (nv != -1){
             vdev->sample_generator = nv;
-        }
-        else{
+        } else {
             vdev->sample_generator = PATTERN_RANDOM;
         }
         reset_dsl_path(sdi,vdev->sample_generator);
@@ -980,8 +964,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         nv = get_pattern_mode_index_by_string(sdi->mode , stropt);
         if(nv == -1){
             vdev->sample_generator = PATTERN_RANDOM;
-        }
-        else{
+        } else {
             vdev->sample_generator = nv;
         }
         reset_dsl_path(sdi, vdev->sample_generator);
@@ -996,8 +979,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
                     load_virtual_device_session(sdi);
                 }
                 vdev->channel_mode_change = FALSE;
-            }
-            else{
+            } else {
                 load_virtual_device_session(sdi);
             }            
         }
@@ -1045,12 +1027,10 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
         {
             ch->hw_offset = ch->offset;
             vdev->offset_change = TRUE;
-        }
-        else{
+        } else {
             if(ch->coupling == 0){
                 ch->hw_offset = ANALOG_DC_COUL_OFFSET;
-            }
-            else{
+            } else {
                 ch->hw_offset = ANALOG_AC_COUL_OFFSET;
             }
         }
@@ -1074,14 +1054,11 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
             {
                 ch->coupling = g_variant_get_byte(data);
                 ch->hw_offset = ch->offset;
-            }
-            else
-            {
+            } else {
                 ch->coupling = g_variant_get_byte(data);
                 if(ch->coupling == 0){
                     ch->hw_offset = ANALOG_DC_COUL_OFFSET;
-                }
-                else{
+                } else {
                     ch->hw_offset = ANALOG_AC_COUL_OFFSET;
                 }       
             }
@@ -1135,7 +1112,7 @@ static int config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
                 if(logic_channel_modes[i].id == (enum DEMO_CHANNEL_ID)nv)
                 {
                     vdev->logic_ch_mode_index = i;
-                    vdev->logic_ch_mode = (enum DEMO_CHANNEL_ID)nv;
+                    vdev->logic_ch_mode = (enum DEMO_LOGIC_CHANNEL_ID)nv;
                     load_virtual_device_session(sdi);
                     vdev->channel_mode_change = TRUE;
                     break;
@@ -1183,8 +1160,7 @@ static int config_list(int key, GVariant **data, const struct sr_dev_inst *sdi,
         if(sdi->mode == LOGIC && vdev->sample_generator != PATTERN_RANDOM){
              gvar = g_variant_new_from_data(G_VARIANT_TYPE("at"),
                                        samplerates_file, ARRAY_SIZE(samplerates_file) * sizeof(uint64_t), TRUE, NULL, NULL);
-        }
-        else{
+        } else {
             gvar = g_variant_new_from_data(G_VARIANT_TYPE("at"),
                                        samplerates + vdev->samplerates_min_index , (vdev->samplerates_max_index - vdev->samplerates_min_index + 1) * sizeof(uint64_t), TRUE, NULL, NULL);
         }
@@ -1230,8 +1206,7 @@ static int config_list(int key, GVariant **data, const struct sr_dev_inst *sdi,
             logic_channel_mode_list[i].id = -1;
             logic_channel_mode_list[i].name = NULL;
             *data = g_variant_new_uint64((uint64_t)&logic_channel_mode_list);
-        }
-        else{
+        } else {
             return SR_ERR_ARG;
         }
         break;
@@ -1267,8 +1242,7 @@ static int hw_dev_acquisition_start(struct sr_dev_inst *sdi,
     {
         vdev->data_buf = malloc(LOGIC_BUF_LEN);  
         vdev->data_buf_len = LOGIC_BUF_LEN;
-    }
-    else{
+    } else {
         vdev->data_buf = malloc(DSO_PACKET_LEN);
         vdev->data_buf_len = DSO_PACKET_LEN;
     }
@@ -1324,8 +1298,7 @@ static int hw_dev_acquisition_start(struct sr_dev_inst *sdi,
                 if(ideal_len>=vdev->packet_len){
                     vdev->packet_len = ideal_len;
                     break;
-                }
-                else{
+                } else {
                     ideal_len *=2;
                 }
             }
@@ -1355,8 +1328,7 @@ static int hw_dev_acquisition_start(struct sr_dev_inst *sdi,
             init_random_data(vdev);
             g_timer_start(run_time);
             sr_session_source_add(-1, 0, 0, receive_data_logic, sdi);
-        }
-        else{
+        } else {
             sr_session_source_add(-1, 0, 0, receive_data_logic_decoder, sdi);
         }
     }
@@ -1371,8 +1343,7 @@ static int hw_dev_acquisition_start(struct sr_dev_inst *sdi,
             vdev->packet_len = 2;
             uint64_t packet_num = post_data_per_sec/vdev->packet_len;
             vdev->packet_time = SEC/(gdouble)packet_num;
-        }
-        else{
+        } else {
             vdev->packet_time = DSO_PACKET_TIME;
         }
         
@@ -1389,9 +1360,7 @@ static int hw_dev_acquisition_start(struct sr_dev_inst *sdi,
         {
             vdev->packet_len = ANALOG_MIN_PACKET_LEN;
             vdev->packet_time = ANALOG_PACKET_TIME(ANALOG_MIN_PACKET_NUM(vdev->samplerate));
-        }
-        else
-        {
+        } else {
             if (vdev->packet_len % ANALOG_PACKET_ALIGN != 0){
                 vdev->packet_len += 1;
             }
@@ -1429,7 +1398,7 @@ static int hw_dev_acquisition_stop(const struct sr_dev_inst *sdi, void *cb_data)
     return SR_OK;
 }
 
-static int hw_dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, gboolean prg)
+static int hw_dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, bool prg)
 {
     (void)prg;
 
@@ -1439,8 +1408,7 @@ static int hw_dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *st
         vdev = sdi->priv;
         *status = vdev->mstatus;
         return SR_OK;
-    }
-    else{
+    } else {
         return SR_ERR;
     }
 }
@@ -1516,13 +1484,11 @@ static int receive_data_logic(int fd, int revents, const struct sr_dev_inst *sdi
                     memset(logic_post_buf+cur_index,LOGIC_HIGH_LEVEL,8);
                 }
             }
-        }
-        else
-        {
+        } else {
             uint64_t random = vdev->data_buf_len - logic.length;
             random = rand() % random;
             int index = vdev->enabled_probes * 8;
-            random = floor(random/index)*index;
+            random = (random/index)*index;
             memcpy(logic_post_buf,vdev->data_buf + random,logic.length);
         }
         logic.data = logic_post_buf;
@@ -1573,8 +1539,7 @@ static void free_temp_buffer(struct session_vdev *vdev)
             {
                 free(pack_buf->block_bufs[i]);
                 pack_buf->block_bufs[i] = NULL;
-            }
-            else{
+            } else {
                 break;
             }
         }
@@ -1758,9 +1723,7 @@ static int receive_data_logic_decoder(int fd, int revents, const struct sr_dev_i
                             pack_buffer->block_buf_len = pack_buffer->block_data_len;
                         }
                     }
-                }
-                else
-                {
+                } else {
                     if (pack_buffer->block_data_len != fileInfo.uncompressed_size)
                     {
                         sr_err("The block size is not coincident:%s", file_name);
@@ -1857,8 +1820,7 @@ int get_bit(uint64_t timebase)
     }
     else if(timebase <= SR_SEC(10) && timebase > SR_MS(200)){
         return SR_SEC(40)/timebase*2;
-    }
-    else{
+    } else {
         return 200;
     }
 }
@@ -2004,9 +1966,7 @@ static int receive_data_dso(int fd, int revents, const struct sr_dev_inst *sdi)
                 }
             }
             pack_buffer->post_len = pack_buffer->post_buf_len;
-        }
-        else
-        {
+        } else {
             if(vdev->load_data)
             {
                 pack_buffer->post_len = 0;
@@ -2060,9 +2020,7 @@ static int receive_data_dso(int fd, int revents, const struct sr_dev_inst *sdi)
                                         pack_buffer->block_buf_len = pack_buffer->block_data_len;
                                     }
                                 }
-                            }
-                            else
-                            {
+                            } else {
                                 if (pack_buffer->block_data_len != fileInfo.uncompressed_size)
                                 {
                                     sr_err("The block size is not coincident:%s", file_name);
@@ -2121,8 +2079,7 @@ static int receive_data_dso(int fd, int revents, const struct sr_dev_inst *sdi)
                 }
                 memcpy(vdev->data_buf,pack_buffer->post_buf,DSO_PACKET_LEN);
                 vdev->load_data = FALSE;
-            }
-            else{
+            } else {
                 memcpy(pack_buffer->post_buf,vdev->data_buf,DSO_PACKET_LEN);
                 pack_buffer->post_buf_len = DSO_PACKET_LEN;
             }
@@ -2138,16 +2095,14 @@ static int receive_data_dso(int fd, int revents, const struct sr_dev_inst *sdi)
             {
                 if(i % 2 == 0){
                     probe = g_slist_nth(sdi->channels, 0)->data;
-                }
-                else{
+                } else {
                     probe = g_slist_nth(sdi->channels, 1)->data;
                 }
                     
                 if(!probe->enabled){
                     if(i % 2 == 0){
                         probe = g_slist_nth(sdi->channels, 1)->data;
-                    }
-                    else{
+                    } else {
                         probe = g_slist_nth(sdi->channels, 0)->data;
                     }  
                 }
@@ -2170,8 +2125,7 @@ static int receive_data_dso(int fd, int revents, const struct sr_dev_inst *sdi)
                         temp_val = DSO_MID_VAL - tem;
                     }
                     *((uint8_t*)pack_buffer->post_buf + i) = temp_val;
-                }
-                else{
+                } else {
                     if(temp_val > DSO_MID_VAL)
                     {
                         val = temp_val - DSO_MID_VAL;
@@ -2183,8 +2137,7 @@ static int receive_data_dso(int fd, int revents, const struct sr_dev_inst *sdi)
                         val = DSO_MID_VAL - temp_val;
                         tem =  (uint16_t)val * (uint16_t)DSO_DEFAULT_VDIV/(uint16_t)vdiv;
                         tem =  DSO_EXPAND_MID_VAL(SR_mV(200)/vdiv) - tem;
-                    }
-                    else{
+                    } else {
                         tem =  DSO_EXPAND_MID_VAL(SR_mV(200)/vdiv);
                     }
 
@@ -2196,8 +2149,7 @@ static int receive_data_dso(int fd, int revents, const struct sr_dev_inst *sdi)
                     }
                     else if(tem >=low_gate){
                         tem = DSO_MIN_VAL;
-                    }
-                    else{
+                    } else {
                         tem-= high_gate;
                     }
                         
@@ -2224,18 +2176,14 @@ static int receive_data_dso(int fd, int revents, const struct sr_dev_inst *sdi)
                 buf_len +=1;
             }
             pack_buffer->post_len = buf_len;
-        }
-        else
-        {
+        } else {
             uint8_t top0;
             uint8_t top1;
             if(vdev->sample_generator == PATTERN_RANDOM)
             {
                 top0 = *((uint8_t*)pack_buffer->post_buf + pack_buffer->post_buf_len -2);
                 top1 = *((uint8_t*)pack_buffer->post_buf + pack_buffer->post_buf_len -1);
-            }
-            else
-            {
+            } else {
                 top0 = *((uint8_t*)pack_buffer->post_buf + get_bit(vdev->timebase) -2);
                 top1 = *((uint8_t*)pack_buffer->post_buf + get_bit(vdev->timebase) -1);
             }
@@ -2252,16 +2200,12 @@ static int receive_data_dso(int fd, int revents, const struct sr_dev_inst *sdi)
             *((uint8_t*)pack_buffer->post_buf + 1)= top1;
             pack_buffer->post_len = DSO_PACKET_LEN;
         }    
-    }
-    else
-    {
+    } else {
         if(DSO_PACKET_LEN >vdev->post_data_len)
         {
             pack_buffer->post_len = vdev->packet_len;
             vdev->post_data_len += vdev->packet_len;
-        }
-        else
-        {
+        } else {
             bToEnd = 1;
             vdev->instant = FALSE;
         }
@@ -2279,16 +2223,13 @@ static int receive_data_dso(int fd, int revents, const struct sr_dev_inst *sdi)
         dso.num_samples = pack_buffer->post_len / chan_num;
         if (vdev->instant){
             dso.data = pack_buffer->post_buf+vdev->post_data_len;
-        }
-        else{
+        } else {
             dso.data = pack_buffer->post_buf;
         }
         ds_data_forward(sdi, &packet);
         if (vdev->instant){
             instant_delay_time(vdev);
-        }
-        else
-        {
+        } else {
             delay_time(vdev);
             g_timer_start(packet_interval);
         }
@@ -2399,8 +2340,7 @@ static int receive_data_analog(int fd, int revents, const struct sr_dev_inst *sd
             {
                 if(i % 2 == 0){
                     vdiv = p0_vdiv;
-                }
-                else{
+                } else {
                     vdiv = p1_vdiv;
                 }
                 tem = 0;
@@ -2412,8 +2352,7 @@ static int receive_data_analog(int fd, int revents, const struct sr_dev_inst *sd
                     tem = val * ANALOG_DEFAULT_VDIV / vdiv;
                     if(tem >= ANALOG_MID_VAL){
                         temp_value = ANALOG_MIN_VAL;
-                    }
-                    else{
+                    } else {
                         temp_value = ANALOG_MID_VAL + tem;
                     }
                 }
@@ -2424,8 +2363,7 @@ static int receive_data_analog(int fd, int revents, const struct sr_dev_inst *sd
 
                     if(tem >= ANALOG_MID_VAL){
                         temp_value = ANALOG_MAX_VAL;
-                    }
-                    else{
+                    } else {
                         temp_value = ANALOG_MID_VAL - tem;
                     }
                 }
@@ -2434,8 +2372,7 @@ static int receive_data_analog(int fd, int revents, const struct sr_dev_inst *sd
                 {
                     if(i % 2 == 0){
                         cur_l = i * per_block_after_expend + j * 2;
-                    }
-                    else{
+                    } else {
                         cur_l = 1 + (i - 1) * per_block_after_expend + j * 2;
                     }
                     memset(vdev->data_buf + cur_l,temp_value,1);
@@ -2465,9 +2402,7 @@ static int receive_data_analog(int fd, int revents, const struct sr_dev_inst *sd
         memcpy(vdev->analog_post_buf , vdev->data_buf + vdev->analog_read_pos , back_len);
         memcpy(vdev->analog_post_buf+ back_len , vdev->data_buf, front_len);
         vdev->analog_read_pos = front_len;
-    }
-    else
-    {
+    } else {
         memcpy(vdev->analog_post_buf,vdev->data_buf + vdev->analog_read_pos,vdev->packet_len);
         vdev->analog_read_pos += vdev->packet_len;
     }
@@ -2611,26 +2546,18 @@ static int load_virtual_device_session(struct sr_dev_inst *sdi)
                             sr_parse_sizestring(val, &tmp_u64);
                             vdev->samplerate = tmp_u64;
                             samplerates_file[0] = vdev->samplerate;
-                        }
-                        else if (!strcmp(keys[j], "total samples"))
-                        {
+                        } else if (!strcmp(keys[j], "total samples")) {
                             tmp_u64 = strtoull(val, NULL, 10);
                             vdev->total_samples = tmp_u64;
                             samplecounts_file[0] = vdev->total_samples;
-                        }
-                        else if (!strcmp(keys[j], "total blocks"))
-                        {
+                        } else if (!strcmp(keys[j], "total blocks")) {
                             tmp_u64 = strtoull(val, NULL, 10);
                             vdev->num_blocks = tmp_u64;
-                        }
-                        else if (!strcmp(keys[j], "total probes"))
-                        {
+                        } else if (!strcmp(keys[j], "total probes")) {
                             sr_dev_probes_free(sdi);
                             tmp_u64 = strtoull(val, NULL, 10);
                             vdev->num_probes = tmp_u64;
-                        }
-                        else if (!strncmp(keys[j], "probe", 5))
-                        {
+                        } else if (!strncmp(keys[j], "probe", 5)) {
                             tmp_u64 = strtoul(keys[j] + 5, NULL, 10);
                             channel_type = SR_CHANNEL_LOGIC;
                             if (!(probe = sr_channel_new(tmp_u64, channel_type, TRUE, val)))
@@ -2650,9 +2577,7 @@ static int load_virtual_device_session(struct sr_dev_inst *sdi)
             g_strfreev(sections);
             g_key_file_free(kf);
             safe_free(metafile);
-        }
-        else
-        {
+        } else {
             vdev->samplerate = LOGIC_DEFAULT_SAMPLERATE;
             vdev->total_samples = LOGIC_DEFAULT_TOTAL_SAMPLES;
             vdev->num_probes = logic_channel_modes[vdev->logic_ch_mode_index].num;
@@ -2778,20 +2703,16 @@ int dso_wavelength_updata(struct session_vdev *vdev)
                 }
                 else if(strcmp(pattern_mode,"sawtooth") && bit == 10){
                     index = i * 16;
-                }
-                else{
+                } else {
                     index = i * DSO_WAVE_PERIOD_LEN_PER_PROBE / (bit / 2);
                 }
-            }
-            else
-            {
+            } else {
                 if(!strcmp(pattern_mode,"sawtooth") && i == bit - 1){
                     index = DSO_WAVE_PERIOD_LEN-1;
                 }
                 else if(strcmp(pattern_mode,"sawtooth") && bit == 10){
                     index = (i-1) * 16 + 1;
-                }
-                else{
+                } else {
                     index = (i-1) * DSO_WAVE_PERIOD_LEN_PER_PROBE / (bit / 2) + 1;
                 }
             }

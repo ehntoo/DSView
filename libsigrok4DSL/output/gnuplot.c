@@ -35,7 +35,7 @@ struct context {
 	unsigned int num_enabled_channels;
 	uint64_t samplerate;
 	uint64_t samplecount;
-	gboolean header_done;
+	bool header_done;
 	uint8_t *prevsample;
 	int *channel_index;
 };

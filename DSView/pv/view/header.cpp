@@ -196,11 +196,9 @@ void Header::mousePressEvent(QMouseEvent *event)
         const auto mTrace = get_mTrace(action, event->pos());
         if (action == Trace::COLOR && mTrace) {
             _colorFlag = true;
-        }
-        else if (action == Trace::NAME && mTrace) {
+        } else if (action == Trace::NAME && mTrace) {
             _nameFlag = true;
-        }
-        else if (action == Trace::LABEL && mTrace) {
+        } else if (action == Trace::LABEL && mTrace) {
             mTrace->select(true);
 
             if (~QApplication::keyboardModifiers() & Qt::ControlModifier)
@@ -244,8 +242,7 @@ void Header::mouseReleaseEvent(QMouseEvent *event)
             _context_trace = mTrace;
             changeColor(event);
             _view.set_all_update(true);
-        }
-        else if (action == Trace::NAME && _nameFlag) {
+        } else if (action == Trace::NAME && _nameFlag) {
             _context_trace = mTrace;
             changeName(event);
         }
@@ -305,7 +302,7 @@ void Header::wheelEvent(QWheelEvent *event)
     (void)x;
     (void)y;
      
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
     x = (int)event->position().x();
     y = (int)event->position().y();    
     int anglex = event->angleDelta().x();
@@ -317,8 +314,7 @@ void Header::wheelEvent(QWheelEvent *event)
     if (anglex == 0 || ABS_VAL(angley) >= ABS_VAL(anglex)){
         delta = angley;
         isVertical = true;
-    }
-    else{
+    } else {
         delta = anglex;
         isVertical = false; //hori direction
     }
@@ -351,9 +347,7 @@ void Header::wheelEvent(QWheelEvent *event)
                 active = true;
             else
                 active = false;
-        }
-        else
-        {
+        } else {
             shift = -delta / 80.0;
         }
 #else

@@ -23,6 +23,7 @@
 #define LIBSIGROKDECODE_LIBSIGROKDECODE_H
 
 #include <stdint.h>
+#include <stdbool.h>
 #include <glib.h>
 #include <log/xlog.h>
 
@@ -290,7 +291,7 @@ struct srd_decoder_inst {
 	uint64_t abs_cur_samplenum;
 
     /** Absolute current sample matched conditions. */
-    gboolean abs_cur_matched;
+    bool abs_cur_matched;
 
 	/** Array of "old" (previous sample) pin values.
 	 *  Type of uint8_t
@@ -301,19 +302,19 @@ struct srd_decoder_inst {
 	GThread *thread_handle;
 
 	/** Indicates whether new samples are available for processing. */
-	gboolean got_new_samples;
+	bool got_new_samples;
 
 	/** Indicates whether the worker thread has handled all samples. */
-	gboolean handled_all_samples;
+	bool handled_all_samples;
 
 	/** Requests termination of wait() and decode(). */
-	gboolean want_wait_terminate;
+	bool want_wait_terminate;
 
     /** First entry of wait(). */
-    gboolean first_pos;
+    bool first_pos;
 
     /** skip zero flag. */
-    gboolean skip_zero;
+    bool skip_zero;
 
 	/** Indicates the current state of the decoder stack. */
 	int decoder_state;

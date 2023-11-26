@@ -201,8 +201,7 @@ bool DsoSignal::go_vDialPre(bool manul)
         _view->set_update(_viewport, true);
         _view->update();
         return true;
-    }
-    else {
+    } else {
         if (_autoV && !_autoV_over)
             autoV_end();
         return false;
@@ -236,8 +235,7 @@ bool DsoSignal::go_vDialNext(bool manul)
         _view->set_update(_viewport, true);
         _view->update();
         return true;
-    } 
-    else {
+    } else {
         if (_autoV && !_autoV_over)
             autoV_end();
         return false;
@@ -254,8 +252,7 @@ bool DsoSignal::load_settings()
     ret = session->get_device()->get_config_byte(SR_CONF_UNIT_BITS, v);
     if (ret) {
         _bits = (uint8_t)v;
-    } 
-    else {
+    } else {
         _bits = DefaultBits; 
         dsv_warn("%s%d", "Warning: config_get SR_CONF_UNIT_BITS failed, set to %d(default).", DefaultBits);
 
@@ -297,8 +294,7 @@ bool DsoSignal::load_settings()
     ret = session->get_device()->get_config_byte(SR_CONF_PROBE_COUPLING, v, _probe, NULL);
     if (ret) {
         _acCoupling = uint8_t(v);
-    }
-    else { 
+    } else { 
         dsv_err("ERROR: config_get SR_CONF_PROBE_COUPLING failed.");
         return false;
     }
@@ -314,8 +310,7 @@ bool DsoSignal::load_settings()
     ret = session->get_device()->get_config_byte(SR_CONF_TRIGGER_VALUE, _trig_value, _probe, NULL);
     if (ret) { 
         _trig_delta = get_trig_vrate() - get_zero_ratio();
-    }
-    else {
+    } else {
         dsv_err("ERROR: config_get SR_CONF_TRIGGER_VALUE failed.");
 
         if (session->get_device()->is_hardware())
@@ -422,8 +417,7 @@ void DsoSignal::set_trig_ratio(double ratio, bool delta_change)
         delta = min(delta, 0.5);
         delta = max(delta, -0.5);
         _trig_value = ratio2value(delta + 0.5);
-    }
-    else {
+    } else {
         if (delta < 0.06f)
             delta = 0.06f;
         if (delta > 0.945f)
@@ -499,8 +493,7 @@ uint64_t DsoSignal::get_factor()
     bool ret = session->get_device()->get_config_uint64(SR_CONF_PROBE_FACTOR, factor, _probe, NULL);
     if (ret) {
         return factor;
-    } 
-    else { 
+    } else { 
         dsv_err("ERROR: config_get SR_CONF_PROBE_FACTOR failed.");
         return 1;
     }
@@ -1158,34 +1151,27 @@ bool DsoSignal::mouse_press(int right, const QPoint pt)
            set_enable(!enabled());
        }
        return true;
-    }
-    else if (enabled()) {
+    } else if (enabled()) {
         if (vDial_rect.contains(pt) && pt.x() > vDial_rect.center().x()) {
             if (pt.y() > vDial_rect.center().y())
                 go_vDialNext(true);
             else
                 go_vDialPre(true);
-        } 
-        else if (session->get_device()->is_file() == false && acdc_rect.contains(pt)) {
+        } else if (session->get_device()->is_file() == false && acdc_rect.contains(pt)) {
            if (session->get_device()->is_hardware_logic())
                set_acCoupling((get_acCoupling()+1)%2);
            else
                set_acCoupling((get_acCoupling()+1)%2);
-        }
-        else if (auto_rect.contains(pt)) {
+        } else if (auto_rect.contains(pt)) {
             if (session->get_device()->is_hardware())
                 auto_start();
-        }
-        else if (x1_rect.contains(pt)) {
+        } else if (x1_rect.contains(pt)) {
            set_factor(1);
-        }
-        else if (x10_rect.contains(pt)) {
+        } else if (x10_rect.contains(pt)) {
            set_factor(10);
-        }
-        else if (x100_rect.contains(pt)) {
+        } else if (x100_rect.contains(pt)) {
            set_factor(100);
-        }
-        else {
+        } else {
             return false;
         }
 
@@ -1326,8 +1312,7 @@ void DsoSignal::auto_set()
             autoV_end();
         if (_autoH)
             autoH_end();
-    } 
-    else {
+    } else {
         if (_autoH && _autoV && get_zero_ratio() != 0.5) {
             set_zero_ratio(0.5);
         }

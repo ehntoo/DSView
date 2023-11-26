@@ -23,7 +23,7 @@
 #include <sys/types.h>
 #include <dirent.h>
 #include <string.h>
-#include <glib.h>
+// #include <glib.h>
 #include "config.h" /* Needed for HAVE_LIBUSB_1_0 and others. */
 #include "log.h"
 #include <assert.h>
@@ -266,11 +266,9 @@ SR_PRIV int sr_config_set(struct sr_dev_inst *sdi,
 
 	if (!sdi || !sdi->driver || !data){
 		ret = SR_ERR;
-	}
-	else if (!sdi->driver->config_set){
+	} else if (!sdi->driver->config_set){
 		ret = SR_ERR_ARG;
-	}
-	else {
+	} else {
         ret = sdi->driver->config_set(key, data, sdi, ch, cg);
 	}
 
@@ -306,11 +304,9 @@ SR_PRIV int sr_config_list(const struct sr_dev_driver *driver,
 
 	if (!driver || !data){
 		ret = SR_ERR;
-	}
-	else if (!driver->config_list){
+	} else if (!driver->config_list){
 		ret = SR_ERR_ARG;
-	}
-    else if ((ret = driver->config_list(key, data, sdi, cg)) == SR_OK){
+	} else if ((ret = driver->config_list(key, data, sdi, cg)) == SR_OK){
 		assert(*data);
 		g_variant_ref_sink(*data);
 	}
@@ -350,7 +346,7 @@ SR_PRIV const struct sr_config_info *sr_config_info_get(int key)
  *         as an indication that it's not applicable.
  */
 SR_PRIV int sr_status_get(const struct sr_dev_inst *sdi,
-                         struct sr_status *status, gboolean prg)
+                         struct sr_status *status, bool prg)
 {
     int ret;
 

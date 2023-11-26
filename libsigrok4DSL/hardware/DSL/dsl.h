@@ -21,6 +21,7 @@
 #ifndef LIBDSL_HARDWARE_DSL_H
 #define LIBDSL_HARDWARE_DSL_H
 
+#include <stdbool.h>
 #include <glib.h> 
 #include "../../libsigrok-internal.h"
 #include "command.h"
@@ -136,8 +137,8 @@
  * the final offset: x+DSCOPE_CONSTANT_BIAS->vpos(coarse); y->voff(fine)
  */
 #define DSCOPE_CONSTANT_BIAS 160
-#define DSCOPE_TRANS_CMULTI   10
-#define DSCOPE_TRANS_FMULTI   100.0
+#define DSCOPE_TRANS_CMULTI   10.0f
+#define DSCOPE_TRANS_FMULTI   100.0f
 
 /*
  * for DSCope20 device
@@ -354,7 +355,7 @@ struct DSL_channels {
     enum DSL_CHANNEL_ID id;
     enum OPERATION_MODE mode;
     enum CHANNEL_TYPE type;
-    gboolean stream;
+    bool stream;
     uint16_t num;
     uint16_t vld_num;
     uint8_t unit_bits;
@@ -1114,13 +1115,13 @@ struct DSL_context {
     uint64_t actual_bytes;
 
 	/* Operational settings */
-    gboolean clock_type;
-    gboolean clock_edge;
-    gboolean rle_mode;
-    gboolean rle_support;
-    gboolean instant;
+    bool clock_type;
+    bool clock_edge;
+    bool rle_mode;
+    bool rle_support;
+    bool instant;
     uint16_t op_mode;
-    gboolean stream;
+    bool stream;
     uint8_t  test_mode;
     uint16_t buf_options;
     enum DSL_CHANNEL_ID ch_mode;
@@ -1142,20 +1143,20 @@ struct DSL_context {
     uint32_t trigger_hpos;
     uint64_t trigger_holdoff;
     uint8_t trigger_margin;
-    gboolean zero;
-    gboolean cali;
-    gboolean tune;
+    bool zero;
+    bool cali;
+    bool tune;
     int16_t tune_index;
     int zero_stage;
     int zero_pcnt;
-    gboolean zero_branch;
-    gboolean zero_comb_fgain;
-    gboolean zero_comb;
+    bool zero_branch;
+    bool zero_comb_fgain;
+    bool zero_comb;
     int tune_stage;
     int tune_pcnt;
     struct sr_channel *tune_probe;
-    gboolean roll;
-    gboolean data_lock;
+    bool roll;
+    bool data_lock;
     uint16_t unit_pitch;
 
     uint64_t num_samples;
@@ -1174,10 +1175,10 @@ struct DSL_context {
 
     int status;
     int trf_completed;
-    gboolean mstatus_valid;
+    bool mstatus_valid;
     struct sr_status mstatus;
-    gboolean abort;
-    gboolean overflow;
+    bool abort;
+    bool overflow;
     int bw_limit;
     int empty_poll_count;
 
@@ -1342,7 +1343,7 @@ SR_PRIV const GSList *dsl_mode_list(const struct sr_dev_inst *sdi);
 SR_PRIV void dsl_adjust_samplerate(struct DSL_context *devc);
 
 SR_PRIV int dsl_en_ch_num(const struct sr_dev_inst *sdi);
-SR_PRIV gboolean dsl_check_conf_profile(libusb_device *dev);
+SR_PRIV bool dsl_check_conf_profile(libusb_device *dev);
 SR_PRIV int dsl_configure_probes(const struct sr_dev_inst *sdi);
 SR_PRIV uint64_t dsl_channel_depth(const struct sr_dev_inst *sdi);
 
@@ -1361,9 +1362,9 @@ SR_PRIV double dsl_adc_code2fgain(uint8_t code);
 SR_PRIV uint8_t dsl_adc_fgain2code(double gain);
 SR_PRIV int dsl_config_adc_fgain(const struct sr_dev_inst *sdi, uint8_t branch, double gain0, double gain1);
 SR_PRIV int dsl_config_fpga_fgain(const struct sr_dev_inst *sdi);
-SR_PRIV int dsl_skew_fpga_fgain(const struct sr_dev_inst *sdi, gboolean comb, double skew[]);
-SR_PRIV int dsl_probe_cali_fgain(struct DSL_context *devc, struct sr_channel *probe, double mean, gboolean comb, gboolean reset);
-SR_PRIV gboolean dsl_probe_fgain_inrange(struct sr_channel *probe, gboolean comb, double skew[]);
+SR_PRIV int dsl_skew_fpga_fgain(const struct sr_dev_inst *sdi, bool comb, double skew[]);
+SR_PRIV int dsl_probe_cali_fgain(struct DSL_context *devc, struct sr_channel *probe, double mean, bool comb, bool reset);
+SR_PRIV bool dsl_probe_fgain_inrange(struct sr_channel *probe, bool comb, double skew[]);
 
 SR_PRIV int dsl_fpga_arm(const struct sr_dev_inst *sdi);
 SR_PRIV int dsl_fpga_config(struct libusb_device_handle *hdl, const char *filename);
@@ -1377,10 +1378,10 @@ SR_PRIV int dsl_config_set(int id, GVariant *data, struct sr_dev_inst *sdi,
 SR_PRIV int dsl_config_list(int key, GVariant **data, const struct sr_dev_inst *sdi,
                        const struct sr_channel_group *cg);
 
-SR_PRIV int dsl_dev_open(struct sr_dev_driver *di, struct sr_dev_inst *sdi, gboolean *fpga_done);
+SR_PRIV int dsl_dev_open(struct sr_dev_driver *di, struct sr_dev_inst *sdi, bool *fpga_done);
 SR_PRIV int dsl_dev_close(struct sr_dev_inst *sdi);
 SR_PRIV int dsl_dev_acquisition_stop(const struct sr_dev_inst *sdi, void *cb_data);
-SR_PRIV int dsl_dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, gboolean prg);
+SR_PRIV int dsl_dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, bool prg);
 
 SR_PRIV unsigned int dsl_get_timeout(const struct sr_dev_inst *sdi);
 SR_PRIV int dsl_start_transfers(const struct sr_dev_inst *sdi);

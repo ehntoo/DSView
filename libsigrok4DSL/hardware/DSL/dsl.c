@@ -32,8 +32,8 @@
 
 SR_PRIV int dsl_secuReset(const struct sr_dev_inst *sdi);
 SR_PRIV int dsl_secuWrite(const struct sr_dev_inst *sdi, uint16_t cmd, uint16_t din);
-SR_PRIV gboolean dsl_isSecuReady(const struct sr_dev_inst *sdi);
-SR_PRIV gboolean dsl_isSecuPass(const struct sr_dev_inst *sdi);
+SR_PRIV bool dsl_isSecuReady(const struct sr_dev_inst *sdi);
+SR_PRIV bool dsl_isSecuPass(const struct sr_dev_inst *sdi);
 SR_PRIV uint16_t dsl_secuRead(const struct sr_dev_inst *sdi);
 static unsigned int to_bytes_per_ms(struct DSL_context *devc);
 
@@ -242,12 +242,12 @@ SR_PRIV int dsl_en_ch_num(const struct sr_dev_inst *sdi)
  * @return TRUE if the device's configuration profile match dsl hardware
  *         configuration, FALSE otherwise.
  */
-SR_PRIV gboolean dsl_check_conf_profile(libusb_device *dev)
+SR_PRIV bool dsl_check_conf_profile(libusb_device *dev)
 {
     struct libusb_device_descriptor des;
     struct libusb_device_handle *hdl;
     int ret;
-    gboolean bSucess;
+    bool bSucess;
     unsigned char strdesc[64];
 
     hdl = NULL;
@@ -372,8 +372,7 @@ static int hw_dev_open(struct sr_dev_driver *di, struct sr_dev_inst *sdi)
                 vi.major, vi.minor);
         ds_set_last_error(SR_ERR_DEVICE_FIRMWARE_VERSION_LOW);
         sdi->status = SR_ST_INCOMPATIBLE;
-    }
-    else {
+    } else {
         sdi->status = SR_ST_ACTIVE;
     }
 
@@ -754,12 +753,12 @@ SR_PRIV int dsl_config_fpga_fgain(const struct sr_dev_inst *sdi)
     return ret;
 }
 
-SR_PRIV int dsl_skew_fpga_fgain(const struct sr_dev_inst *sdi, gboolean comb, double skew[])
+SR_PRIV int dsl_skew_fpga_fgain(const struct sr_dev_inst *sdi, bool comb, double skew[])
 {
     uint8_t fgain_up = 0;
     uint8_t fgain_dn = 0;
     GSList *l;
-    gboolean tmp;
+    bool tmp;
     int ret;
 
     for (int i = 0; i <= 7; i++) {
@@ -819,7 +818,7 @@ SR_PRIV int dsl_skew_fpga_fgain(const struct sr_dev_inst *sdi, gboolean comb, do
     return ret;
 }
 
-SR_PRIV int dsl_probe_cali_fgain(struct DSL_context *devc, struct sr_channel *probe, double mean, gboolean comb, gboolean reset)
+SR_PRIV int dsl_probe_cali_fgain(struct DSL_context *devc, struct sr_channel *probe, double mean, bool comb, bool reset)
 {
     const double UPGAIN = 1.0077;
     const double DNGAIN = 0.9923;
@@ -936,7 +935,7 @@ SR_PRIV int dsl_probe_cali_fgain(struct DSL_context *devc, struct sr_channel *pr
     return SR_OK;
 }
 
-SR_PRIV gboolean dsl_probe_fgain_inrange(struct sr_channel *probe, gboolean comb, double skew[])
+SR_PRIV bool dsl_probe_fgain_inrange(struct sr_channel *probe, bool comb, double skew[])
 {
     const double UPGAIN = 1.0077;
     const double DNGAIN = 0.9923;
@@ -1026,8 +1025,8 @@ SR_PRIV int dsl_fpga_arm(const struct sr_dev_inst *sdi)
     struct ctl_wr_cmd wr_cmd;
     struct ctl_rd_cmd rd_cmd;
     uint8_t rd_cmd_data;
-    gboolean qutr_trig;
-    gboolean half_trig;
+    bool qutr_trig;
+    bool half_trig;
 
     devc = sdi->priv;
     usb = sdi->conn;
@@ -1814,7 +1813,7 @@ SR_PRIV int dsl_config_list(int key, GVariant **data, const struct sr_dev_inst *
     return SR_OK;
 }
 
-SR_PRIV int dsl_dev_open(struct sr_dev_driver *di, struct sr_dev_inst *sdi, gboolean *fpga_done)
+SR_PRIV int dsl_dev_open(struct sr_dev_driver *di, struct sr_dev_inst *sdi, bool *fpga_done)
 {
     struct sr_usb_dev_inst *usb;
     struct DSL_context *devc;
@@ -1921,8 +1920,7 @@ SR_PRIV int dsl_dev_open(struct sr_dev_driver *di, struct sr_dev_inst *sdi, gboo
                 ds_set_last_error(SR_ERR_DEVICE_USB_IO_ERROR);
                 return SR_ERR;
             }
-        }
-        else {
+        } else {
             ret = dsl_wr_reg(sdi, CTR0_ADDR, bmNONE); // dessert clear
             /* Check HDL version */
             ret = dsl_hdl_version(sdi, &hw_info);
@@ -2016,8 +2014,7 @@ SR_PRIV int dsl_dev_acquisition_stop(const struct sr_dev_inst *sdi, void *cb_dat
         devc->abort = TRUE;
         dsl_wr_reg(sdi, CTR0_ADDR, bmFORCE_RDY);
         sr_info("Send command:\"bmFORCE_RDY\"");
-    }
-    else if (devc->status == DSL_FINISH) {
+    } else if (devc->status == DSL_FINISH) {
         /* Stop GPIF acquisition */
         wr_cmd.header.dest = DSL_CTL_STOP;
         wr_cmd.header.size = 0;
@@ -2040,7 +2037,7 @@ SR_PRIV int dsl_dev_acquisition_stop(const struct sr_dev_inst *sdi, void *cb_dat
     return SR_OK;
 }
 
-SR_PRIV int dsl_dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, gboolean prg)
+SR_PRIV int dsl_dev_status_get(const struct sr_dev_inst *sdi, struct sr_status *status, bool prg)
 {
     int ret = SR_ERR;
 
@@ -2345,13 +2342,11 @@ static void receive_transfer(struct libusb_transfer *transfer)
             logic.format = LA_CROSS_DATA;
             logic.data_error = 0;
             logic.data = cur_buf;
-        }
-        else if (sdi->mode == DSO) {
+        } else if (sdi->mode == DSO) {
             if (!devc->instant) {
                 const uint32_t offset = devc->actual_samples / (channel_modes[devc->ch_mode].num/dsl_en_ch_num(sdi));
                 get_measure(sdi, cur_buf, offset);
-            }
-            else {
+            } else {
                 devc->mstatus.vlen = get_buffer_size(sdi) / channel_modes[devc->ch_mode].num;
                 devc->mstatus.trig_offset = 0;
                 devc->mstatus.sample_divider_tog = FALSE;
@@ -2372,13 +2367,11 @@ static void receive_transfer(struct libusb_transfer *transfer)
                 dso.trig_flag = (devc->mstatus.trig_flag != 0);
                 dso.trig_ch = devc->mstatus.trig_ch;
                 dso.data = cur_buf + (devc->zero ? 0 : 2*devc->mstatus.trig_offset);
-            }
-            else {
+            } else {
                 packet.type = SR_DF_DSO;
                 packet.status = SR_PKT_DATA_ERROR;
             }
-        }
-        else if (sdi->mode == ANALOG) {
+        } else if (sdi->mode == ANALOG) {
             packet.type = SR_DF_ANALOG;
             packet.payload = &analog;
             analog.probes = sdi->channels;
@@ -2635,7 +2628,7 @@ Err:
     return SR_ERR;
 }
 
-SR_PRIV gboolean dsl_isSecuReady(const struct sr_dev_inst *sdi)
+SR_PRIV bool dsl_isSecuReady(const struct sr_dev_inst *sdi)
 {
     uint8_t temp;
     if (dsl_rd_reg(sdi, SEC_CTRL_ADDR, &temp) != SR_OK) goto Err;
@@ -2649,7 +2642,7 @@ Err:
     return FALSE;
 }
 
-SR_PRIV gboolean dsl_isSecuPass(const struct sr_dev_inst *sdi)
+SR_PRIV bool dsl_isSecuPass(const struct sr_dev_inst *sdi)
 {
     uint8_t temp;
     if (dsl_rd_reg(sdi, SEC_CTRL_ADDR, &temp) != SR_OK) goto Err;
